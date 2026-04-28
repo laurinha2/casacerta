@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background: var(--bege-claro);
+    }
+
+    /* ---- HERO PERFIL ---- */
+    .perfil-hero {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--verde-oliva) 100%);
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .perfil-avatar {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .perfil-info h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--branco);
+      font-size: 1.6rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .perfil-info p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .perfil-sair {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--branco);
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .perfil-sair:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    /* ---- ABAS ---- */
+    .abas-wrap {
+      background: var(--branco);
+      border-bottom: 2px solid var(--bege);
+      position: sticky;
+      top: 70px;
+      z-index: 50;
+    }
+
+    .abas {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      overflow-x: auto;
+    }
+
+    .aba-btn {
+      padding: 1rem 1.4rem;
+      border: none;
+      background: transparent;
+      color: var(--texto-medio);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .aba-btn.active {
+      color: var(--azul);
+      border-bottom-color: var(--vermelho);
+    }
+
+    .aba-btn:hover {
+      color: var(--azul);
+    }
+
+    /* ---- CONTEÚDO ---- */
+    .perfil-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+
+    .aba-painel {
+      display: none;
+    }
+
+    .aba-painel.active {
+      display: block;
+    }
+
+    /* ---- DADOS PESSOAIS ---- */
+    .dados-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      max-width: 700px;
+    }
+
+    .dados-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--sombra);
+      grid-column: 1 / -1;
+    }
+
+    .dados-card h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--bege);
+    }
+
+    .dados-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .dados-form .full {
+      grid-column: 1 / -1;
+    }
+
+    .dados-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* ---- FAVORITOS ---- */
+    .vazio {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--texto-medio);
+    }
+
+    .vazio-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    .vazio h3 {
+      color: var(--azul);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .vazio p {
+      font-size: 0.9rem;
+    }
+
+    /* ---- FINANCIAMENTOS ---- */
+    .fin-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .fin-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--sombra);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .fin-card h4 {
+      color: var(--azul);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .fin-detalhes {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .fin-item {
+      font-size: 0.82rem;
+      color: var(--texto-medio);
+    }
+
+    .fin-item strong {
+      display: block;
+      color: var(--azul);
+      font-size: 0.9rem;
+    }
+
+    .fin-parcela {
+      text-align: right;
+    }
+
+    .fin-parcela .valor {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--vermelho);
+      font-weight: 700;
+    }
+
+    .fin-parcela small {
+      font-size: 0.75rem;
+      color: var(--texto-medio);
+      display: block;
+    }
+
+    .fin-data {
+      font-size: 0.75rem;
+      color: var(--texto-medio);
+      margin-top: 0.3rem;
+    }
+
+    .fin-excluir {
+      background: none;
+      border: none;
+      color: var(--bege-escuro);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .fin-excluir:hover {
+      color: var(--vermelho);
+      background: #fdecea;
+    }
+
+    /* ---- CONTRATOS ---- */
+    .contrato-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--sombra);
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--azul);
+    }
+
+    .contrato-card.aluguel { border-left-color: var(--vermelho); }
+    .contrato-card.compra  { border-left-color: #2e7d32; }
+
+    .contrato-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .contrato-tipo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .contrato-imovel {
+      font-size: 0.95rem;
+      color: var(--texto-escuro);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .contrato-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .contrato-item label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--azul);
+      margin-bottom: 0.2rem;
+    }
+
+    .contrato-item span {
+      font-size: 0.88rem;
+      color: var(--texto-medio);
+    }
+
+    .contrato-status {
+      display: inline-block;
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-ativo     { background: #e6f4ea; color: #2d7a3a; }
+    .status-encerrado { background: #fdecea; color: var(--vermelho); }
+    .status-pendente  { background: #fff8e1; color: #b8860b; }
+
+    /* SEÇÃO TÍTULO */
+    .secao-titulo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--bege);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .secao-titulo span {
+      font-size: 0.82rem;
+      color: var(--texto-medio);
+      font-family: 'Lato', sans-serif;
+      font-weight: 400;
+    }
+
+    @media (max-width: 768px) {
+      .perfil-hero { flex-wrap: wrap; }
+      .perfil-sair { margin-left: 0; }
+      .dados-form { grid-template-columns: 1fr; }
+      .dados-form .full { grid-column: 1; }
+      .fin-card { grid-template-columns: 1fr; }
+      .fin-parcela { text-align: left; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- HERO DO PERFIL -->
+  <div class="perfil-hero">
+    <div class="perfil-avatar">👤</div>
+    <div class="perfil-info">
+      <h2 id="perfil-nome">Carregando...</h2>
+      <p id="perfil-email"></p>
+    </div>
+    <a href="#" class="perfil-sair" onclick="sair()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+      Sair
+    </a>
+  </div>
+
+  <!-- ABAS -->
+  <div class="abas-wrap">
+    <div class="abas">
+      <button class="aba-btn active" onclick="trocarAba('dados', this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        Meus Dados
+      </button>
+      <button class="aba-btn" onclick="trocarAba('favoritos', this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        </svg>
+        Favoritos
+      </button>
+      <button class="aba-btn" onclick="trocarAba('financiamentos', this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+        Financiamentos
+      </button>
+      <button class="aba-btn" onclick="trocarAba('contratos', this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+        Contratos
+      </button>
+    </div>
+  </div>
+
+  <div class="perfil-content">
+
+    <!-- ABA: MEUS DADOS -->
+    <div class="aba-painel active" id="aba-dados">
+      <div class="dados-card">
+        <h3>Informações Pessoais</h3>
+        <div class="dados-form">
+          <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="edit-nome" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="edit-tel" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="edit-email" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>CPF ou CNPJ</label>
+            <input type="text" id="edit-cpf" class="form-control">
+          </div>
+          <div class="form-group full">
+            <label>Nova Senha <small style="color:var(--texto-medio); font-weight:400">(deixe em branco para manter a atual)</small></label>
+            <input type="password" id="edit-senha" class="form-control" placeholder="Nova senha">
+          </div>
+        </div>
+        <div class="dados-actions">
+          <button class="btn-primary" onclick="salvarDados()">Salvar alterações</button>
+          <button class="btn-outline" onclick="carregarDados()">Cancelar</button>
+        </div>
+        <div id="dados-msg" style="margin-top:1rem; font-size:0.88rem; display:none;"></div>
+      </div>
+    </div>
+
+    <!-- ABA: FAVORITOS -->
+    <div class="aba-painel" id="aba-favoritos">
+      <div class="secao-titulo">
+        Imóveis Favoritos
+        <span id="qtd-favoritos">0 imóveis</span>
+      </div>
+      <div id="lista-favoritos" class="cards-grid"></div>
+    </div>
+
+    <!-- ABA: FINANCIAMENTOS -->
+    <div class="aba-painel" id="aba-financiamentos">
+      <div class="secao-titulo">
+        Simulações de Financiamento
+        <a href="financiamento.html" class="btn-outline" style="font-size:0.82rem; padding:0.4rem 1rem;">+ Nova simulação</a>
+      </div>
+      <div id="lista-financiamentos" class="fin-lista"></div>
+    </div>
+
+    <!-- ABA: CONTRATOS -->
+    <div class="aba-painel" id="aba-contratos">
+      <div class="secao-titulo">
+        Imóveis Locados / Contratos
+        <span id="qtd-contratos">0 contratos</span>
+      </div>
+      <div id="lista-contratos"></div>
+    </div>
+
+  </div>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    let usuarioAtual = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const logado = localStorage.getItem('usuarioLogado');
+      if (!logado) { window.location.href = 'login.html'; return; }
+      usuarioAtual = JSON.parse(logado);
+
+      document.getElementById('perfil-nome').textContent = 'Olá, ' + usuarioAtual.nome.split(' ')[0] + '!';
+      document.getElementById('perfil-email').textContent = usuarioAtual.email;
+
+      carregarDados();
+      carregarFavoritos();
+      carregarFinanciamentos();
+      carregarContratos();
+    });
+
+    // ---- ABAS ----
+    function trocarAba(id, btn) {
+      document.querySelectorAll('.aba-painel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.aba-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('aba-' + id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // ---- DADOS PESSOAIS ----
+    async function carregarDados() {
+      try {
+        const res = await fetch(`${API}/usuarios/${usuarioAtual.id}`);
+        const dados = await res.json();
+        document.getElementById('edit-nome').value = dados.nome || '';
+        document.getElementById('edit-tel').value = dados.telefone || '';
+        document.getElementById('edit-email').value = dados.email || '';
+        document.getElementById('edit-cpf').value = dados.cpf_cnpj || '';
+        document.getElementById('edit-senha').value = '';
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+      }
+    }
+
+    async function salvarDados() {
+      const novaSenha = document.getElementById('edit-senha').value;
+      const msg = document.getElementById('dados-msg');
+
+      try {
+        // Atualizar senha se preenchida
+        if (novaSenha) {
+          await fetch(`${API}/usuarios/${usuarioAtual.id}/senha`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ senha: novaSenha })
+          });
+        }
+
+        // Atualizar nome no localStorage para refletir no hero
+        const nomeAtualizado = document.getElementById('edit-nome').value.trim();
+        usuarioAtual.nome = nomeAtualizado;
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioAtual));
+        document.getElementById('perfil-nome').textContent = 'Olá, ' + nomeAtualizado.split(' ')[0] + '!';
+
+        msg.style.display = 'block';
+        msg.style.color = 'var(--verde-oliva)';
+        msg.textContent = '✓ Dados atualizados com sucesso!';
+        setTimeout(() => msg.style.display = 'none', 3000);
+      } catch (err) {
+        msg.style.display = 'block';
+        msg.style.color = 'var(--vermelho)';
+        msg.textContent = 'Erro ao salvar dados.';
+      }
+    }
+
+    // ---- FAVORITOS ----
+    async function carregarFavoritos() {
+      const container = document.getElementById('lista-favoritos');
+      try {
+        const res = await fetch(`${API}/favoritos/${usuarioAtual.id}`);
+        const favIds = await res.json();
+        const favImoveis = imoveis.filter(im => favIds.includes(im.id));
+
+        document.getElementById('qtd-favoritos').textContent = favImoveis.length + ' imóvel(is)';
+
+        if (favImoveis.length === 0) {
+          container.innerHTML = `
+            <div class="vazio" style="grid-column:1/-1">
+              <div class="vazio-icon">♡</div>
+              <h3>Nenhum favorito ainda</h3>
+              <p>Explore os imóveis e clique no coração para favoritar!</p>
+              <br>
+              <a href="imoveis.html" class="btn-outline">Ver imóveis</a>
+            </div>`;
+        } else {
+          container.innerHTML = favImoveis.map(renderCard).join('');
+        }
+      } catch (err) {
+        console.error('Erro ao carregar favoritos:', err);
+      }
+    }
+
+    // ---- FINANCIAMENTOS ----
+    async function carregarFinanciamentos() {
+      const container = document.getElementById('lista-financiamentos');
+      try {
+        const res = await fetch(`${API}/simulacoes/${usuarioAtual.id}`);
+        const sims = await res.json();
+
+        if (sims.length === 0) {
+          container.innerHTML = `
+            <div class="vazio">
+              <div class="vazio-icon">📋</div>
+              <h3>Nenhuma simulação salva</h3>
+              <p>Faça uma simulação de financiamento e salve para consultar depois.</p>
+              <br>
+              <a href="financiamento.html" class="btn-outline">Simular agora</a>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = sims.map(s => `
+          <div class="fin-card">
+            <div>
+              <h4>Simulação de Financiamento</h4>
+              <div class="fin-detalhes">
+                <div class="fin-item"><strong>R$ ${Number(s.valor).toLocaleString('pt-BR', {minimumFractionDigits:2})}</strong>Valor do imóvel</div>
+                <div class="fin-item"><strong>R$ ${Number(s.entrada).toLocaleString('pt-BR', {minimumFractionDigits:2})}</strong>Entrada</div>
+                <div class="fin-item"><strong>${s.prazo} anos</strong>Prazo</div>
+                <div class="fin-item"><strong>${s.taxa}% a.a.</strong>Taxa</div>
+              </div>
+              <div class="fin-data">Simulado em ${s.data}</div>
+            </div>
+            <div class="fin-parcela">
+              <div class="valor">${s.parcela}</div>
+              <small>por mês</small>
+              <br>
+              <button class="fin-excluir" onclick="excluirSimulacao(${s.id})">✕ Remover</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Erro ao carregar financiamentos:', err);
+      }
+    }
+
+    async function excluirSimulacao(id) {
+      try {
+        await fetch(`${API}/simulacoes/${id}`, { method: 'DELETE' });
+        carregarFinanciamentos();
+      } catch (err) {
+        alert('Erro ao excluir simulação.');
+      }
+    }
+
+    // ---- CONTRATOS (banco de dados) ----
+    async function carregarContratos() {
+      const container = document.getElementById('lista-contratos');
+      try {
+        const res = await fetch(`${API}/contratos/${usuarioAtual.id}`);
+        const contratos = await res.json();
+
+        document.getElementById('qtd-contratos').textContent = contratos.length + ' contrato(s)';
+
+        if (contratos.length === 0) {
+          container.innerHTML = `
+            <div class="vazio">
+              <div class="vazio-icon">📄</div>
+              <h3>Nenhum contrato ativo</h3>
+              <p>Seus contratos de locação e compra aparecerão aqui após a assinatura.</p>
+              <br>
+              <a href="imoveis.html" class="btn-outline">Buscar imóveis</a>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = contratos.map(c => `
+          <div class="contrato-card ${c.tipo}">
+            <div class="contrato-header">
+              <span class="contrato-tipo">${c.tipo === 'aluguel' ? '🏠 Contrato de Aluguel' : '🏡 Contrato de Compra'}</span>
+              <span class="contrato-status status-${c.status}">${c.status}</span>
+            </div>
+            <div class="contrato-imovel">📍 ${c.imovel}</div>
+            <div class="contrato-grid">
+              <div class="contrato-item">
+                <label>Locatário / Comprador</label>
+                <span>${c.locatario}</span>
+              </div>
+              ${c.avalista ? `
+              <div class="contrato-item">
+                <label>Avalista</label>
+                <span>${c.avalista}</span>
+              </div>` : ''}
+              <div class="contrato-item">
+                <label>Valor</label>
+                <span>R$ ${Number(c.valor).toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
+              </div>
+              <div class="contrato-item">
+                <label>Início</label>
+                <span>${formatarData(c.data_inicio)}</span>
+              </div>
+              ${c.data_fim ? `
+              <div class="contrato-item">
+                <label>Término</label>
+                <span>${formatarData(c.data_fim)}</span>
+              </div>` : ''}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Erro ao carregar contratos:', err);
+        container.innerHTML = `
+          <div class="vazio">
+            <div class="vazio-icon">⚠️</div>
+            <h3>Erro ao carregar contratos</h3>
+            <p>Não foi possível conectar ao servidor.</p>
+          </div>`;
+      }
+    }
+
+    function formatarData(data) {
+      if (!data) return '—';
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    // ---- SAIR ----
+    function sair() {
+      if (confirm('Deseja sair da sua conta?')) {
+        localStorage.removeItem('usuarioLogado');
+        window.location.href = 'index.html';
+      }
+    }
+  </script>
+  <script src="js/mascaras.js"></script>
+</body>
+
+</html>

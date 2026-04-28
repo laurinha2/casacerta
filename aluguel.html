@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aluguel – Casa Certa Imobiliária</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* HERO */
+    .aluguel-hero {
+      background: linear-gradient(135deg, var(--verde-oliva) 0%, var(--azul) 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .aluguel-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('img/interior-luxury.jpg') center/cover;
+      opacity: 0.18;
+    }
+
+    .aluguel-hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .aluguel-hero h1 {
+      color: var(--branco);
+      margin-bottom: 0.75rem;
+    }
+
+    .aluguel-hero p {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--branco);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* FILTROS */
+    .filtros-aluguel {
+      background: var(--branco);
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+    }
+
+    .filtros-aluguel-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filtro-grupo-al {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .filtro-grupo-al label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--texto-medio);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* LISTAGEM */
+    .listagem-section {
+      background: var(--bege-claro);
+      padding: 3rem 2rem;
+      min-height: 400px;
+    }
+
+    .listagem-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .listagem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .listagem-count {
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+    }
+
+    .listagem-count strong {
+      color: var(--azul);
+      font-size: 1.1rem;
+    }
+
+    /* CARDS ALUGUEL */
+    .aluguel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .aluguel-card {
+      background: var(--branco);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aluguel-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--sombra-forte);
+    }
+
+    .aluguel-img {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .aluguel-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s ease;
+    }
+
+    .aluguel-card:hover .aluguel-img img {
+      transform: scale(1.05);
+    }
+
+    .aluguel-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--azul);
+      color: var(--branco);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .aluguel-badge.disponivel {
+      background: #2d7a3a;
+    }
+
+    .aluguel-badge.reservado {
+      background: #b8860b;
+    }
+
+    .card-fav-al {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--branco);
+      cursor: pointer;
+      transition: var(--transition);
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-fav-al:hover {
+      transform: scale(1.2);
+      color: var(--vermelho);
+    }
+
+    .card-fav-al.ativo {
+      color: var(--vermelho);
+    }
+
+    .aluguel-body {
+      padding: 1.2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aluguel-tipo {
+      font-size: 0.75rem;
+      color: var(--texto-medio);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .aluguel-nome {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.05rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .aluguel-local {
+      font-size: 0.85rem;
+      color: var(--texto-medio);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .aluguel-preco-wrap {
+      margin-bottom: 1rem;
+    }
+
+    .aluguel-preco {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--vermelho);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .aluguel-preco-label {
+      font-size: 0.78rem;
+      color: var(--texto-medio);
+    }
+
+    .aluguel-condominio {
+      font-size: 0.78rem;
+      color: var(--texto-medio);
+      margin-top: 0.2rem;
+    }
+
+    .aluguel-specs {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--texto-medio);
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--bege);
+    }
+
+    .aluguel-spec {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .aluguel-spec svg {
+      color: var(--azul);
+    }
+
+    .aluguel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .aluguel-tag {
+      font-size: 0.72rem;
+      background: var(--bege-claro);
+      color: var(--azul);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid var(--bege-escuro);
+    }
+
+    .aluguel-acoes {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .aluguel-acoes a {
+      flex: 1;
+      text-align: center;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* CTA */
+    .aluguel-cta {
+      background: linear-gradient(135deg, var(--azul), var(--verde-oliva));
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .aluguel-cta h2 {
+      color: var(--branco);
+      margin-bottom: 1rem;
+    }
+
+    .aluguel-cta p {
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+      .filtros-aluguel {
+        position: static;
+      }
+
+      .filtros-aluguel-inner {
+        flex-direction: column;
+      }
+
+      .filtro-grupo-al {
+        min-width: 100%;
+      }
+
+      .aluguel-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- HERO -->
+  <section class="aluguel-hero">
+    <div class="aluguel-hero-content fade-up">
+      <h1>Imóveis para Alugar</h1>
+      <p>Encontre o imóvel perfeito para morar com conforto, segurança e praticidade. Contratos ágeis e atendimento
+        personalizado.</p>
+      <div class="hero-badges">
+        <span class="hero-badge">✓ Contratos digitais</span>
+        <span class="hero-badge">✓ Vistoria detalhada</span>
+        <span class="hero-badge">✓ Suporte 24h</span>
+        <span class="hero-badge">✓ Sem burocracia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTROS -->
+  <div class="filtros-aluguel">
+    <div class="filtros-aluguel-inner">
+      <div class="filtro-grupo-al">
+        <label>Tipo</label>
+        <select id="al-tipo" class="form-control" onchange="filtrarAlugueis()">
+          <option value="">Todos</option>
+          <option value="Apartamento">Apartamento</option>
+          <option value="Casa">Casa</option>
+          <option value="Studio">Studio</option>
+          <option value="Cobertura">Cobertura</option>
+        </select>
+      </div>
+      <div class="filtro-grupo-al">
+        <label>Cidade</label>
+        <select id="al-cidade" class="form-control" onchange="filtrarAlugueis()">
+          <option value="">Todas</option>
+          <option value="Curitiba">Curitiba</option>
+          <option value="Porto Alegre">Porto Alegre</option>
+        </select>
+      </div>
+      <div class="filtro-grupo-al">
+        <label>Quartos</label>
+        <select id="al-quartos" class="form-control" onchange="filtrarAlugueis()">
+          <option value="">Todos</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+      <div class="filtro-grupo-al">
+        <label>Valor máx./mês</label>
+        <select id="al-preco" class="form-control" onchange="filtrarAlugueis()">
+          <option value="">Qualquer</option>
+          <option value="1500">até R$ 1.500</option>
+          <option value="2500">até R$ 2.500</option>
+          <option value="4000">até R$ 4.000</option>
+          <option value="6000">até R$ 6.000</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn-outline" onclick="limparFiltrosAl()" style="white-space:nowrap;">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTAGEM -->
+  <section class="listagem-section">
+    <div class="listagem-wrap">
+      <div class="listagem-header">
+        <div class="listagem-count"><strong id="al-count">0</strong> imóveis disponíveis</div>
+      </div>
+      <div class="aluguel-grid" id="lista-alugueis"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="aluguel-cta">
+    <h2>Não encontrou o que procura?</h2>
+    <p>Entre em contato com nossa equipe e nos conte o que precisa. Temos novos imóveis entrando todo mês!</p>
+    <a href="https://wa.me/5554981111111?text=Olá! Procuro um imóvel para alugar." target="_blank"
+      class="btn-primary">💬 Falar com corretor</a>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    const imoveisAluguel = [
+      {
+        id: 101,
+        tipo: "Apartamento",
+        nome: "Apartamento Jardins",
+        local: "Batel – Curitiba",
+        cidade: "Curitiba",
+        preco: 2800,
+        condominio: 450,
+        area: 85,
+        quartos: 2,
+        banheiros: 2,
+        vagas: 1,
+        status: "disponivel",
+        statusLabel: "Disponível",
+        imagem: "img/interior-luxury.jpg",
+        tags: ["Mobiliado", "Varanda", "Academia", "Portaria 24h"]
+      },
+      {
+        id: 102,
+        tipo: "Studio",
+        nome: "Studio Vista Livre",
+        local: "Centro – Curitiba",
+        cidade: "Curitiba",
+        preco: 1600,
+        condominio: 280,
+        area: 38,
+        quartos: 1,
+        banheiros: 1,
+        vagas: 0,
+        status: "disponivel",
+        statusLabel: "Disponível",
+        imagem: "img/pexels-taryn-elliott-9565727.jpg",
+        tags: ["Mobiliado", "Academia", "Coworking"]
+      },
+      {
+        id: 103,
+        tipo: "Apartamento",
+        nome: "Apto Residencial Parque",
+        local: "Moinhos de Vento – Porto Alegre",
+        cidade: "Porto Alegre",
+        preco: 3500,
+        condominio: 600,
+        area: 110,
+        quartos: 3,
+        banheiros: 2,
+        vagas: 2,
+        status: "disponivel",
+        statusLabel: "Disponível",
+        imagem: "img/pexels-jonathanborba-10115004.jpg",
+        tags: ["Semi-mobiliado", "Piscina", "Churrasqueira", "2 vagas"]
+      },
+      {
+        id: 104,
+        tipo: "Casa",
+        nome: "Casa Condomínio Fechado",
+        local: "Jardim Aurora – Porto Alegre",
+        cidade: "Porto Alegre",
+        preco: 4200,
+        condominio: 800,
+        area: 180,
+        quartos: 3,
+        banheiros: 3,
+        vagas: 2,
+        status: "disponivel",
+        statusLabel: "Disponível",
+        imagem: "img/pexels-capturavisualmoment-34717361.jpg",
+        tags: ["Amplo quintal", "Piscina", "Condomínio fechado", "Pet friendly"]
+      },
+      {
+        id: 105,
+        tipo: "Apartamento",
+        nome: "Apto Moderno Vila Nova",
+        local: "Vila Nova – Curitiba",
+        cidade: "Curitiba",
+        preco: 2200,
+        condominio: 380,
+        area: 68,
+        quartos: 2,
+        banheiros: 1,
+        vagas: 1,
+        status: "reservado",
+        statusLabel: "Reservado",
+        imagem: "img/pexels-rods-aguiar-2154709933-34208343.jpg",
+        tags: ["Próx. metrô", "Portaria 24h", "Sacada"]
+      },
+      {
+        id: 106,
+        tipo: "Cobertura",
+        nome: "Cobertura Duplex Premium",
+        local: "Bela Vista – Porto Alegre",
+        cidade: "Porto Alegre",
+        preco: 6500,
+        condominio: 1200,
+        area: 220,
+        quartos: 3,
+        banheiros: 3,
+        vagas: 3,
+        status: "disponivel",
+        statusLabel: "Disponível",
+        imagem: "img/pexels-dropshado-2251247.jpg",
+        tags: ["Terraço privativo", "Piscina privativa", "Vista panorâmica", "Luxo"]
+      }
+    ];
+
+    function svgIcon(tipo) {
+      if (tipo === 'area') return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`;
+      if (tipo === 'quarto') return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>`;
+      if (tipo === 'banho') return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" y1="5" x2="8" y2="7"/><line x1="2" y1="12" x2="22" y2="12"/></svg>`;
+      if (tipo === 'vaga') return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+    }
+
+    function renderCardAluguel(im) {
+      const fav = isFavorito(im.id);
+      return `
+        <div class="aluguel-card fade-up">
+          <div class="aluguel-img">
+            <img src="${im.imagem}" alt="${im.nome}" loading="lazy">
+            <span class="aluguel-badge ${im.status}">${im.statusLabel}</span>
+            <button class="card-fav-al ${fav ? 'ativo' : ''}" onclick="handleFavAl(${im.id}, this)">
+              ${fav ? '♥' : '♡'}
+            </button>
+          </div>
+          <div class="aluguel-body">
+            <div class="aluguel-tipo">${im.tipo}</div>
+            <div class="aluguel-nome">${im.nome}</div>
+            <div class="aluguel-local">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${im.local}
+            </div>
+            <div class="aluguel-preco-wrap">
+              <div>
+                <span class="aluguel-preco">R$ ${im.preco.toLocaleString('pt-BR')}</span>
+                <span class="aluguel-preco-label">/mês</span>
+              </div>
+              <div class="aluguel-condominio">+ Condomínio: R$ ${im.condominio.toLocaleString('pt-BR')}/mês</div>
+            </div>
+            <div class="aluguel-specs">
+              <span class="aluguel-spec">${svgIcon('area')} ${im.area} m²</span>
+              <span class="aluguel-spec">${svgIcon('quarto')} ${im.quartos} quarto${im.quartos > 1 ? 's' : ''}</span>
+              <span class="aluguel-spec">${svgIcon('banho')} ${im.banheiros} banheiro${im.banheiros > 1 ? 's' : ''}</span>
+              ${im.vagas > 0 ? `<span class="aluguel-spec">${svgIcon('vaga')} ${im.vagas} vaga${im.vagas > 1 ? 's' : ''}</span>` : ''}
+            </div>
+            <div class="aluguel-tags">
+              ${im.tags.map(t => `<span class="aluguel-tag">${t}</span>`).join('')}
+            </div>
+            <div class="aluguel-acoes">
+              <a href="https://wa.me/5554981111111?text=Olá! Tenho interesse no imóvel: ${im.nome}" target="_blank" class="btn-primary">Tenho interesse</a>
+              <a href="contato.html" class="btn-outline">Agendar visita</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleFavAl(id, btn) {
+      const adicionado = toggleFavorito(id);
+      btn.classList.toggle('ativo', adicionado);
+      btn.textContent = adicionado ? '♥' : '♡';
+    }
+
+    function filtrarAlugueis() {
+      const tipo = document.getElementById('al-tipo').value;
+      const cidade = document.getElementById('al-cidade').value;
+      const quartos = parseInt(document.getElementById('al-quartos').value) || 0;
+      const preco = parseInt(document.getElementById('al-preco').value) || 0;
+
+      let lista = imoveisAluguel.filter(im => {
+        if (tipo && im.tipo !== tipo) return false;
+        if (cidade && im.cidade !== cidade) return false;
+        if (quartos && im.quartos < quartos) return false;
+        if (preco && im.preco > preco) return false;
+        return true;
+      });
+
+      document.getElementById('al-count').textContent = lista.length;
+      const container = document.getElementById('lista-alugueis');
+
+      if (lista.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--texto-medio);">
+            <p style="font-size:2rem; margin-bottom:1rem;">🔍</p>
+            <h3 style="color:var(--azul); margin-bottom:0.5rem;">Nenhum imóvel encontrado</h3>
+            <p>Tente ajustar os filtros para ver mais resultados.</p>
+            <br>
+            <button class="btn-outline" onclick="limparFiltrosAl()">Limpar filtros</button>
+          </div>`;
+      } else {
+        container.innerHTML = lista.map(renderCardAluguel).join('');
+      }
+    }
+
+    function limparFiltrosAl() {
+      ['al-tipo', 'al-cidade', 'al-quartos', 'al-preco'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      filtrarAlugueis();
+    }
+
+    document.addEventListener('DOMContentLoaded', filtrarAlugueis);
+  </script>
+</body>
+
+</html>

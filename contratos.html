@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Contratos – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .contratos-page {
+      min-height: 80vh;
+      padding: 3rem 2rem;
+      background: var(--bege-claro);
+    }
+    .contratos-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .contratos-titulo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      margin-bottom: 0.5rem;
+    }
+    .contratos-sub {
+      color: var(--texto-medio);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* CARD CONTRATO */
+    .contrato-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--azul);
+    }
+    .contrato-card.aluguel { border-left-color: var(--vermelho); }
+    .contrato-card.compra  { border-left-color: #2e7d32; }
+
+    .contrato-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .contrato-tipo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .badge {
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-ativo     { background: #e6f4ea; color: #2e7d32; }
+    .badge-encerrado { background: #fdecea; color: #c62828; }
+    .badge-pendente  { background: #fff8e1; color: #f57f17; }
+
+    .contrato-imovel {
+      font-size: 1rem;
+      color: var(--texto-escuro);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .contrato-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .contrato-item label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--azul);
+      margin-bottom: 0.2rem;
+    }
+    .contrato-item span {
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+    }
+
+    /* VAZIO / NÃO LOGADO */
+    .estado-vazio {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--texto-medio);
+    }
+    .estado-vazio .icone { font-size: 3rem; margin-bottom: 1rem; }
+    .estado-vazio h3 { color: var(--azul); font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; }
+    .estado-vazio p { font-size: 0.9rem; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main class="contratos-page">
+    <div class="contratos-wrap fade-up">
+      <h1 class="contratos-titulo">Meus Contratos</h1>
+      <p class="contratos-sub">Acompanhe seus contratos de aluguel e compra.</p>
+
+      <div id="contratos-lista">
+        <div class="estado-vazio">
+          <div class="icone">📄</div>
+          <h3>Carregando...</h3>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+      const lista = document.getElementById('contratos-lista');
+
+      if (!usuario) {
+        lista.innerHTML = `
+          <div class="estado-vazio">
+            <div class="icone">🔒</div>
+            <h3>Acesso restrito</h3>
+            <p>Você precisa estar logado para ver seus contratos.</p>
+            <a href="login.html" class="btn-primary">Fazer Login</a>
+          </div>`;
+        return;
+      }
+
+      carregarContratos(usuario.id, lista);
+    });
+
+    async function carregarContratos(usuario_id, lista) {
+      try {
+        const res = await fetch(`${API}/contratos/${usuario_id}`);
+        const contratos = await res.json();
+
+        if (!contratos.length) {
+          lista.innerHTML = `
+            <div class="estado-vazio">
+              <div class="icone">📄</div>
+              <h3>Nenhum contrato encontrado</h3>
+              <p>Você ainda não possui contratos vinculados à sua conta.</p>
+              <a href="imoveis.html" class="btn-primary">Ver Imóveis</a>
+            </div>`;
+          return;
+        }
+
+        lista.innerHTML = contratos.map(c => `
+          <div class="contrato-card ${c.tipo}">
+            <div class="contrato-header">
+              <span class="contrato-tipo">${c.tipo === 'aluguel' ? '🏠 Contrato de Aluguel' : '🏡 Contrato de Compra'}</span>
+              <span class="badge badge-${c.status}">${c.status}</span>
+            </div>
+            <div class="contrato-imovel">📍 ${c.imovel}</div>
+            <div class="contrato-grid">
+              <div class="contrato-item">
+                <label>Locatário / Comprador</label>
+                <span>${c.locatario}</span>
+              </div>
+              ${c.avalista ? `
+              <div class="contrato-item">
+                <label>Avalista</label>
+                <span>${c.avalista}</span>
+              </div>` : ''}
+              <div class="contrato-item">
+                <label>Valor</label>
+                <span>R$ ${Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div class="contrato-item">
+                <label>Início</label>
+                <span>${formatarData(c.data_inicio)}</span>
+              </div>
+              ${c.data_fim ? `
+              <div class="contrato-item">
+                <label>Término</label>
+                <span>${formatarData(c.data_fim)}</span>
+              </div>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        lista.innerHTML = `
+          <div class="estado-vazio">
+            <div class="icone">⚠️</div>
+            <h3>Erro ao carregar contratos</h3>
+            <p>Não foi possível conectar ao servidor.</p>
+          </div>`;
+      }
+    }
+
+    function formatarData(data) {
+      if (!data) return '—';
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+  </script>
+
+</body>
+</html>

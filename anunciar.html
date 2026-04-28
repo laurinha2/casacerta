@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Anunciar – Casa Certa Imobiliária</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  .anunciar-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 320px;
+      background: linear-gradient(135deg, var(--verde-oliva) 0%, #2d3a1e 100%);
+    }
+
+    .anunciar-hero-content {
+      padding: 3.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .anunciar-hero h1 {
+      color: var(--branco);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .anunciar-hero p {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .anunciar-hero p+p { font-weight: 400; margin-top: 0.5rem; }
+    .anunciar-hero-img { overflow: hidden; }
+
+    .anunciar-hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+
+    .vantagens-section { background: var(--bege-claro); padding: 4rem 2rem; }
+
+    .vantagens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .vantagem-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.5rem;
+      box-shadow: var(--sombra);
+      transition: var(--transition);
+      border-top: 4px solid var(--vermelho);
+    }
+
+    .vantagem-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-forte); }
+    .vantagem-titulo { color: var(--vermelho); font-weight: 700; font-size: 1rem; margin-bottom: 0.75rem; }
+    .vantagem-card p { color: var(--texto-medio); font-size: 0.88rem; line-height: 1.6; }
+
+    .form-section {
+      background: var(--bege);
+      padding: 4rem 2rem;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .form-wrap {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--sombra-forte);
+      box-sizing: border-box;
+    }
+
+    .form-titulo { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .form-sub { color: var(--texto-medio); margin-bottom: 2rem; font-size: 0.92rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .form-full { grid-column: 1 / -1; }
+    .form-aviso { font-size: 0.78rem; color: var(--texto-medio); margin-top: 0.3rem; }
+
+    .aviso-login {
+      display: none;
+      background: #fdecea;
+      border: 1px solid var(--vermelho);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .aviso-login p { color: var(--vermelho); font-weight: 700; margin-bottom: 1rem; }
+    .aviso-login .btn-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .form-erro {
+      display: none;
+      background: #fdecea;
+      color: var(--vermelho);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      margin-top: 1rem;
+    }
+
+    .form-sucesso { display: none; text-align: center; padding: 2rem; }
+    .form-sucesso h3 { color: var(--verde-oliva); font-size: 1.4rem; margin-bottom: 1rem; }
+    .form-sucesso p { color: var(--texto-medio); }
+
+    @media (max-width: 768px) {
+      .anunciar-hero { grid-template-columns: 1fr; }
+      .anunciar-hero-img { height: 220px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-full { grid-column: 1; }
+      .form-section { padding: 2rem 1rem; }
+      .form-wrap { padding: 1rem; width: 100%; margin: 0; border-radius: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- HERO -->
+  <div class="anunciar-hero">
+    <div class="anunciar-hero-content">
+      <h1>Vantagens de Anunciar</h1>
+      <p>Você sabia que na Casa Certa Imobiliária é possível anunciar o seu imóvel para venda ou locação?</p>
+      <p>Conheça os principais motivos que fazem com que estejamos ao seu lado em todas as etapas do processo, desde o
+        anúncio do imóvel até a finalização do contrato.</p>
+    </div>
+    <div class="anunciar-hero-img">
+      <img src="img/pexels-gustavo-fring-7489118.jpg" alt="Casa à venda">
+    </div>
+  </div>
+
+  <!-- VANTAGENS -->
+  <section class="vantagens-section">
+    <div class="vantagens-grid">
+      <div class="vantagem-card fade-up">
+        <div class="vantagem-titulo">📸 Fotos Profissionais</div>
+        <p>Divulgamos seu imóvel com fotos de qualidade para atrair mais interessados.</p>
+      </div>
+      <div class="vantagem-card fade-up-2">
+        <div class="vantagem-titulo">🌐 Divulgação Online</div>
+        <p>Seu imóvel será divulgado em nosso site e em plataformas digitais.</p>
+      </div>
+      <div class="vantagem-card fade-up-3">
+        <div class="vantagem-titulo">👥 Atendimento Especializado</div>
+        <p>Nossa equipe acompanha todo o processo de venda ou locação.</p>
+      </div>
+      <div class="vantagem-card fade-up">
+        <div class="vantagem-titulo">📋 Suporte Jurídico</div>
+        <p>Contratos e documentações revisados por especialistas para sua segurança.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIO -->
+  <section class="form-section">
+    <div class="form-wrap">
+      <h2 class="form-titulo">Anuncie seu imóvel</h2>
+      <p class="form-sub">Quer vender ou alugar seu imóvel? Cadastre suas informações e nossa equipe entrará em contato.
+      </p>
+
+      <!-- AVISO SE NÃO ESTIVER LOGADO -->
+      <div class="aviso-login" id="aviso-login">
+        <p>🔒 Você precisa estar logado para anunciar um imóvel.</p>
+        <div class="btn-links">
+          <a href="login.html" class="btn-primary">Fazer Login</a>
+          <a href="cadastro.html" class="btn-outline">Criar Conta</a>
+        </div>
+      </div>
+
+      <div id="form-anunciar">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="an-nome">Nome Completo</label>
+            <input type="text" id="an-nome" class="form-control" placeholder="Seu nome completo">
+          </div>
+          <div class="form-group">
+            <label for="an-email">E-mail</label>
+            <input type="email" id="an-email" class="form-control" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label for="an-cidade">Cidade / Bairro</label>
+            <input type="text" id="an-cidade" class="form-control" placeholder="Ex: Getúlio Vargas / Centro">
+          </div>
+          <div class="form-group">
+            <label for="an-tel">Telefone</label>
+            <input type="tel" id="an-tel" class="form-control" placeholder="(54) 99999-9999">
+          </div>
+          <div class="form-group">
+            <label for="an-tipo">Tipo de Imóvel</label>
+            <select id="an-tipo" class="form-control">
+              <option value="">Selecione</option>
+              <option>Casa</option>
+              <option>Apartamento</option>
+              <option>Cobertura</option>
+              <option>Terreno</option>
+              <option>Comercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="an-endereco">Endereço do Imóvel</label>
+            <input type="text" id="an-endereco" class="form-control" placeholder="Rua, número, complemento">
+          </div>
+          <div class="form-group">
+            <label for="an-valor">Valor Estimado (R$)</label>
+            <input type="text" id="an-valor" class="form-control" placeholder="Ex: 350.000">
+          </div>
+          <div class="form-group">
+            <label for="an-finalidade">Finalidade</label>
+            <select id="an-finalidade" class="form-control">
+              <option value="">Selecione</option>
+              <option>Venda</option>
+              <option>Locação</option>
+              <option>Venda e Locação</option>
+            </select>
+          </div>
+          <div class="form-group form-full">
+            <label for="an-desc">Descrição do Imóvel</label>
+            <textarea id="an-desc" class="form-control" rows="4"
+              placeholder="Adicione uma breve descrição: área, quartos, diferenciais..."></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label for="an-foto">Adicionar Fotos</label>
+            <input type="file" id="an-foto" class="form-control" accept="image/*" multiple>
+            <p class="form-aviso">Aceitamos JPG, PNG ou WebP. Máximo 5 fotos.</p>
+          </div>
+        </div>
+        <div class="form-erro" id="form-erro"></div>
+        <div style="margin-top:1.5rem; text-align:right;">
+          <button class="btn-primary" id="btn-enviar" onclick="enviarAnuncio()"
+            style="padding: 0.9rem 2.5rem; font-size:1rem;">Enviar →</button>
+        </div>
+      </div>
+
+      <!-- SUCESSO -->
+      <div class="form-sucesso" id="form-sucesso">
+        <div style="font-size:3rem; margin-bottom:1rem;">🎉</div>
+        <h3>Anúncio enviado com sucesso!</h3>
+        <p>Nossa equipe entrará em contato em breve para dar continuidade ao processo de anúncio do seu imóvel.</p>
+        <br>
+        <a href="index.html" class="btn-outline" style="margin-top:1rem;">Voltar ao início</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    let usuarioLogado = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+      if (!usuarioLogado) {
+        // Mostra aviso e desabilita o formulário
+        document.getElementById('aviso-login').style.display = 'block';
+        document.getElementById('btn-enviar').disabled = true;
+        document.getElementById('btn-enviar').style.opacity = '0.4';
+        document.getElementById('btn-enviar').style.cursor = 'not-allowed';
+      } else {
+        // Preenche nome, email e telefone automaticamente
+        document.getElementById('an-nome').value = usuarioLogado.nome || '';
+        document.getElementById('an-email').value = usuarioLogado.email || '';
+        document.getElementById('an-tel').value = usuarioLogado.telefone || '';
+      }
+    });
+
+    async function enviarAnuncio() {
+      if (!usuarioLogado) {
+        alert('Você precisa estar logado para anunciar.');
+        return;
+      }
+
+      const erroEl = document.getElementById('form-erro');
+      const btn = document.getElementById('btn-enviar');
+      erroEl.style.display = 'none';
+
+      // Validar campos obrigatórios
+      const obrig = ['an-nome', 'an-email', 'an-tel', 'an-tipo', 'an-endereco'];
+      let ok = true;
+      obrig.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.style.borderColor = 'var(--vermelho)'; ok = false; }
+        else el.style.borderColor = '';
+      });
+
+      if (!ok) {
+        erroEl.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+        erroEl.style.display = 'block';
+        return;
+      }
+
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+
+      const dados = {
+        usuario_id: usuarioLogado.id,
+        nome: document.getElementById('an-nome').value.trim(),
+        email: document.getElementById('an-email').value.trim(),
+        telefone: document.getElementById('an-tel').value.trim(),
+        tipo: document.getElementById('an-tipo').value,
+        endereco: document.getElementById('an-endereco').value.trim(),
+        cidade: document.getElementById('an-cidade').value.trim(),
+        valor: document.getElementById('an-valor').value.trim(),
+        finalidade: document.getElementById('an-finalidade').value,
+        descricao: document.getElementById('an-desc').value.trim()
+      };
+
+      try {
+        const res = await fetch(`${API}/imoveis`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('form-anunciar').style.display = 'none';
+          document.getElementById('form-sucesso').style.display = 'block';
+        } else {
+          erroEl.textContent = data.erro || 'Erro ao enviar anúncio.';
+          erroEl.style.display = 'block';
+        }
+      } catch (err) {
+        erroEl.textContent = 'Erro ao conectar com o servidor.';
+        erroEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Enviar →';
+        btn.disabled = false;
+      }
+    }
+  </script>
+  <script src="js/mascaras.js"></script>
+</body>
+
+</html>

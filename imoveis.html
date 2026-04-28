@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imóveis – Casa Certa Imobiliária</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, var(--verde-oliva), var(--azul));
+      padding: 3rem 2rem;
+      color: var(--branco);
+      text-align: center;
+    }
+
+    .page-header h1 {
+      color: var(--branco);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+    }
+
+    /* FILTROS AVANÇADOS */
+    .filtros-bar {
+      background: var(--bege);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--sombra);
+      position: sticky;
+      top: 70px;
+      z-index: 100;
+    }
+
+    .filtros-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .filtros-wrap .filtro-grupo {
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .filtros-wrap label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* RESULTADOS */
+    .resultados-section {
+      background: var(--bege-claro);
+      padding: 3rem 2rem;
+      min-height: 400px;
+    }
+
+    .resultados-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .resultados-count {
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+    }
+
+    .resultados-count strong {
+      color: var(--azul);
+      font-size: 1.1rem;
+    }
+
+    .ordenar-select {
+      padding: 0.5rem 1rem;
+      border: 1.5px solid var(--bege-escuro);
+      border-radius: var(--radius);
+      font-family: 'Lato', sans-serif;
+      background: var(--branco);
+      color: var(--azul);
+      cursor: pointer;
+    }
+
+    .cards-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sem-resultados {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--texto-medio);
+    }
+
+    .sem-resultados h3 {
+      color: var(--azul);
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .filtros-bar {
+        position: static;
+      }
+
+      .resultados-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <div class="page-header">
+    <h1>Imóveis</h1>
+    <p>Listagem completa com filtros avançados para você encontrar o imóvel perfeito.</p>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-bar">
+    <div class="filtros-wrap">
+      <div class="filtro-grupo">
+        <label>Finalidade</label>
+        <select id="f-finalidade" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Todas</option>
+          <option value="compra">Compra</option>
+          <option value="aluguel">Aluguel</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Tipo</label>
+        <select id="f-tipo" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="casa">Casa</option>
+          <option value="apartamento">Apartamento</option>
+          <option value="cobertura">Cobertura</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Cidade</label>
+        <select id="f-cidade" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Todas</option>
+          <option value="Curitiba">Curitiba</option>
+          <option value="Porto Alegre">Porto Alegre</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Bairro</label>
+        <select id="f-bairro" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="Centro">Centro</option>
+          <option value="Vila Nova">Vila Nova</option>
+          <option value="Jardim das Flores">Jardim das Flores</option>
+          <option value="Jardim Aurora">Jardim Aurora</option>
+          <option value="Alphaville">Alphaville</option>
+          <option value="Moinhos de Vento">Moinhos de Vento</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Quartos</label>
+        <select id="f-quartos" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Todos</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label>Preço Máx.</label>
+        <select id="f-preco" class="form-control" onchange="aplicarFiltros()">
+          <option value="">Qualquer</option>
+          <option value="300000">até R$ 300.000</option>
+          <option value="500000">até R$ 500.000</option>
+          <option value="800000">até R$ 800.000</option>
+          <option value="1000000">até R$ 1.000.000</option>
+          <option value="5000">até R$ 5.000/mês</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn-primary" onclick="limparFiltros()">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <section class="resultados-section">
+    <div class="resultados-header">
+      <div class="resultados-count"><strong id="count">0</strong> imóveis encontrados</div>
+      <select class="ordenar-select" id="ordenar" onchange="aplicarFiltros()">
+        <option value="padrao">Ordenar por: Padrão</option>
+        <option value="menor-preco">Menor Preço</option>
+        <option value="maior-preco">Maior Preço</option>
+        <option value="maior-area">Maior Área</option>
+      </select>
+    </div>
+    <div class="cards-container cards-grid" id="lista-imoveis">
+      <div class="sem-resultados">
+        <p>Carregando...</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <!--script src="js/dados.js"></script-->
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script let imoveisBanco = []; // variável global para armazenar os imóveis da API></script>
+
+  <script>
+    async function testarAPI() {
+      const res = await fetch('http://localhost:3000/imoveis/publicos');
+      const data = await res.json();
+      console.log("DADOS DO BANCO:", data);
+    }
+    
+
+  testarAPI();
+
+  function aplicarFiltros() {
+  const finalidade = document.getElementById('f-finalidade').value;
+  const tipo = document.getElementById('f-tipo').value;
+  const cidade = document.getElementById('f-cidade').value;
+  const bairro = document.getElementById('f-bairro').value;
+  const quartos = parseInt(document.getElementById('f-quartos').value) || 0;
+  const preco = parseInt(document.getElementById('f-preco').value) || 0;
+  const ordenar = document.getElementById('ordenar').value;
+
+  let lista = imoveisBanco.filter(im => {
+  if (finalidade && im.finalidade !== finalidade) return false;
+  if (tipo && im.tipo !== tipo) return false;
+  if (cidade && im.cidade !== cidade) return false;
+  if (bairro && im.bairro !== bairro) return false;
+  if (quartos && im.quartos < quartos) return false; if (preco && im.preco> preco) return false;
+    return true;
+    });
+
+    if (ordenar === 'menor-preco') lista.sort((a, b) => a.preco - b.preco);
+    else if (ordenar === 'maior-preco') lista.sort((a, b) => b.preco - a.preco);
+    else if (ordenar === 'maior-area') lista.sort((a, b) => b.area - a.area);
+
+    document.getElementById('count').textContent = lista.length;
+    const container = document.getElementById('lista-imoveis');
+
+    if (lista.length === 0) {
+    container.innerHTML = `<div class="sem-resultados">
+      <h3>Nenhum imóvel encontrado</h3>
+    </div>`;
+    } else {
+    container.innerHTML = lista.map(im => `
+    <div class="card">
+      <h3>${im.tipo}</h3>
+      <p>${im.cidade}</p>
+      <p>${im.valor ? im.valor : 'Preço não informado'}</p>
+      <p>${im.descricao || ''}</p>
+    </div>
+    `).join('');
+    }
+    }
+
+    function limparFiltros() {
+    ['f-finalidade', 'f-tipo', 'f-cidade', 'f-bairro', 'f-quartos', 'f-preco', 'ordenar']
+    .forEach(id => document.getElementById(id).value = '');
+    aplicarFiltros();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('finalidade')) document.getElementById('f-finalidade').value = params.get('finalidade');
+    if (params.get('tipo')) document.getElementById('f-tipo').value = params.get('tipo');
+    if (params.get('cidade')) document.getElementById('f-cidade').value = params.get('cidade');
+    if (params.get('bairro')) document.getElementById('f-bairro').value = params.get('bairro');
+    aplicarFiltros();
+    });
+    </script>
+</body>
+
+</html>

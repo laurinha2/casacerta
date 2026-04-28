@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/config.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { background: var(--bege-claro); font-family: 'Lato', sans-serif; margin: 0; }
+
+    .admin-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--bege-claro);
+    }
+
+    .admin-login-box { text-align: center; max-width: 440px; width: 100%; }
+
+    .login-avatar {
+      width: 90px; height: 90px;
+      background: var(--azul);
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .admin-login-box h1 { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 2.2rem; margin-bottom: 0.4rem; }
+    .admin-login-box p { color: var(--texto-medio); font-size: 0.92rem; margin-bottom: 2.5rem; font-weight: 700; }
+
+    .admin-login-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+    .admin-login-form .form-control { background: var(--branco); padding: 0.9rem 1.2rem; font-size: 1rem; }
+
+    .btn-entrar-admin {
+      padding: 0.9rem; font-size: 1rem;
+      border: 2px solid var(--vermelho); background: transparent; color: var(--vermelho);
+      font-weight: 700; border-radius: var(--radius); cursor: pointer;
+      font-family: 'Lato', sans-serif; transition: var(--transition);
+    }
+    .btn-entrar-admin:hover { background: var(--vermelho); color: var(--branco); }
+    .btn-entrar-admin:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .login-erro {
+      display: none; background: #fdecea; color: var(--vermelho);
+      padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.88rem; text-align: center;
+    }
+
+    .admin-painel { display: none; }
+
+    .admin-header {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--verde-oliva) 100%);
+      color: var(--branco); padding: 1.2rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .admin-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0; }
+    .admin-header p { font-size: 0.8rem; opacity: 0.7; margin: 0; }
+
+    .btn-sair {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3);
+      color: var(--branco); padding: 0.5rem 1.2rem; border-radius: var(--radius);
+      cursor: pointer; font-size: 0.85rem; font-family: 'Lato', sans-serif;
+      font-weight: 700; transition: var(--transition);
+    }
+    .btn-sair:hover { background: rgba(255,255,255,0.22); }
+
+    .admin-abas-wrap { background: var(--branco); border-bottom: 2px solid var(--bege); position: sticky; top: 0; z-index: 50; }
+    .admin-abas { display: flex; max-width: 1200px; margin: 0 auto; padding: 0 2rem; overflow-x: auto; }
+
+    .admin-aba-btn {
+      padding: 1rem 1.4rem; border: none; background: transparent;
+      color: var(--texto-medio); font-family: 'Lato', sans-serif;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .admin-aba-btn.active { color: var(--azul); border-bottom-color: var(--vermelho); }
+    .admin-aba-btn:hover { color: var(--azul); }
+
+    .admin-content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+    .admin-painel-aba { display: none; }
+    .admin-painel-aba.active { display: block; }
+
+    .admin-card { background: var(--branco); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .admin-card h3 { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 1.3rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--bege); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.82rem; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-group select { padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-size: 0.95rem; font-family: 'Lato', sans-serif; background: var(--branco); color: var(--texto-escuro); }
+
+    .form-erro-contrato { display: none; background: #fdecea; color: var(--vermelho); padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.88rem; margin-top: 0.5rem; }
+
+    .btn-salvar { margin-top: 1.2rem; padding: 0.85rem 2rem; background: var(--azul); color: var(--branco); border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Lato', sans-serif; transition: var(--transition); }
+    .btn-salvar:hover { opacity: 0.85; }
+    .btn-salvar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .tabela-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: var(--azul); color: var(--branco); padding: 0.8rem 1rem; text-align: left; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3px; }
+    td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; color: var(--texto-escuro); vertical-align: middle; }
+    tr:hover td { background: #f9f6f0; }
+
+    .badge { padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .badge-ativo     { background: #e6f4ea; color: #2e7d32; }
+    .badge-encerrado { background: #fdecea; color: #c62828; }
+    .badge-pendente  { background: #fff8e1; color: #f57f17; }
+
+    .btn-excluir { background: transparent; border: 1px solid var(--vermelho); color: var(--vermelho); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); }
+    .btn-excluir:hover { background: var(--vermelho); color: var(--branco); }
+
+    .sem-dados { text-align: center; color: var(--texto-medio); padding: 2.5rem; font-size: 0.9rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--branco); border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--azul); display: flex; flex-direction: column; gap: 0.3rem; }
+    .stat-card.vermelho { border-left-color: var(--vermelho); }
+    .stat-card.verde    { border-left-color: #2e7d32; }
+    .stat-numero { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--azul); font-weight: 700; line-height: 1; }
+    .stat-label { font-size: 0.82rem; color: var(--texto-medio); text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid .full { grid-column: 1; }
+      .admin-header { flex-wrap: wrap; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="admin-login" id="tela-login">
+    <div class="admin-login-box fade-up">
+      <div class="login-avatar">🏢</div>
+      <h1>Painel Admin</h1>
+      <p>Acesso restrito à equipe Casa Certa</p>
+      <div class="admin-login-form">
+        <input type="text" id="adm-usuario" class="form-control" placeholder="Usuário">
+        <input type="password" id="adm-senha" class="form-control" placeholder="Senha">
+        <div class="login-erro" id="adm-erro"></div>
+        <button class="btn-entrar-admin" id="btn-adm-login" onclick="loginAdmin()">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAINEL -->
+  <div class="admin-painel" id="tela-painel">
+
+    <div class="admin-header">
+      <div>
+        <h2>Casa Certa — Painel Administrativo</h2>
+        <p>Gerencie contratos, anúncios e usuários</p>
+      </div>
+      <button class="btn-sair" onclick="sairAdmin()">↩ Sair</button>
+    </div>
+
+    <div class="admin-abas-wrap">
+      <div class="admin-abas">
+        <button class="admin-aba-btn active" onclick="trocarAba('contratos', this)">📄 Contratos</button>
+        <button class="admin-aba-btn" onclick="trocarAba('anuncios', this)">🏠 Anúncios</button>
+        <button class="admin-aba-btn" onclick="trocarAba('usuarios', this)">👥 Usuários</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- ABA CONTRATOS -->
+      <div class="admin-painel-aba active" id="aba-contratos">
+        <div class="stats-grid" id="stats-contratos"></div>
+        <div class="admin-card">
+          <h3>Novo Contrato</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Usuário (cliente) *</label>
+              <select id="ct-usuario" class="form-control"><option value="">Selecione o cliente...</option></select>
+            </div>
+            <div class="form-group">
+              <label>Tipo *</label>
+              <select id="ct-tipo" class="form-control">
+                <option value="aluguel">Aluguel</option>
+                <option value="compra">Compra</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Imóvel *</label>
+              <input type="text" id="ct-imovel" class="form-control" placeholder="Ex: Rua das Flores, 123 – Centro">
+            </div>
+            <div class="form-group">
+              <label>Locatário / Comprador *</label>
+              <input type="text" id="ct-locatario" class="form-control" placeholder="Nome completo">
+            </div>
+            <div class="form-group">
+              <label>Avalista</label>
+              <input type="text" id="ct-avalista" class="form-control" placeholder="Nome completo (opcional)">
+            </div>
+            <div class="form-group">
+              <label>Valor (R$) *</label>
+              <input type="number" id="ct-valor" class="form-control" placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Status *</label>
+              <select id="ct-status" class="form-control">
+                <option value="ativo">Ativo</option>
+                <option value="pendente">Pendente</option>
+                <option value="encerrado">Encerrado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data de Início *</label>
+              <input type="date" id="ct-inicio" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Data de Fim</label>
+              <input type="date" id="ct-fim" class="form-control">
+            </div>
+          </div>
+          <div class="form-erro-contrato" id="erro-contrato"></div>
+          <button class="btn-salvar" id="btn-salvar" onclick="salvarContrato()">Salvar Contrato</button>
+        </div>
+        <div class="admin-card">
+          <h3>Contratos Cadastrados</h3>
+          <div class="tabela-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Cliente</th><th>Tipo</th><th>Imóvel</th><th>Locatário</th><th>Avalista</th><th>Valor</th><th>Início</th><th>Fim</th><th>Status</th><th>Ação</th></tr>
+              </thead>
+              <tbody id="tbody-contratos"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA ANÚNCIOS -->
+      <div class="admin-painel-aba" id="aba-anuncios">
+        <div class="stats-grid" id="stats-anuncios"></div>
+        <div class="admin-card">
+          <h3>Anúncios Recebidos</h3>
+          <div class="tabela-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereço</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Ação</th></tr>
+              </thead>
+              <tbody id="tbody-anuncios"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA USUÁRIOS -->
+      <div class="admin-painel-aba" id="aba-usuarios">
+        <div class="stats-grid" id="stats-usuarios"></div>
+        <div class="admin-card">
+          <h3>Usuários Cadastrados</h3>
+          <div class="tabela-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>CPF / CNPJ</th></tr>
+              </thead>
+              <tbody id="tbody-usuarios"><tr><td colspan="5" class="sem-dados">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function trocarAba(id, btn) {
+      document.querySelectorAll('.admin-painel-aba').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.admin-aba-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('aba-' + id).classList.add('active');
+      btn.classList.add('active');
+      if (id === 'anuncios') carregarAnuncios();
+    }
+
+    async function loginAdmin() {
+      const usuario = document.getElementById('adm-usuario').value.trim();
+      const senha = document.getElementById('adm-senha').value.trim();
+      const erroEl = document.getElementById('adm-erro');
+      const btn = document.getElementById('btn-adm-login');
+
+      erroEl.style.display = 'none';
+      if (!usuario || !senha) { erroEl.textContent = 'Preencha todos os campos.'; erroEl.style.display = 'block'; return; }
+
+      btn.textContent = 'Entrando...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API}/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, senha })
+        });
+        const data = await res.json();
+        if (res.ok) { sessionStorage.setItem('adminLogado', 'true'); mostrarPainel(); }
+        else { erroEl.textContent = data.erro || 'Credenciais inválidas.'; erroEl.style.display = 'block'; }
+      } catch (err) {
+        erroEl.textContent = 'Erro ao conectar com o servidor.';
+        erroEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Entrar';
+        btn.disabled = false;
+      }
+    }
+
+    function sairAdmin() {
+      sessionStorage.removeItem('adminLogado');
+      document.getElementById('tela-painel').style.display = 'none';
+      document.getElementById('tela-login').style.display = 'flex';
+    }
+
+    async function mostrarPainel() {
+      document.getElementById('tela-login').style.display = 'none';
+      document.getElementById('tela-painel').style.display = 'block';
+      await carregarUsuarios();
+      await carregarContratos();
+    }
+
+    if (sessionStorage.getItem('adminLogado') === 'true') mostrarPainel();
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('tela-login').style.display !== 'none') loginAdmin();
+    });
+
+    // USUÁRIOS
+    let listaUsuarios = [];
+
+    async function carregarUsuarios() {
+      try {
+        const res = await fetch(`${API}/usuarios`);
+        listaUsuarios = await res.json();
+
+        const select = document.getElementById('ct-usuario');
+        select.innerHTML = '<option value="">Selecione o cliente...</option>';
+        listaUsuarios.forEach(u => {
+          select.innerHTML += `<option value="${u.id}">${u.nome} (${u.email})</option>`;
+        });
+
+        document.getElementById('stats-usuarios').innerHTML = `
+          <div class="stat-card">
+            <div class="stat-numero">${listaUsuarios.length}</div>
+            <div class="stat-label">Usuários cadastrados</div>
+          </div>`;
+
+        const tbody = document.getElementById('tbody-usuarios');
+        if (listaUsuarios.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="sem-dados">Nenhum usuário cadastrado.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = listaUsuarios.map(u => `
+          <tr>
+            <td>${u.id}</td>
+            <td><strong>${u.nome}</strong></td>
+            <td>${u.email}</td>
+            <td>${u.telefone || '—'}</td>
+            <td>${u.cpf_cnpj || '—'}</td>
+          </tr>`).join('');
+      } catch (err) { console.error('Erro ao carregar usuários:', err); }
+    }
+
+    // CONTRATOS
+    async function carregarContratos() {
+      try {
+        const res = await fetch(`${API}/admin/contratos`);
+        const contratos = await res.json();
+        const tbody = document.getElementById('tbody-contratos');
+
+        const ativos = contratos.filter(c => c.status === 'ativo').length;
+        const pendentes = contratos.filter(c => c.status === 'pendente').length;
+        const encerrados = contratos.filter(c => c.status === 'encerrado').length;
+
+        document.getElementById('stats-contratos').innerHTML = `
+          <div class="stat-card"><div class="stat-numero">${contratos.length}</div><div class="stat-label">Total de contratos</div></div>
+          <div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">${ativos}</div><div class="stat-label">Ativos</div></div>
+          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>
+          <div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">${encerrados}</div><div class="stat-label">Encerrados</div></div>`;
+
+        if (contratos.length === 0) { tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum contrato cadastrado ainda.</td></tr>'; return; }
+
+        tbody.innerHTML = contratos.map(c => `
+          <tr>
+            <td>${c.id}</td>
+            <td><strong>${c.nome_usuario || '—'}</strong><br><small style="color:var(--texto-medio)">${c.email_usuario || ''}</small></td>
+            <td>${c.tipo}</td>
+            <td>${c.imovel}</td>
+            <td>${c.locatario}</td>
+            <td>${c.avalista || '—'}</td>
+            <td>R$ ${Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td>${formatarData(c.data_inicio)}</td>
+            <td>${c.data_fim ? formatarData(c.data_fim) : '—'}</td>
+            <td><span class="badge badge-${c.status}">${c.status}</span></td>
+            <td><button class="btn-excluir" onclick="excluirContrato(${c.id})">Excluir</button></td>
+          </tr>`).join('');
+      } catch (err) { console.error('Erro ao carregar contratos:', err); }
+    }
+
+    // ANÚNCIOS
+    async function carregarAnuncios() {
+      try {
+        const res = await fetch(`${API}/admin/imoveis`);
+        const anuncios = await res.json();
+        const tbody = document.getElementById('tbody-anuncios');
+
+        const pendentes = anuncios.filter(a => a.status === 'pendente').length;
+
+        document.getElementById('stats-anuncios').innerHTML = `
+          <div class="stat-card"><div class="stat-numero">${anuncios.length}</div><div class="stat-label">Total de anúncios</div></div>
+          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>`;
+
+        if (anuncios.length === 0) { tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anúncio recebido ainda.</td></tr>'; return; }
+
+        tbody.innerHTML = anuncios.map(a => `
+          <tr>
+            <td>${a.id}</td>
+            <td><strong>${a.nome}</strong><br><small style="color:var(--texto-medio)">${a.nome_usuario || ''}</small></td>
+            <td>${a.email}<br><small>${a.telefone}</small></td>
+            <td>${a.tipo || '—'}</td>
+            <td>${a.endereco}</td>
+            <td>${a.cidade || '—'}</td>
+            <td>${a.valor || '—'}</td>
+            <td>${a.finalidade || '—'}</td>
+            <td>${a.data_envio || '—'}</td>
+            <td><span class="badge badge-${a.status}">${a.status}</span></td>
+            <td><button class="btn-excluir" onclick="excluirAnuncio(${a.id})">Excluir</button></td>
+          </tr>`).join('');
+      } catch (err) { console.error('Erro ao carregar anúncios:', err); }
+    }
+
+    // SALVAR CONTRATO
+    async function salvarContrato() {
+      const erroEl = document.getElementById('erro-contrato');
+      const btn = document.getElementById('btn-salvar');
+      erroEl.style.display = 'none';
+
+      const dados = {
+        usuario_id:  document.getElementById('ct-usuario').value,
+        tipo:        document.getElementById('ct-tipo').value,
+        imovel:      document.getElementById('ct-imovel').value.trim(),
+        locatario:   document.getElementById('ct-locatario').value.trim(),
+        avalista:    document.getElementById('ct-avalista').value.trim(),
+        valor:       document.getElementById('ct-valor').value,
+        data_inicio: document.getElementById('ct-inicio').value,
+        data_fim:    document.getElementById('ct-fim').value,
+        status:      document.getElementById('ct-status').value
+      };
+
+      if (!dados.usuario_id || !dados.imovel || !dados.locatario || !dados.valor || !dados.data_inicio) {
+        erroEl.textContent = 'Preencha todos os campos obrigatórios (*).';
+        erroEl.style.display = 'block'; return;
+      }
+
+      btn.textContent = 'Salvando...'; btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API}/contratos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          ['ct-usuario','ct-imovel','ct-locatario','ct-avalista','ct-valor','ct-inicio','ct-fim'].forEach(id => document.getElementById(id).value = '');
+          document.getElementById('ct-status').value = 'ativo';
+          carregarContratos();
+        } else {
+          erroEl.textContent = data.erro || 'Erro ao salvar contrato.';
+          erroEl.style.display = 'block';
+        }
+      } catch (err) {
+        erroEl.textContent = 'Erro ao conectar com o servidor.';
+        erroEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Salvar Contrato'; btn.disabled = false;
+      }
+    }
+
+    async function excluirContrato(id) {
+      if (!confirm('Tem certeza que deseja excluir este contrato?')) return;
+      try {
+        await fetch(`${API}/contratos/${id}`, { method: 'DELETE' });
+        carregarContratos();
+      } catch (err) { alert('Erro ao excluir contrato.'); }
+    }
+
+    async function excluirAnuncio(id) {
+      if (!confirm('Tem certeza que deseja excluir este anúncio?')) return;
+      try {
+        await fetch(`${API}/imoveis/${id}`, { method: 'DELETE' });
+        carregarAnuncios();
+      } catch (err) { alert('Erro ao excluir anúncio.'); }
+    }
+
+    function formatarData(data) {
+      if (!data) return '—';
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+  </script>
+</body>
+</html>

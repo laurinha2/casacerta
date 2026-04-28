@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Área do Cliente – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background: var(--bege-claro);
+    }
+
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--bege-claro);
+    }
+
+    .login-box {
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .login-avatar {
+      width: 90px;
+      height: 90px;
+      background: var(--bege-escuro);
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: var(--branco);
+    }
+
+    .login-titulo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-sub {
+      color: var(--texto-medio);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .login-form .form-control {
+      background: var(--branco);
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+    }
+
+    .btn-entrar {
+      padding: 0.9rem;
+      font-size: 1rem;
+      border: 2px solid var(--vermelho);
+      background: transparent;
+      color: var(--vermelho);
+      font-weight: 700;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+    }
+
+    .btn-entrar:hover {
+      background: var(--vermelho);
+      color: var(--branco);
+    }
+
+    .login-links {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+    }
+
+    .login-links a {
+      color: var(--azul);
+      text-decoration: underline;
+    }
+
+    .login-links a:hover {
+      color: var(--vermelho);
+    }
+
+    .login-erro {
+      display: none;
+      background: #fdecea;
+      color: var(--vermelho);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <main class="login-page">
+    <div class="login-box fade-up">
+      <div class="login-avatar">👤</div>
+      <h1 class="login-titulo">Área do Cliente</h1>
+      <p class="login-sub">Acesse sua conta para visualizar documentos, boletos e solicitar suporte.</p>
+
+      <div class="login-form">
+        <input type="text" id="login-user" class="form-control" placeholder="E-mail ou Telefone">
+        <input type="password" id="login-senha" class="form-control" placeholder="Senha">
+        <div class="login-erro" id="login-erro">E-mail/telefone ou senha incorretos.</div>
+        <button class="btn-entrar" onclick="fazerLogin()">Entrar</button>
+      </div>
+
+      <div class="login-links">
+        <span><a href="recuperar.html">Esqueci minha Senha</a></span>
+        <span><a href="cadastro.html">Criar Conta</a></span>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+
+  <script>
+    async function fazerLogin() {
+      const user = document.getElementById('login-user').value.trim();
+      const senha = document.getElementById('login-senha').value.trim();
+      const erroEl = document.getElementById('login-erro');
+      const btnEntrar = document.querySelector('.btn-entrar');
+
+      erroEl.style.display = 'none';
+
+      if (!user || !senha) {
+        erroEl.textContent = 'Preencha todos os campos.';
+        erroEl.style.display = 'block';
+        return;
+      }
+
+      btnEntrar.textContent = 'Entrando...';
+      btnEntrar.disabled = true;
+
+      try {
+      const response = await fetch(`${API}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user, senha: senha })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('usuarioLogado', JSON.stringify(data.usuario));
+          window.location.href = 'perfil.html';
+        } else {
+          erroEl.textContent = data.erro || 'E-mail ou senha incorretos.';
+          erroEl.style.display = 'block';
+        }
+
+      } catch (err) {
+        console.error(err);
+        erroEl.textContent = 'Erro ao conectar com o servidor.';
+        erroEl.style.display = 'block';
+      } finally {
+        btnEntrar.textContent = 'Entrar';
+        btnEntrar.disabled = false;
+      }
+    }
+
+    // Enter para logar
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        fazerLogin();
+      }
+    });
+  </script>
+
+</body>
+</html>

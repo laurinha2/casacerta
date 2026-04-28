@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .cadastro-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      background: var(--bege-claro);
+    }
+
+    .cadastro-box {
+      max-width: 620px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cadastro-titulo {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cadastro-sub {
+      color: var(--texto-medio);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .cadastro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+      margin: 0.5rem 0;
+    }
+
+    .form-check input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--vermelho);
+    }
+
+    .btn-criar {
+      padding: 0.9rem 3rem;
+      font-size: 1rem;
+      border: 2px solid var(--vermelho);
+      background: transparent;
+      color: var(--vermelho);
+      font-weight: 700;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+      margin-top: 1rem;
+    }
+
+    .btn-criar:hover {
+      background: var(--vermelho);
+      color: var(--branco);
+    }
+
+    .cadastro-links {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--texto-medio);
+    }
+
+    .cadastro-links a {
+      color: var(--azul);
+      text-decoration: underline;
+      display: block;
+    }
+
+    .cadastro-links a:hover {
+      color: var(--vermelho);
+    }
+
+    .erro-msg {
+      color: var(--vermelho);
+      font-size: 0.82rem;
+      margin-top: 0.2rem;
+      display: none;
+    }
+
+    @media (max-width: 580px) {
+      .cadastro-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <main class="cadastro-page">
+    <div class="cadastro-box fade-up">
+      <h1 class="cadastro-titulo">Cadastro</h1>
+      <p class="cadastro-sub">Crie sua conta para acessar boletos, documentos e suporte.</p>
+
+      <div class="cadastro-grid">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" id="cad-nome" class="form-control" placeholder="Nome Completo">
+        </div>
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="tel" id="cad-tel" class="form-control" placeholder="(54) 99999-9999">
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="cad-email" class="form-control" placeholder="E-mail">
+        </div>
+        <div class="form-group">
+          <label>CPF ou CNPJ</label>
+          <input type="text" id="cad-cpf" class="form-control" placeholder="CPF ou CNPJ">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="cad-senha" class="form-control" placeholder="Senha (mín. 6 caracteres)">
+        </div>
+        <div class="form-group">
+          <label>Confirmar Senha</label>
+          <input type="password" id="cad-confirma" class="form-control" placeholder="Confirmar Senha">
+        </div>
+      </div>
+
+      <div class="form-check" style="margin-top:1rem; justify-content:center;">
+        <input type="checkbox" id="cad-termos">
+        <label for="cad-termos">Aceito os <a href="#" style="color:var(--vermelho);">termos de uso</a> e a <a href="#"
+            style="color:var(--vermelho);">política de privacidade</a></label>
+      </div>
+
+      <div>
+        <button class="btn-criar" onclick="criarConta()">Criar Conta</button>
+      </div>
+
+      <div class="cadastro-links">
+        <span>Já Possui uma Conta?</span>
+        <a href="login.html">Entrar</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script src="js/mascaras.js"></script>s
+  <script>
+    function criarConta() {
+      const nome = document.getElementById('cad-nome').value.trim();
+      const tel = document.getElementById('cad-tel').value.trim();
+      const email = document.getElementById('cad-email').value.trim();
+      const cpf = document.getElementById('cad-cpf').value.trim();
+      const senha = document.getElementById('cad-senha').value;
+      const confirma = document.getElementById('cad-confirma').value;
+      const termos = document.getElementById('cad-termos').checked;
+
+      // Campos obrigatórios
+      if (!nome || !email || !senha || !tel || !cpf) {
+        alert('Preencha todos os campos obrigatórios.'); return;
+      }
+
+      // Validar e-mail
+      if (!validarEmail(email)) {
+        alert('Informe um e-mail válido. Ex: nome@email.com'); return;
+      }
+
+      // Validar telefone
+      if (!validarTelefone(tel)) {
+        alert('Informe um telefone válido com DDD. Ex: (54) 99999-9999'); return;
+      }
+
+      // Validar CPF (só valida se tiver 11 dígitos — ignora CNPJ)
+      const cpfLimpo = cpf.replace(/\D/g, '');
+      if (cpfLimpo.length === 11 && !validarCPF(cpf)) {
+        alert('CPF inválido. Verifique os números digitados.'); return;
+      }
+
+      // Validar senha
+      if (senha.length < 6) {
+        alert('A senha deve ter pelo menos 6 caracteres.'); return;
+      }
+
+      // Confirmar senha
+      if (senha !== confirma) {
+        alert('As senhas não coincidem.'); return;
+      }
+
+      // Termos
+      if (!termos) {
+        alert('Você precisa aceitar os termos para continuar.'); return;
+      }
+
+      // Verificar e-mail duplicado
+      // Enviar para o backend
+     fetch(`${API}/usuarios`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome,
+          email,
+          telefone: tel,
+          cpf_cnpj: cpf,
+          senha
+        })
+      })
+        .then(async response => {
+          const data = await response.json();
+          if (!response.ok) {
+            alert(data.erro || 'Erro ao cadastrar. Tente novamente.');
+            return;
+          }
+          alert('Conta criada com sucesso! Faça login para acessar sua conta.');
+          window.location.href = 'login.html';
+        })
+        .catch(error => {
+          console.error('Erro ao cadastrar:', error);
+          alert('Erro ao conectar com o servidor. Verifique se o backend está rodando.');
+        });
+    }
+  </script>
+ 
+</body>
+
+</html>

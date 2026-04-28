@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa Certa Imobiliária – Encontre seu Lar</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content fade-up">
+      <span class="hero-tag">Projeto UC14 – Laura</span>
+      <h1>Encontre<br><em>seu lar</em></h1>
+      <p class="hero-sub">Compra, venda e aluguel com segurança e praticidade. Imóveis selecionados para quem busca conforto e tradição.</p>
+      <div class="hero-btns">
+        <a href="imoveis.html" class="btn-primary">Ver Imóveis</a>
+        <a href="financiamento.html" class="btn-hero-outline">Simular Financiamento</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BUSCA RÁPIDA ===== -->
+  <section class="busca-rapida">
+    <div class="busca-inner">
+      <div class="busca-tabs">
+        <button class="tab-btn active" data-finalidade="compra" onclick="selecionarTab(this)">Quero Comprar</button>
+        <button class="tab-btn" data-finalidade="anunciar" onclick="selecionarTab(this)">Quero Anunciar</button>
+        <button class="tab-btn" data-finalidade="aluguel" onclick="selecionarTab(this)">Aluguel</button>
+        <button class="tab-btn" data-finalidade="planta" onclick="selecionarTab(this)">Imóveis na Planta</button>
+      </div>
+      <div class="busca-filtros">
+        <div class="filtro-grupo">
+          <label>O que Deseja?</label>
+          <select id="busca-tipo" class="form-control">
+            <option value="">Selecione</option>
+            <option value="casa">Casa</option>
+            <option value="apartamento">Apartamento</option>
+            <option value="cobertura">Cobertura</option>
+            <option value="terreno">Terreno</option>
+            <option value="comercial">Comercial</option>
+          </select>
+        </div>
+        <div class="filtro-grupo">
+          <label>Tipo de Imóvel</label>
+          <select id="busca-subtipo" class="form-control">
+            <option value="">Selecione</option>
+            <option value="residencial">Residencial</option>
+            <option value="comercial">Comercial</option>
+          </select>
+        </div>
+        <div class="filtro-grupo">
+          <label>Cidade</label>
+          <select id="busca-cidade" class="form-control">
+            <option value="">Selecione</option>
+            <option value="Curitiba">Curitiba</option>
+            <option value="Porto Alegre">Porto Alegre</option>
+          </select>
+        </div>
+        <div class="filtro-grupo">
+          <label>Bairro</label>
+          <select id="busca-bairro" class="form-control">
+            <option value="">Selecione</option>
+            <option value="Centro">Centro</option>
+            <option value="Vila Nova">Vila Nova</option>
+            <option value="Jardim das Flores">Jardim das Flores</option>
+            <option value="Jardim Aurora">Jardim Aurora</option>
+            <option value="Alphaville">Alphaville</option>
+            <option value="Moinhos de Vento">Moinhos de Vento</option>
+          </select>
+        </div>
+        <div class="filtro-acoes">
+          <button class="btn-primary" onclick="buscar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Buscar
+          </button>
+          <button class="btn-secondary" onclick="verTodos()">+ Filtros</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features-section">
+    <div class="container">
+      <div class="features-grid">
+
+        <!-- Card 1: Financiamento -->
+        <div class="feature-card fade-up">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="2.5" fill="none"/>
+              <line x1="6" y1="18" x2="42" y2="18" stroke="currentColor" stroke-width="2.5"/>
+              <rect x="12" y="24" width="5" height="8" rx="1" fill="currentColor" opacity="0.35"/>
+              <rect x="21.5" y="20" width="5" height="12" rx="1" fill="currentColor" opacity="0.6"/>
+              <rect x="31" y="16" width="5" height="16" rx="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Simulação de Financiamento</h3>
+          <p>Calcule uma estimativa de parcelas com base no valor do imóvel, entrada e prazo de pagamento — sem sair de casa.</p>
+          <a href="financiamento.html" class="feature-link">
+            Simular agora
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <!-- Card 2: Corretor -->
+        <div class="feature-card fade-up-2">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 8h30a2 2 0 0 1 2 2v20a2 2 0 0 1-2 2H16l-9 7V10a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+              <circle cx="17" cy="20" r="2.5" fill="currentColor"/>
+              <circle cx="24" cy="20" r="2.5" fill="currentColor"/>
+              <circle cx="31" cy="20" r="2.5" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>Contato Direto com Corretor</h3>
+          <p>Envie mensagens, tire dúvidas e solicite mais informações sobre qualquer imóvel de maneira prática e rápida.</p>
+          <a href="contato.html" class="feature-link">
+            Falar com corretor
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <!-- Card 3: Mapa -->
+        <div class="feature-card fade-up-3">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 6L6 12v30l11-6 14 6 11-6V6L31 12 17 6z" stroke="currentColor" stroke-width="2.5" fill="none"/>
+              <line x1="17" y1="6" x2="17" y2="36" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="31" y1="12" x2="31" y2="42" stroke="currentColor" stroke-width="2.5"/>
+              <circle cx="24" cy="22" r="3" fill="currentColor" opacity="0.5"/>
+            </svg>
+          </div>
+          <h3>Visualização no Mapa</h3>
+          <p>Veja a localização exata do imóvel no mapa, analise a região, os acessos e a proximidade com serviços essenciais.</p>
+          <a href="imoveis.html" class="feature-link">
+            Ver no mapa
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DESTAQUES ===== -->
+  <section class="destaques-section">
+    <div class="container">
+      <div class="destaques-header">
+        <div>
+          <h2 class="section-title" style="text-align:left; margin-bottom:0.4rem;">Imóveis em Destaque</h2>
+          <p class="section-subtitle" style="text-align:left; margin:0;">Selecionados para oferecer conforto, boa localização e ótimo custo-benefício.</p>
+        </div>
+        <a href="imoveis.html" class="btn-outline">Ver todos →</a>
+      </div>
+      <div class="cards-grid" id="cards-destaque"></div>
+    </div>
+  </section>
+
+  <!-- ===== NUMEROS ===== -->
+  <section class="numeros-section">
+    <div class="container numeros-grid">
+      <div class="numero-item">
+        <span class="numero-val">+200</span>
+        <span class="numero-label">Imóveis negociados</span>
+      </div>
+      <div class="numero-sep"></div>
+      <div class="numero-item">
+        <span class="numero-val">15 anos</span>
+        <span class="numero-label">De experiência no mercado</span>
+      </div>
+      <div class="numero-sep"></div>
+      <div class="numero-item">
+        <span class="numero-val">98%</span>
+        <span class="numero-label">Clientes satisfeitos</span>
+      </div>
+      <div class="numero-sep"></div>
+      <div class="numero-item">
+        <span class="numero-val">CRECI</span>
+        <span class="numero-label">21.785J – Certificado</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-anunciar">
+    <div class="cta-content">
+      <h2>Quer anunciar seu imóvel?</h2>
+      <p>Cadastre seu imóvel e alcance compradores e locatários em todo o Brasil com atendimento especializado.</p>
+      <a href="anunciar.html" class="btn-primary">Anunciar agora</a>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('cards-destaque');
+      const destaques = imoveis.filter(im => im.destaque);
+      container.innerHTML = destaques.map(renderCard).join('');
+    });
+
+    let finalidadeSelecionada = 'compra';
+    function selecionarTab(btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      finalidadeSelecionada = btn.dataset.finalidade;
+      if (finalidadeSelecionada === 'anunciar') window.location.href = 'anunciar.html';
+      if (finalidadeSelecionada === 'planta') window.location.href = 'planta.html';
+      if (finalidadeSelecionada === 'aluguel') window.location.href = 'aluguel.html';
+    }
+
+    function buscar() {
+      const tipo = document.getElementById('busca-tipo').value;
+      const cidade = document.getElementById('busca-cidade').value;
+      const bairro = document.getElementById('busca-bairro').value;
+      const params = new URLSearchParams();
+      if (finalidadeSelecionada && finalidadeSelecionada !== 'anunciar' && finalidadeSelecionada !== 'planta') params.set('finalidade', finalidadeSelecionada);
+      if (tipo) params.set('tipo', tipo);
+      if (cidade) params.set('cidade', cidade);
+      if (bairro) params.set('bairro', bairro);
+      window.location.href = 'imoveis.html?' + params.toString();
+    }
+
+    function verTodos() { window.location.href = 'imoveis.html'; }
+  </script>
+</body>
+</html>

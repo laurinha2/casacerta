@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulação de Financiamento – Casa Certa</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .fin-section {
+      background: var(--bege-claro);
+      padding: 4rem 2rem;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .fin-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .fin-content h1 {
+      color: var(--vermelho);
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      margin-bottom: 1rem;
+      line-height: 1.25;
+    }
+
+    .fin-content p {
+      color: var(--texto-medio);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .fin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .fin-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .aviso {
+      font-size: 0.78rem;
+      color: var(--texto-medio);
+      line-height: 1.5;
+    }
+
+    /* RESULTADO */
+    .resultado-box {
+      display: none;
+      background: var(--azul);
+      color: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-top: 1.5rem;
+      box-shadow: var(--sombra-forte);
+    }
+
+    .resultado-box h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--bege-claro);
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    .resultado-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .resultado-item:last-child {
+      border-bottom: none;
+    }
+
+    .resultado-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .resultado-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--branco);
+    }
+
+    .resultado-val.destaque {
+      font-size: 1.4rem;
+      color: var(--bege-claro);
+    }
+
+    .fin-img {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--sombra-forte);
+    }
+
+    .fin-img img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+      .fin-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .fin-img {
+        display: none;
+      }
+
+      .fin-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <section class="fin-section">
+    <div class="fin-wrap">
+      <div>
+        <div class="fin-content">
+          <h1>Simule seu financiamento sem sair de casa</h1>
+          <p>Calcule parcelas, prazos e taxas para planejar a compra do seu imóvel.</p>
+        </div>
+
+        <div class="fin-form">
+          <div class="fin-row">
+            <div class="form-group">
+              <label>Valor do imóvel (R$)</label>
+              <input type="number" id="fin-valor" class="form-control" placeholder="Ex: 350000" min="0">
+            </div>
+            <div class="form-group">
+              <label>Entrada (R$)</label>
+              <input type="number" id="fin-entrada" class="form-control" placeholder="Ex: 70000" min="0">
+            </div>
+          </div>
+          <div class="fin-row">
+            <div class="form-group">
+              <label>Prazo (anos)</label>
+              <select id="fin-prazo" class="form-control">
+                <option value="10">10 anos</option>
+                <option value="15">15 anos</option>
+                <option value="20">20 anos</option>
+                <option value="25">25 anos</option>
+                <option value="30" selected>30 anos</option>
+                <option value="35">35 anos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Taxa de juros anual (%) ex: 8%</label>
+              <input type="number" id="fin-taxa" class="form-control" placeholder="Ex: 8" step="0.1" min="0" max="30">
+            </div>
+          </div>
+
+          <p class="aviso">⚠️ Esta é uma simulação aproximada pelo Sistema Price (tabela de amortização). Consulte
+            sempre um especialista financeiro para condições exatas.</p>
+
+          <button class="btn-primary" onclick="simular()" style="font-size:1rem; padding:0.9rem 2rem;">Calcular
+            →</button>
+
+          <!-- RESULTADO -->
+          <div class="resultado-box" id="resultado">
+            <h3>📊 Resultado da Simulação</h3>
+            <div class="resultado-item">
+              <span class="resultado-label">Valor do imóvel</span>
+              <span class="resultado-val" id="r-valor">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Entrada</span>
+              <span class="resultado-val" id="r-entrada">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Valor financiado</span>
+              <span class="resultado-val" id="r-financiado">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Prazo</span>
+              <span class="resultado-val" id="r-prazo">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Taxa anual</span>
+              <span class="resultado-val" id="r-taxa">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Parcela estimada</span>
+              <span class="resultado-val destaque" id="r-parcela">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Total a pagar</span>
+              <span class="resultado-val" id="r-total">—</span>
+            </div>
+            <div class="resultado-item">
+              <span class="resultado-label">Total de juros</span>
+              <span class="resultado-val" id="r-juros">—</span>
+            </div>
+            <div style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;"></div>
+              <a href="contato.html" class="btn-primary"
+                style="flex:1; justify-content:center; display:flex; align-items:center;">Falar com especialista →</a>
+              <button class="btn-secondary" style="flex:1;" onclick="salvarSimulacaoLocal()">Salvar simulação</button>
+            </div>
+            <div id="salvo-msg"
+              style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--verde-oliva); text-align:center;">
+              ✓ Simulação salva no seu perfil!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fin-img">
+        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=80" alt="Financiamento imóvel">
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    function salvarSimulacaoLocal() {
+      const logado = localStorage.getItem('usuarioLogado');
+      if (!logado) {
+        alert('Você precisa estar logado para salvar simulações.\nFaça login na Área do Cliente.');
+        window.location.href = 'login.html';
+        return;
+      }
+      const usuario = JSON.parse(logado);
+      const valor = parseFloat(document.getElementById('fin-valor').value);
+      const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
+      const prazo = parseInt(document.getElementById('fin-prazo').value);
+      const taxa = parseFloat(document.getElementById('fin-taxa').value);
+      const parcelaEl = document.getElementById('r-parcela').textContent;
+      if (!valor || parcelaEl === '—') { alert('Faça uma simulação primeiro!'); return; }
+
+      const sims = JSON.parse(localStorage.getItem('simulacoes_' + usuario.email) || '[]');
+      sims.unshift({
+        id: Date.now(),
+        valor, entrada, prazo, taxa,
+        valorFormatado: document.getElementById('r-valor').textContent,
+        entradaFormatada: document.getElementById('r-entrada').textContent,
+        parcelaFormatada: parcelaEl,
+        data: new Date().toLocaleDateString('pt-BR')
+      });
+      localStorage.setItem('simulacoes_' + usuario.email, JSON.stringify(sims));
+      const msg = document.getElementById('salvo-msg');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 3000);
+    }
+
+    function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
+
+    function simular() {
+      const valor = parseFloat(document.getElementById('fin-valor').value);
+      const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
+      const prazo = parseInt(document.getElementById('fin-prazo').value);
+      const taxa = parseFloat(document.getElementById('fin-taxa').value);
+
+      if (!valor || valor <= 0) { alert('Informe o valor do imóvel.'); return; }
+      if (entrada >= valor) { alert('A entrada não pode ser maior ou igual ao valor do imóvel.'); return; }
+      if (!taxa || taxa <= 0) { alert('Informe a taxa de juros anual.'); return; }
+
+      const { parcela, total, jurosTotal } = calcularFinanciamento(valor, entrada, prazo, taxa);
+      const financiado = valor - entrada;
+
+      document.getElementById('r-valor').textContent = fmt(valor);
+      document.getElementById('r-entrada').textContent = fmt(entrada);
+      document.getElementById('r-financiado').textContent = fmt(financiado);
+      document.getElementById('r-prazo').textContent = prazo + ' anos (' + (prazo * 12) + ' meses)';
+      document.getElementById('r-taxa').textContent = taxa.toFixed(2) + '% a.a.';
+      document.getElementById('r-parcela').textContent = fmt(parcela);
+      document.getElementById('r-total').textContent = fmt(total + entrada);
+      document.getElementById('r-juros').textContent = fmt(jurosTotal);
+
+      document.getElementById('resultado').style.display = 'block';
+      document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+</body>
+
+</html>

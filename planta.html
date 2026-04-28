@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imóveis na Planta – Casa Certa Imobiliária</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* HERO */
+    .planta-hero {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--verde-oliva) 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .planta-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1400&q=70') center/cover;
+      opacity: 0.15;
+    }
+    .planta-hero-content { position: relative; z-index: 1; }
+    .planta-hero h1 { color: var(--branco); margin-bottom: 0.75rem; }
+    .planta-hero p { color: rgba(255,255,255,0.8); font-size: 1rem; max-width: 600px; margin: 0 auto 2rem; line-height: 1.7; }
+    .hero-badges { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: var(--branco);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* EMPREENDIMENTO */
+    .empreendimento { padding: 5rem 2rem; }
+    .empreendimento:nth-child(even) { background: var(--bege); }
+    .empreendimento:nth-child(odd) { background: var(--bege-claro); }
+    .emp-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .emp-wrap.reverse { direction: rtl; }
+    .emp-wrap.reverse > * { direction: ltr; }
+
+    /* GALERIA */
+    .emp-galeria { display: flex; flex-direction: column; gap: 0.75rem; }
+    .emp-foto-main {
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: 300px;
+      box-shadow: var(--sombra-forte);
+      cursor: pointer;
+    }
+    .emp-foto-main img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+    .emp-foto-main:hover img { transform: scale(1.04); }
+
+    .emp-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    .emp-thumb {
+      height: 80px;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+    .emp-thumb.ativo { opacity: 1; border-color: var(--vermelho); }
+    .emp-thumb:hover { opacity: 1; }
+    .emp-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* BOTÃO PLANTA */
+    .btn-ver-planta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--azul);
+      color: var(--branco);
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .btn-ver-planta:hover { background: var(--vermelho); }
+
+    /* INFO */
+    .emp-tag {
+      display: inline-block;
+      background: var(--vermelho);
+      color: var(--branco);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+    .emp-nome { font-family: 'Playfair Display', serif; color: var(--azul); font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 0.3rem; }
+    .emp-local { color: var(--texto-medio); font-size: 0.9rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.4rem; }
+
+    /* PROGRESSO */
+    .progresso-box { background: var(--branco); border-radius: var(--radius); padding: 1.2rem 1.5rem; box-shadow: var(--sombra); margin-bottom: 1.5rem; }
+    .progresso-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .progresso-label { font-size: 0.85rem; font-weight: 700; color: var(--azul); }
+    .progresso-pct { font-size: 1.1rem; font-weight: 700; color: var(--vermelho); }
+    .progresso-bar { width: 100%; height: 10px; background: var(--bege); border-radius: 10px; overflow: hidden; margin-bottom: 0.75rem; }
+    .progresso-fill { height: 100%; background: linear-gradient(90deg, var(--vermelho), #c0392b); border-radius: 10px; }
+    .progresso-info { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--texto-medio); }
+    .progresso-entrega { display: flex; align-items: center; gap: 0.4rem; font-weight: 700; color: var(--verde-oliva); }
+
+    /* SPECS */
+    .emp-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+    .emp-spec { background: var(--branco); border-radius: var(--radius); padding: 0.75rem; text-align: center; box-shadow: var(--sombra); }
+    .emp-spec-icon { margin-bottom: 0.25rem; color: var(--azul); display: flex; justify-content: center; }
+    .emp-spec-val { font-size: 0.88rem; font-weight: 700; color: var(--azul); display: block; }
+    .emp-spec-label { font-size: 0.72rem; color: var(--texto-medio); }
+
+    /* TIPOLOGIAS */
+    .tipologias-titulo { font-size: 0.85rem; font-weight: 700; color: var(--azul); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tipologias { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .tipologia { display: flex; justify-content: space-between; align-items: center; background: var(--branco); border-radius: var(--radius); padding: 0.75rem 1rem; box-shadow: var(--sombra); font-size: 0.88rem; }
+    .tipologia-nome { color: var(--azul); font-weight: 700; }
+    .tipologia-preco { color: var(--vermelho); font-weight: 700; }
+    .tipologia-area { color: var(--texto-medio); font-size: 0.78rem; }
+
+    /* DIFERENCIAIS */
+    .diferenciais { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .diferencial {
+      background: var(--branco);
+      border: 1.5px solid var(--bege-escuro);
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--azul);
+    }
+
+    .emp-preco-partir { font-size: 0.82rem; color: var(--texto-medio); margin-bottom: 0.25rem; }
+    .emp-preco { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--vermelho); font-weight: 700; margin-bottom: 1.5rem; }
+    .emp-acoes { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .emp-acoes a { white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal.open { display: flex; }
+    .modal-content { position: relative; max-width: 900px; width: 100%; }
+    .modal-content img { width: 100%; border-radius: var(--radius); max-height: 85vh; object-fit: contain; }
+    .modal-fechar {
+      position: absolute;
+      top: -18px; right: -18px;
+      width: 38px; height: 38px;
+      background: var(--vermelho);
+      color: var(--branco);
+      border: none; border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+    }
+
+    /* PLANTA SVG */
+    .planta-svg-wrap {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      width: 100%;
+    }
+    .planta-svg-wrap svg { width: 100%; height: auto; }
+
+    /* CTA */
+    .planta-cta { background: linear-gradient(135deg, var(--azul), var(--verde-oliva)); padding: 4rem 2rem; text-align: center; }
+    .planta-cta h2 { color: var(--branco); margin-bottom: 1rem; }
+    .planta-cta p { color: rgba(255,255,255,0.75); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    @media (max-width: 900px) {
+      .emp-wrap { grid-template-columns: 1fr; }
+      .emp-wrap.reverse { direction: ltr; }
+    }
+    @media (max-width: 480px) {
+      .emp-specs { grid-template-columns: repeat(2, 1fr); }
+      .emp-thumbs { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- HERO -->
+  <section class="planta-hero">
+    <div class="planta-hero-content fade-up">
+      <h1>Imóveis na Planta</h1>
+      <p>Invista no seu futuro com condições especiais de lançamento. Escolha seu apartamento antes de todos e garanta o melhor preço.</p>
+      <div class="hero-badges">
+        <span class="hero-badge">✓ Condições de lançamento</span>
+        <span class="hero-badge">✓ Parcelamento direto com a construtora</span>
+        <span class="hero-badge">✓ FGTS na entrada</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMPREENDIMENTO 1: BELLA VISTA -->
+  <section class="empreendimento">
+    <div class="emp-wrap">
+      <div class="emp-galeria">
+        <div class="emp-foto-main" onclick="abrirModal('bella', 0)">
+          <img id="bella-main" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80" alt="Residencial Bella Vista">
+        </div>
+        <div class="emp-thumbs">
+          <div class="emp-thumb ativo" onclick="trocarFoto('bella', 0, this)">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&q=70" alt="">
+          </div>
+          <div class="emp-thumb" onclick="trocarFoto('bella', 1, this)">
+            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=300&q=70" alt="">
+          </div>
+          <div class="emp-thumb" onclick="trocarFoto('bella', 2, this)">
+            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=300&q=70" alt="">
+          </div>
+        </div>
+        <button class="btn-ver-planta" onclick="abrirModalPlanta('bella')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Ver Planta Baixa
+        </button>
+      </div>
+
+      <div>
+        <span class="emp-tag">Lançamento</span>
+        <h2 class="emp-nome">Residencial Bella Vista</h2>
+        <p class="emp-local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Vila Nova – Curitiba, PR
+        </p>
+
+        <div class="progresso-box">
+          <div class="progresso-header">
+            <span class="progresso-label">Andamento da Obra</span>
+            <span class="progresso-pct">45%</span>
+          </div>
+          <div class="progresso-bar"><div class="progresso-fill" style="width:45%"></div></div>
+          <div class="progresso-info">
+            <span>Lançamento: Jan/2024</span>
+            <span class="progresso-entrega">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Entrega: Dez/2027
+            </span>
+          </div>
+        </div>
+
+        <div class="emp-specs">
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <span class="emp-spec-val">8 andares</span>
+            <span class="emp-spec-label">Torre única</span>
+          </div>
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <span class="emp-spec-val">48 unidades</span>
+            <span class="emp-spec-label">No total</span>
+          </div>
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <span class="emp-spec-val">1 vaga</span>
+            <span class="emp-spec-label">Por unidade</span>
+          </div>
+        </div>
+
+        <p class="tipologias-titulo">Tipologias disponíveis</p>
+        <div class="tipologias">
+          <div class="tipologia"><span class="tipologia-nome">Studio</span><span class="tipologia-area">32 m²</span><span class="tipologia-preco">A partir de R$ 280.000</span></div>
+          <div class="tipologia"><span class="tipologia-nome">2 Quartos</span><span class="tipologia-area">58 m²</span><span class="tipologia-preco">A partir de R$ 420.000</span></div>
+          <div class="tipologia"><span class="tipologia-nome">2 Quartos + Suíte</span><span class="tipologia-area">72 m²</span><span class="tipologia-preco">A partir de R$ 540.000</span></div>
+        </div>
+
+        <div class="diferenciais">
+          <span class="diferencial">Piscina</span>
+          <span class="diferencial">Academia</span>
+          <span class="diferencial">Salão de Festas</span>
+          <span class="diferencial">Portaria 24h</span>
+          <span class="diferencial">Área Verde</span>
+          <span class="diferencial">Energia Solar</span>
+        </div>
+
+        <p class="emp-preco-partir">A partir de</p>
+        <p class="emp-preco">R$ 280.000</p>
+        <div class="emp-acoes">
+          <a href="https://wa.me/5554981111111?text=Olá! Tenho interesse no Residencial Bella Vista." target="_blank" class="btn-primary">Quero saber mais</a>
+          <a href="contato.html" class="btn-outline">Agendar visita</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMPREENDIMENTO 2: VERDE PARQUE -->
+  <section class="empreendimento">
+    <div class="emp-wrap reverse">
+      <div class="emp-galeria">
+        <div class="emp-foto-main" onclick="abrirModal('verde', 0)">
+          <img id="verde-main" src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80" alt="Condomínio Verde Parque">
+        </div>
+        <div class="emp-thumbs">
+          <div class="emp-thumb ativo" onclick="trocarFoto('verde', 0, this)">
+            <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=300&q=70" alt="">
+          </div>
+          <div class="emp-thumb" onclick="trocarFoto('verde', 1, this)">
+            <img src="https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?w=300&q=70" alt="">
+          </div>
+          <div class="emp-thumb" onclick="trocarFoto('verde', 2, this)">
+            <img src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=300&q=70" alt="">
+          </div>
+        </div>
+        <button class="btn-ver-planta" onclick="abrirModalPlanta('verde')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Ver Planta Baixa
+        </button>
+      </div>
+
+      <div>
+        <span class="emp-tag" style="background:var(--verde-oliva)">Pré-lançamento</span>
+        <h2 class="emp-nome">Condomínio Verde Parque</h2>
+        <p class="emp-local">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Jardim Aurora – Porto Alegre, RS
+        </p>
+
+        <div class="progresso-box">
+          <div class="progresso-header">
+            <span class="progresso-label">Andamento da Obra</span>
+            <span class="progresso-pct">20%</span>
+          </div>
+          <div class="progresso-bar"><div class="progresso-fill" style="width:20%"></div></div>
+          <div class="progresso-info">
+            <span>Lançamento: Jun/2024</span>
+            <span class="progresso-entrega">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Entrega: Jun/2029
+            </span>
+          </div>
+        </div>
+
+        <div class="emp-specs">
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <span class="emp-spec-val">12 andares</span>
+            <span class="emp-spec-label">2 torres</span>
+          </div>
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <span class="emp-spec-val">120 unidades</span>
+            <span class="emp-spec-label">No total</span>
+          </div>
+          <div class="emp-spec">
+            <div class="emp-spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+            <span class="emp-spec-val">2 vagas</span>
+            <span class="emp-spec-label">Por unidade</span>
+          </div>
+        </div>
+
+        <p class="tipologias-titulo">Tipologias disponíveis</p>
+        <div class="tipologias">
+          <div class="tipologia"><span class="tipologia-nome">2 Quartos</span><span class="tipologia-area">65 m²</span><span class="tipologia-preco">A partir de R$ 380.000</span></div>
+          <div class="tipologia"><span class="tipologia-nome">3 Quartos</span><span class="tipologia-area">88 m²</span><span class="tipologia-preco">A partir de R$ 560.000</span></div>
+          <div class="tipologia"><span class="tipologia-nome">3 Quartos + Suíte Master</span><span class="tipologia-area">110 m²</span><span class="tipologia-preco">A partir de R$ 720.000</span></div>
+        </div>
+
+        <div class="diferenciais">
+          <span class="diferencial">2 Piscinas</span>
+          <span class="diferencial">Academia</span>
+          <span class="diferencial">Playground</span>
+          <span class="diferencial">Portaria 24h</span>
+          <span class="diferencial">Parque Privativo</span>
+          <span class="diferencial">Pet Place</span>
+          <span class="diferencial">Bicicletário</span>
+        </div>
+
+        <p class="emp-preco-partir">A partir de</p>
+        <p class="emp-preco">R$ 380.000</p>
+        <div class="emp-acoes">
+          <a href="https://wa.me/5554981111111?text=Olá! Tenho interesse no Condomínio Verde Parque." target="_blank" class="btn-primary">Quero saber mais</a>
+          <a href="contato.html" class="btn-outline">Agendar visita</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="planta-cta">
+    <h2>Não perca as condições de lançamento!</h2>
+    <p>Entre em contato agora e garanta as melhores unidades com preço especial de pré-lançamento.</p>
+    <a href="https://wa.me/5554981111111?text=Olá! Quero saber sobre os imóveis na planta." target="_blank" class="btn-primary">Falar com um especialista</a>
+  </section>
+
+  <!-- MODAL FOTOS -->
+  <div class="modal" id="modal-foto" onclick="fecharModal('modal-foto', event)">
+    <div class="modal-content">
+      <button class="modal-fechar" onclick="document.getElementById('modal-foto').classList.remove('open')">✕</button>
+      <img id="modal-foto-img" src="" alt="Foto ampliada">
+    </div>
+  </div>
+
+  <!-- MODAL PLANTA BELLA VISTA -->
+  <div class="modal" id="modal-planta-bella" onclick="fecharModal('modal-planta-bella', event)">
+    <div class="modal-content">
+      <button class="modal-fechar" onclick="document.getElementById('modal-planta-bella').classList.remove('open')">✕</button>
+      <div class="planta-svg-wrap">
+        <!-- PLANTA BAIXA SVG - BELLA VISTA (2 quartos, sala, cozinha, banheiro) -->
+        <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" style="font-family:'Lato',sans-serif;">
+          <!-- Fundo -->
+          <rect width="500" height="380" fill="#f5f0eb"/>
+          <!-- Parede externa -->
+          <rect x="20" y="20" width="460" height="340" fill="none" stroke="#1a2744" stroke-width="6" rx="2"/>
+          <!-- SALA (esquerda baixo) -->
+          <rect x="20" y="220" width="180" height="140" fill="#e8e0d8" stroke="#1a2744" stroke-width="3"/>
+          <text x="110" y="278" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">SALA DE ESTAR</text>
+          <text x="110" y="294" text-anchor="middle" font-size="10" fill="#666">28 m²</text>
+          <!-- sofá -->
+          <rect x="35" y="295" width="70" height="30" rx="4" fill="#c9b8ae" stroke="#999" stroke-width="1"/>
+          <rect x="35" y="270" width="70" height="20" rx="3" fill="#b8a49a" stroke="#999" stroke-width="1"/>
+          <!-- mesa centro -->
+          <rect x="120" y="290" width="35" height="25" rx="3" fill="#d4c4b8" stroke="#999" stroke-width="1"/>
+
+          <!-- COZINHA (direita baixo) -->
+          <rect x="200" y="220" width="140" height="140" fill="#ddd5c8" stroke="#1a2744" stroke-width="3"/>
+          <text x="270" y="278" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">COZINHA</text>
+          <text x="270" y="294" text-anchor="middle" font-size="10" fill="#666">18 m²</text>
+          <!-- bancada -->
+          <rect x="208" y="225" width="124" height="22" rx="2" fill="#b8a49a" stroke="#888" stroke-width="1"/>
+          <rect x="208" y="225" width="40" height="22" rx="0" fill="#c9b8ae" stroke="#888" stroke-width="1"/>
+          <!-- mesa jantar -->
+          <rect x="225" y="295" width="60" height="45" rx="3" fill="#c4b5a8" stroke="#999" stroke-width="1"/>
+          <circle cx="218" cy="305" r="8" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="218" cy="325" r="8" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="298" cy="305" r="8" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="298" cy="325" r="8" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+
+          <!-- ÁREA SERVIÇO -->
+          <rect x="340" y="220" width="140" height="80" fill="#d8d0c4" stroke="#1a2744" stroke-width="3"/>
+          <text x="410" y="255" text-anchor="middle" font-size="10" fill="#1a2744" font-weight="700">ÁR. SERVIÇO</text>
+          <text x="410" y="270" text-anchor="middle" font-size="9" fill="#666">8 m²</text>
+          <!-- máquina -->
+          <rect x="355" y="230" width="35" height="35" rx="3" fill="#c0b8b0" stroke="#888" stroke-width="1"/>
+          <circle cx="372" cy="247" r="12" fill="#d4ccc4" stroke="#999" stroke-width="1"/>
+
+          <!-- BANHEIRO SOCIAL -->
+          <rect x="340" y="300" width="80" height="60" fill="#dde8dd" stroke="#1a2744" stroke-width="3"/>
+          <text x="380" y="323" text-anchor="middle" font-size="9" fill="#1a2744" font-weight="700">BANHO</text>
+          <text x="380" y="335" text-anchor="middle" font-size="8" fill="#666">5 m²</text>
+          <rect x="348" y="306" width="28" height="18" rx="8" fill="#c8ddc8" stroke="#888" stroke-width="1"/>
+          <rect x="383" y="306" width="16" height="14" rx="2" fill="#b8ccb8" stroke="#888" stroke-width="1"/>
+
+          <!-- CORREDOR -->
+          <rect x="420" y="300" width="60" height="60" fill="#e4ddd5" stroke="#1a2744" stroke-width="3"/>
+          <text x="450" y="333" text-anchor="middle" font-size="9" fill="#666">HALL</text>
+
+          <!-- QUARTO 1 (esquerda cima) -->
+          <rect x="20" y="20" width="200" height="200" fill="#e0d8f0" stroke="#1a2744" stroke-width="3"/>
+          <text x="120" y="105" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">QUARTO SUÍTE</text>
+          <text x="120" y="121" text-anchor="middle" font-size="10" fill="#666">22 m²</text>
+          <!-- cama casal -->
+          <rect x="40" y="30" width="80" height="100" rx="4" fill="#c8c0d8" stroke="#999" stroke-width="1"/>
+          <rect x="40" y="30" width="80" height="25" rx="4" fill="#b8b0c8" stroke="#999" stroke-width="1"/>
+          <rect x="30" y="55" width="20" height="60" rx="3" fill="#c0b8c8" stroke="#999" stroke-width="1"/>
+          <rect x="130" y="55" width="20" height="60" rx="3" fill="#c0b8c8" stroke="#999" stroke-width="1"/>
+          <!-- closet -->
+          <rect x="140" y="30" width="70" height="60" fill="#b8b0c4" stroke="#888" stroke-width="1"/>
+          <text x="175" y="64" text-anchor="middle" font-size="9" fill="#666">CLOSET</text>
+          <line x1="140" y1="30" x2="210" y2="90" stroke="#888" stroke-width="0.5"/>
+          <!-- banheiro suíte -->
+          <rect x="30" y="155" width="80" height="55" fill="#ccdacc" stroke="#888" stroke-width="2"/>
+          <text x="70" y="177" text-anchor="middle" font-size="9" fill="#1a2744" font-weight="700">EN SUITE</text>
+          <rect x="38" y="161" width="28" height="18" rx="8" fill="#b8ccb8" stroke="#888" stroke-width="1"/>
+          <rect x="74" y="163" width="14" height="12" rx="2" fill="#a8bca8" stroke="#888" stroke-width="1"/>
+
+          <!-- QUARTO 2 (direita cima) -->
+          <rect x="220" y="20" width="260" height="200" fill="#f0e8d8" stroke="#1a2744" stroke-width="3"/>
+          <text x="350" y="105" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">QUARTO 2</text>
+          <text x="350" y="121" text-anchor="middle" font-size="10" fill="#666">18 m²</text>
+          <!-- cama solteiro -->
+          <rect x="235" y="35" width="65" height="90" rx="4" fill="#e0d0b8" stroke="#999" stroke-width="1"/>
+          <rect x="235" y="35" width="65" height="22" rx="4" fill="#d4c4a8" stroke="#999" stroke-width="1"/>
+          <rect x="225" y="55" width="16" height="55" rx="3" fill="#d8c8b0" stroke="#999" stroke-width="1"/>
+          <!-- guarda roupa -->
+          <rect x="380" y="28" width="85" height="55" fill="#d8c8b0" stroke="#888" stroke-width="1"/>
+          <text x="422" y="59" text-anchor="middle" font-size="9" fill="#666">GUARDA-ROUPA</text>
+          <line x1="422" y1="28" x2="422" y2="83" stroke="#888" stroke-width="0.5"/>
+
+          <!-- Portas -->
+          <!-- Porta sala -->
+          <path d="M 200 300 Q 200 280 220 280" fill="none" stroke="#1a2744" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="200" y1="300" x2="200" y2="280" stroke="#1a2744" stroke-width="2"/>
+          <!-- Porta quarto 1 -->
+          <path d="M 220 100 Q 200 100 200 120" fill="none" stroke="#1a2744" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="220" y1="100" x2="200" y2="100" stroke="#1a2744" stroke-width="2"/>
+          <!-- Porta quarto 2 -->
+          <path d="M 220 130 Q 240 130 240 150" fill="none" stroke="#1a2744" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="220" y1="130" x2="220" y2="150" stroke="#1a2744" stroke-width="2"/>
+
+          <!-- Medidas -->
+          <text x="250" y="375" text-anchor="middle" font-size="10" fill="#666">← 7,00 m →</text>
+          <text x="12" y="195" text-anchor="middle" font-size="10" fill="#666" transform="rotate(-90, 12, 195)">← 6,00 m →</text>
+
+          <!-- Título -->
+          <text x="250" y="14" text-anchor="middle" font-size="12" fill="#1a2744" font-weight="700">PLANTA BAIXA — RESIDENCIAL BELLA VISTA — 2 QUARTOS / 72 m²</text>
+
+          <!-- Legenda Norte -->
+          <circle cx="475" cy="345" r="14" fill="none" stroke="#1a2744" stroke-width="1.5"/>
+          <text x="475" y="339" text-anchor="middle" font-size="9" fill="#1a2744" font-weight="700">N</text>
+          <line x1="475" y1="331" x2="475" y2="320" stroke="#1a2744" stroke-width="1.5" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PLANTA VERDE PARQUE -->
+  <div class="modal" id="modal-planta-verde" onclick="fecharModal('modal-planta-verde', event)">
+    <div class="modal-content">
+      <button class="modal-fechar" onclick="document.getElementById('modal-planta-verde').classList.remove('open')">✕</button>
+      <div class="planta-svg-wrap">
+        <!-- PLANTA BAIXA SVG - VERDE PARQUE (3 quartos, sala, cozinha, 2 banheiros) -->
+        <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" style="font-family:'Lato',sans-serif;">
+          <rect width="560" height="420" fill="#f5f0eb"/>
+          <rect x="20" y="20" width="520" height="380" fill="none" stroke="#1a2744" stroke-width="6" rx="2"/>
+
+          <!-- SALA ESTAR/JANTAR (grande, esquerda baixo) -->
+          <rect x="20" y="240" width="220" height="160" fill="#e8e0d8" stroke="#1a2744" stroke-width="3"/>
+          <text x="130" y="308" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">SALA ESTAR / JANTAR</text>
+          <text x="130" y="324" text-anchor="middle" font-size="10" fill="#666">38 m²</text>
+          <rect x="32" y="340" width="80" height="35" rx="4" fill="#c9b8ae" stroke="#999" stroke-width="1"/>
+          <rect x="32" y="310" width="80" height="25" rx="3" fill="#b8a49a" stroke="#999" stroke-width="1"/>
+          <rect x="145" y="335" width="65" height="48" rx="3" fill="#c4b5a8" stroke="#999" stroke-width="1"/>
+          <circle cx="137" cy="345" r="9" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="137" cy="370" r="9" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="222" cy="345" r="9" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+          <circle cx="222" cy="370" r="9" fill="#d4c5b8" stroke="#999" stroke-width="1"/>
+
+          <!-- COZINHA -->
+          <rect x="240" y="280" width="140" height="120" fill="#ddd5c8" stroke="#1a2744" stroke-width="3"/>
+          <text x="310" y="333" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">COZINHA</text>
+          <text x="310" y="349" text-anchor="middle" font-size="10" fill="#666">16 m²</text>
+          <rect x="248" y="286" width="124" height="20" rx="2" fill="#b8a49a" stroke="#888" stroke-width="1"/>
+          <rect x="248" y="286" width="35" height="20" rx="0" fill="#c9b8ae" stroke="#888" stroke-width="1"/>
+
+          <!-- ÁREA SERVIÇO -->
+          <rect x="380" y="280" width="160" height="80" fill="#d8d0c4" stroke="#1a2744" stroke-width="3"/>
+          <text x="460" y="315" text-anchor="middle" font-size="10" fill="#1a2744" font-weight="700">ÁR. SERVIÇO</text>
+          <text x="460" y="330" text-anchor="middle" font-size="9" fill="#666">10 m²</text>
+          <rect x="392" y="288" width="35" height="35" rx="3" fill="#c0b8b0" stroke="#888" stroke-width="1"/>
+          <circle cx="409" cy="305" r="12" fill="#d4ccc4" stroke="#999" stroke-width="1"/>
+
+          <!-- BANHEIRO SOCIAL -->
+          <rect x="380" y="360" width="80" height="60" fill="#dde8dd" stroke="#1a2744" stroke-width="3"/>
+          <text x="420" y="384" text-anchor="middle" font-size="9" fill="#1a2744" font-weight="700">BANHO</text>
+          <text x="420" y="396" text-anchor="middle" font-size="8" fill="#666">SOCIAL</text>
+          <rect x="388" y="366" width="26" height="17" rx="7" fill="#c8ddc8" stroke="#888" stroke-width="1"/>
+          <rect x="421" y="366" width="14" height="12" rx="2" fill="#b8ccb8" stroke="#888" stroke-width="1"/>
+
+          <!-- CORREDOR/HALL -->
+          <rect x="240" y="240" width="300" height="40" fill="#e4ddd5" stroke="#1a2744" stroke-width="3"/>
+          <text x="390" y="265" text-anchor="middle" font-size="10" fill="#666">CORREDOR</text>
+
+          <!-- QUARTO MASTER (grande, esquerda cima) -->
+          <rect x="20" y="20" width="220" height="220" fill="#e0d8f0" stroke="#1a2744" stroke-width="3"/>
+          <text x="130" y="118" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">SUÍTE MASTER</text>
+          <text x="130" y="134" text-anchor="middle" font-size="10" fill="#666">28 m²</text>
+          <rect x="35" y="30" width="100" height="110" rx="4" fill="#c8c0d8" stroke="#999" stroke-width="1"/>
+          <rect x="35" y="30" width="100" height="28" rx="4" fill="#b8b0c8" stroke="#999" stroke-width="1"/>
+          <rect x="22" y="58" width="18" height="70" rx="3" fill="#c0b8c8" stroke="#999" stroke-width="1"/>
+          <rect x="148" y="58" width="18" height="70" rx="3" fill="#c0b8c8" stroke="#999" stroke-width="1"/>
+          <!-- closet master -->
+          <rect x="150" y="28" width="78" height="70" fill="#b8b0c4" stroke="#888" stroke-width="1"/>
+          <text x="189" y="66" text-anchor="middle" font-size="9" fill="#666">CLOSET</text>
+          <line x1="189" y1="28" x2="189" y2="98" stroke="#888" stroke-width="0.5"/>
+          <!-- banheiro master -->
+          <rect x="30" y="170" width="90" height="62" fill="#ccdacc" stroke="#888" stroke-width="2"/>
+          <text x="75" y="193" text-anchor="middle" font-size="9" fill="#1a2744" font-weight="700">EN SUITE</text>
+          <text x="75" y="205" text-anchor="middle" font-size="8" fill="#666">MASTER</text>
+          <rect x="38" y="178" width="30" height="20" rx="9" fill="#b8ccb8" stroke="#888" stroke-width="1"/>
+          <rect x="76" y="178" width="16" height="14" rx="2" fill="#a8bca8" stroke="#888" stroke-width="1"/>
+          <rect x="76" y="198" width="30" height="24" rx="3" fill="#b8ccb8" stroke="#888" stroke-width="1"/>
+
+          <!-- QUARTO 2 (meio cima) -->
+          <rect x="240" y="20" width="160" height="220" fill="#f0e8d8" stroke="#1a2744" stroke-width="3"/>
+          <text x="320" y="118" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">QUARTO 2</text>
+          <text x="320" y="134" text-anchor="middle" font-size="10" fill="#666">18 m²</text>
+          <rect x="252" y="32" width="75" height="95" rx="4" fill="#e0d0b8" stroke="#999" stroke-width="1"/>
+          <rect x="252" y="32" width="75" height="24" rx="4" fill="#d4c4a8" stroke="#999" stroke-width="1"/>
+          <rect x="240" y="56" width="16" height="58" rx="3" fill="#d8c8b0" stroke="#999" stroke-width="1"/>
+          <rect x="345" y="28" width="45" height="65" fill="#d8c8b0" stroke="#888" stroke-width="1"/>
+          <text x="367" y="64" text-anchor="middle" font-size="8" fill="#666">GR</text>
+
+          <!-- QUARTO 3 (direita cima) -->
+          <rect x="400" y="20" width="140" height="220" fill="#f8f0e4" stroke="#1a2744" stroke-width="3"/>
+          <text x="470" y="118" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">QUARTO 3</text>
+          <text x="470" y="134" text-anchor="middle" font-size="10" fill="#666">16 m²</text>
+          <rect x="412" y="32" width="70" height="90" rx="4" fill="#e4d8c4" stroke="#999" stroke-width="1"/>
+          <rect x="412" y="32" width="70" height="22" rx="4" fill="#d8ccb8" stroke="#999" stroke-width="1"/>
+          <rect x="400" y="54" width="16" height="55" rx="3" fill="#dcd0bc" stroke="#999" stroke-width="1"/>
+          <rect x="496" y="28" width="36" height="60" fill="#d8c8b0" stroke="#888" stroke-width="1"/>
+          <text x="514" y="61" text-anchor="middle" font-size="8" fill="#666">GR</text>
+
+          <!-- Medidas -->
+          <text x="280" y="415" text-anchor="middle" font-size="10" fill="#666">← 8,80 m →</text>
+          <text x="12" y="215" text-anchor="middle" font-size="10" fill="#666" transform="rotate(-90, 12, 215)">← 7,20 m →</text>
+
+          <!-- Título -->
+          <text x="280" y="14" text-anchor="middle" font-size="11" fill="#1a2744" font-weight="700">PLANTA BAIXA — VERDE PARQUE — 3 QUARTOS / 110 m²</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+
+  <script src="js/dados.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/componentes.js"></script>
+  <script>
+    const galeriaBella = [
+      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
+      'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80'
+    ];
+    const galeriaVerde = [
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
+      'https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?w=800&q=80',
+      'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=800&q=80'
+    ];
+
+    function trocarFoto(emp, idx, el) {
+      const galeria = emp === 'bella' ? galeriaBella : galeriaVerde;
+      document.getElementById(emp + '-main').src = galeria[idx];
+      el.closest('.emp-galeria').querySelectorAll('.emp-thumb').forEach(t => t.classList.remove('ativo'));
+      el.classList.add('ativo');
+    }
+
+    function abrirModal(emp, idx) {
+      const galeria = emp === 'bella' ? galeriaBella : galeriaVerde;
+      document.getElementById('modal-foto-img').src = galeria[idx];
+      document.getElementById('modal-foto').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function abrirModalPlanta(emp) {
+      document.getElementById('modal-planta-' + emp).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal(id, e) {
+      if (!e || e.target.id === id || e.target.classList.contains('modal-fechar')) {
+        document.getElementById(id).classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+  </script>
+</body>
+</html>
