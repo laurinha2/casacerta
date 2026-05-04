@@ -1,19 +1,47 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-const path = require('path');
 app.use(express.static(path.join(__dirname, '..')));
 
+// ===== CONFIGURAÇÃO DO MULTER (upload de fotos) =====
+const pastaUploads = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(pastaUploads)) fs.mkdirSync(pastaUploads, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, pastaUploads),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `imovel_${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`);
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { files: 5, fileSize: 5 * 1024 * 1024 }, // máx 5 fotos, 5MB cada
+  fileFilter: (req, file, cb) => {
+    const permitidos = /jpeg|jpg|png|webp/;
+    if (permitidos.test(path.extname(file.originalname).toLowerCase())) cb(null, true);
+    else cb(new Error('Apenas imagens JPG, PNG ou WebP são permitidas.'));
+  }
+});
+
+// Servir pasta de uploads como estática
+app.use('/uploads', express.static(pastaUploads));
+
+// ===== BANCO DE DADOS =====
 const db = mysql.createConnection({
-  host: 'localhost',
-  port: 3307,
-  user: 'root',
-  password: '',
-  database: 'casacerta'
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3307,
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'casacerta'
 });
 
 db.connect((err) => {
@@ -78,14 +106,31 @@ function criarTabelas() {
     telefone VARCHAR(20),
     tipo VARCHAR(50),
     endereco VARCHAR(255),
+    bairro VARCHAR(255),
     cidade VARCHAR(255),
     valor VARCHAR(50),
     finalidade VARCHAR(50),
     descricao TEXT,
+    area VARCHAR(20),
+    quartos INT DEFAULT 0,
+    banheiros INT DEFAULT 0,
+    vagas INT DEFAULT 0,
+    fotos TEXT,
     status VARCHAR(30) DEFAULT 'pendente',
     data_envio VARCHAR(30),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
   )`, (err) => { if (err) console.error('Erro imoveis_anuncios:', err.message); });
+
+  // Adiciona colunas novas caso a tabela já exista
+  const novasColunas = [
+    `ALTER TABLE imoveis_anuncios ADD COLUMN bairro VARCHAR(255)`,
+    `ALTER TABLE imoveis_anuncios ADD COLUMN area VARCHAR(20)`,
+    `ALTER TABLE imoveis_anuncios ADD COLUMN quartos INT DEFAULT 0`,
+    `ALTER TABLE imoveis_anuncios ADD COLUMN banheiros INT DEFAULT 0`,
+    `ALTER TABLE imoveis_anuncios ADD COLUMN vagas INT DEFAULT 0`,
+    `ALTER TABLE imoveis_anuncios ADD COLUMN fotos TEXT`,
+  ];
+  novasColunas.forEach(sql => { db.query(sql, () => { }); });
 }
 
 // ===== USUÁRIOS =====
@@ -121,6 +166,18 @@ app.get('/usuarios/:id', (req, res) => {
       if (err) return res.status(500).json({ erro: err.message });
       if (rows.length === 0) return res.status(404).json({ erro: 'Usuário não encontrado' });
       res.json(rows[0]);
+    }
+  );
+});
+
+app.patch('/usuarios/:id', (req, res) => {
+  const { nome, telefone, cpf_cnpj } = req.body;
+  db.query(
+    'UPDATE usuarios SET nome = ?, telefone = ?, cpf_cnpj = ? WHERE id = ?',
+    [nome, telefone, cpf_cnpj, req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json({ sucesso: true });
     }
   );
 });
@@ -271,18 +328,23 @@ app.delete('/contratos/:id', (req, res) => {
 
 // ===== ANÚNCIOS DE IMÓVEIS =====
 
-// Enviar anúncio (usuário logado)
-app.post('/imoveis', (req, res) => {
+// ✅ Enviar anúncio COM fotos (usuário logado)
+app.post('/imoveis', upload.array('fotos', 5), (req, res) => {
   const { usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao } = req.body;
   if (!usuario_id || !nome || !email || !telefone || !tipo || !endereco)
     return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
 
   const data_envio = new Date().toLocaleDateString('pt-BR');
 
+  // Salva os caminhos das fotos como JSON
+  const fotos = req.files && req.files.length > 0
+    ? JSON.stringify(req.files.map(f => `/uploads/${f.filename}`))
+    : null;
+
   db.query(
-    `INSERT INTO imoveis_anuncios (usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, status, data_envio)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)`,
-    [usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, data_envio],
+    `INSERT INTO imoveis_anuncios (usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, fotos, status, data_envio)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente', ?)`,
+    [usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, fotos, data_envio],
     (err, result) => {
       if (err) return res.status(500).json({ erro: err.message });
       res.json({ id: result.insertId, sucesso: true });
@@ -303,19 +365,58 @@ app.get('/admin/imoveis', (req, res) => {
   );
 });
 
-// ROTA PARA LISTAGEM PÚBLICA (Página de Imóveis)
-app.get('/imoveis/publicos', (req, res) => {
-  const sql = `
-    SELECT id, tipo, endereco, cidade, valor, finalidade, descricao 
-    FROM imoveis_anuncios 
-    WHERE status = 'pendente' 
-    ORDER BY id DESC`;
-  // Dica: use status = 'aprovado' se quiser que o admin filtre antes
+// Aprovar anúncio com dados completos (admin)
+app.patch('/admin/imoveis/:id/aprovar', (req, res) => {
+  const { bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
+  db.query(
+    `UPDATE imoveis_anuncios 
+     SET status = 'aprovado', bairro = ?, cidade = ?, valor = ?, finalidade = ?,
+         area = ?, quartos = ?, banheiros = ?, vagas = ?, descricao = ?
+     WHERE id = ?`,
+    [bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao, req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json({ sucesso: true });
+    }
+  );
+});
+// ✅ Cole este trecho no server.js, logo abaixo da rota de "aprovar" (/admin/imoveis/:id/aprovar)
 
-  db.query(sql, (err, rows) => {
+// Editar imóvel aprovado (admin) — atualiza qualquer campo
+app.patch('/admin/imoveis/:id/editar', (req, res) => {
+  const { tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
+  db.query(
+    `UPDATE imoveis_anuncios 
+     SET tipo = ?, endereco = ?, bairro = ?, cidade = ?, valor = ?, finalidade = ?,
+         area = ?, quartos = ?, banheiros = ?, vagas = ?, descricao = ?
+     WHERE id = ?`,
+    [tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao, req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json({ sucesso: true });
+    }
+  );
+});
+// Rejeitar anúncio (admin)
+app.patch('/admin/imoveis/:id/rejeitar', (req, res) => {
+  db.query(`UPDATE imoveis_anuncios SET status = 'rejeitado' WHERE id = ?`, [req.params.id], (err) => {
     if (err) return res.status(500).json({ erro: err.message });
-    res.json(rows);
+    res.json({ sucesso: true });
   });
+});
+
+// Listagem pública — só imóveis aprovados
+app.get('/imoveis/publicos', (req, res) => {
+  db.query(
+    `SELECT id, tipo, endereco, bairro, cidade, valor, finalidade, descricao, area, quartos, banheiros, vagas, fotos
+     FROM imoveis_anuncios 
+     WHERE status = 'aprovado' 
+     ORDER BY id DESC`,
+    (err, rows) => {
+      if (err) return res.status(500).json({ erro: err.message });
+      res.json(rows);
+    }
+  );
 });
 
 // Excluir anúncio (admin)
@@ -327,15 +428,13 @@ app.delete('/imoveis/:id', (req, res) => {
 });
 
 // ===== ROTA DE TESTE =====
-app.get('/api', (req, res) => {
-  res.send('Servidor funcionando!');
-});
+app.get('/api', (req, res) => res.send('Servidor funcionando!'));
 
-// Rota raiz → abre index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-app.listen(3000, () => {
-  console.log('Servidor rodando em http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
