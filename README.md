@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, '..')));
 Reinicia o Node, para o Live Server, e acessa ${API}.
 Para seus colegas acessarem, você descobre seu IP rodando no PowerShell:
 bashipconfig
-E passa o endereço IPv4 para eles, tipo http://192.168.18.49:3000.
+E passa o endereço IPv4 para eles, tipo .http://192.168.18.49:3000
 
 
 

@@ -82,32 +82,6 @@ async function toggleFavorito(id) {
   }
 }
 
-// ---- RENDERIZAR CARD DE IMÓVEL ----
-function renderCard(im) {
-  return `
-    <div class="card-imovel fade-up">
-      <div class="card-img-wrap">
-        <img src="${im.imagem}" alt="${im.nome}" loading="lazy">
-        <button class="card-favorito" onclick="handleFavorito(${im.id}, this)" title="Favoritar">
-          ♡
-        </button>
-      </div>
-      <div class="card-body">
-        <div class="card-nome">${im.nome}</div>
-        <div class="card-local">📍 ${im.bairro} – ${im.cidade}</div>
-        <div class="card-preco">${formatarPreco(im.preco, im.finalidade)}</div>
-        <div class="card-specs">
-          <span class="card-spec">🏠 ${im.area} m²</span>
-          <span class="card-spec">🛏 ${im.quartos} quartos</span>
-          <span class="card-spec">🚿 ${im.banheiros} banheiros</span>
-          ${im.vagas > 0 ? `<span class="card-spec">🚗 ${im.vagas} vagas</span>` : ''}
-        </div>
-        <a href="detalhes.html?id=${im.id}" class="btn-primary card-btn" style="justify-content:center;">Ver Detalhes</a>
-      </div>
-    </div>
-  `;
-}
-
 async function handleFavorito(id, btn) {
   btn.disabled = true;
   btn.textContent = '...';
@@ -197,6 +171,20 @@ function formatarPreco(preco, finalidade) {
   return valor;
 }
 
+// ---- PARSEAR FOTOS DO BANCO ----
+// O banco salva fotos como string JSON: '["/uploads/foto1.jpg", "/uploads/foto2.jpg"]'
+// Esta função retorna um array de URLs absolutas
+function parsearFotos(fotosJson) {
+  if (!fotosJson) return [];
+  try {
+    const arr = JSON.parse(fotosJson);
+    // Garante URL absoluta com a origem do servidor
+    return arr.map(f => `${location.origin}${f}`);
+  } catch {
+    return [];
+  }
+}
+
 // ---- CARREGAR IMÓVEIS DO BANCO ----
 async function carregarImoveisPeloBanco() {
   const container = document.getElementById('lista-imoveis');
@@ -206,23 +194,30 @@ async function carregarImoveisPeloBanco() {
     const res = await fetch(`${API}/imoveis/publicos`);
     const imoveis = await res.json();
 
-    // popula a variável global com os campos corretos
-    imoveisBanco = imoveis.map(im => ({
-      id: im.id,
-      nome: im.nome || im.tipo,              // usa "nome" do banco, fallback para "tipo"
-      imagem: 'img/casa-padrao.jpg',
-      bairro: im.bairro || im.endereco,      // garante bairro
-      cidade: im.cidade,
-      preco: Number(im.preco || im.valor) || 0, // garante que o preço seja preenchido
-      finalidade: im.finalidade.toLowerCase(),
-      area: im.area || '--',
-      quartos: im.quartos || '--',
-      banheiros: im.banheiros || '--',
-      vagas: im.vagas || 0,
-      descricao: im.descricao || ''
-    }));
+    imoveisBanco = imoveis.map(im => {
+      const fotos = parsearFotos(im.fotos);
+      const imagem = fotos.length > 0 ? fotos[0] : 'img/casa-padrao.jpg';
 
-    // renderiza os imóveis filtrados
+      return {
+        id: im.id,
+        nome: im.tipo,
+        tipo: (im.tipo || '').toLowerCase(),
+        imagem,           // ✅ primeira foto do banco (ou fallback)
+        galeria: fotos.slice(1),  // ✅ demais fotos para a galeria
+        fotos,            // ✅ array completo de fotos
+        bairro: im.bairro || '--',
+        cidade: im.cidade || '--',
+        preco: Number((im.valor || im.preco || '0').toString().replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
+        finalidade: im.finalidade ? im.finalidade.toLowerCase() : 'venda',
+        area: im.area || '--',
+        quartos: im.quartos || 0,
+        banheiros: im.banheiros || '--',
+        vagas: im.vagas || 0,
+        descricao: im.descricao || '',
+        extras: []
+      };
+    });
+
     aplicarFiltros();
   } catch (err) {
     console.error('Erro ao listar imóveis:', err);
@@ -235,7 +230,8 @@ function renderCard(im) {
   return `
     <div class="card-imovel fade-up">
       <div class="card-img-wrap">
-        <img src="${im.imagem}" alt="${im.nome}" loading="lazy">
+        <img src="${im.imagem}" alt="${im.nome}" loading="lazy"
+          onerror="this.src='img/casa-padrao.jpg'">
         <button class="card-favorito" onclick="handleFavorito(${im.id}, this)" title="Favoritar">
           ♡
         </button>
@@ -254,4 +250,40 @@ function renderCard(im) {
       </div>
     </div>
   `;
+}
+
+// ---- BUSCAR IMÓVEL POR ID (do banco) ----
+// Usado pelo detalhes.html
+async function getImovelByIdBanco(id) {
+  try {
+    const res = await fetch(`${API}/imoveis/publicos`);
+    const imoveis = await res.json();
+    const im = imoveis.find(i => i.id === parseInt(id));
+    if (!im) return null;
+
+    const fotos = parsearFotos(im.fotos);
+    return {
+      id: im.id,
+      nome: im.tipo,
+      tipo: (im.tipo || '').toLowerCase(),
+      imagem: fotos.length > 0 ? fotos[0] : 'img/casa-padrao.jpg',
+      galeria: fotos.slice(1),
+      fotos,
+      bairro: im.bairro || '--',
+      cidade: im.cidade || '--',
+      preco: Number((im.valor || im.preco || '0').toString().replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
+      finalidade: im.finalidade ? im.finalidade.toLowerCase() : 'venda',
+      area: im.area || '--',
+      quartos: im.quartos || 0,
+      banheiros: im.banheiros || '--',
+      vagas: im.vagas || 0,
+      descricao: im.descricao || '',
+      extras: [],
+      lat: null,
+      lng: null
+    };
+  } catch (err) {
+    console.error('Erro ao buscar imóvel:', err);
+    return null;
+  }
 }

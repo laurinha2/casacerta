@@ -108,12 +108,24 @@
     tr:hover td { background: #f9f6f0; }
 
     .badge { padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .badge-ativo     { background: #e6f4ea; color: #2e7d32; }
-    .badge-encerrado { background: #fdecea; color: #c62828; }
-    .badge-pendente  { background: #fff8e1; color: #f57f17; }
+    .badge-ativo      { background: #e6f4ea; color: #2e7d32; }
+    .badge-aprovado   { background: #e6f4ea; color: #2e7d32; }
+    .badge-encerrado  { background: #fdecea; color: #c62828; }
+    .badge-rejeitado  { background: #fdecea; color: #c62828; }
+    .badge-pendente   { background: #fff8e1; color: #f57f17; }
 
     .btn-excluir { background: transparent; border: 1px solid var(--vermelho); color: var(--vermelho); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); }
     .btn-excluir:hover { background: var(--vermelho); color: var(--branco); }
+
+    .btn-aprovar { background: transparent; border: 1px solid #2e7d32; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); margin-right: 0.3rem; display: block; margin-bottom: 0.3rem; }
+    .btn-aprovar:hover { background: #2e7d32; color: var(--branco); }
+
+    .btn-rejeitar { background: transparent; border: 1px solid #f57f17; color: #f57f17; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); margin-right: 0.3rem; display: block; margin-bottom: 0.3rem; }
+    .btn-rejeitar:hover { background: #f57f17; color: var(--branco); }
+
+    /* ✅ Botão Editar */
+    .btn-editar { background: transparent; border: 1px solid var(--azul); color: var(--azul); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
+    .btn-editar:hover { background: var(--azul); color: var(--branco); }
 
     .sem-dados { text-align: center; color: var(--texto-medio); padding: 2.5rem; font-size: 0.9rem; }
 
@@ -124,10 +136,121 @@
     .stat-numero { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--azul); font-weight: 700; line-height: 1; }
     .stat-label { font-size: 0.82rem; color: var(--texto-medio); text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700; }
 
+    /* ===== MODAL BASE ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.aberto { display: flex; }
+
+    .modal-box {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-box h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-box .modal-sub {
+      font-size: 0.85rem;
+      color: var(--texto-medio);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--bege);
+    }
+
+    .modal-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+    }
+    .modal-info-grid span { color: var(--texto-medio); }
+    .modal-info-grid strong { color: var(--azul); }
+
+    .modal-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .modal-form-grid .full { grid-column: 1 / -1; }
+
+    .modal-form-grid .form-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+
+    .btn-cancelar {
+      padding: 0.7rem 1.5rem;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .btn-confirmar-aprovar {
+      padding: 0.7rem 1.8rem;
+      background: #2e7d32;
+      color: var(--branco);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: var(--transition);
+    }
+    .btn-confirmar-aprovar:hover { opacity: 0.85; }
+
+    /* ✅ Botão salvar edição — azul */
+    .btn-confirmar-editar {
+      padding: 0.7rem 1.8rem;
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: var(--transition);
+    }
+    .btn-confirmar-editar:hover { opacity: 0.85; }
+
     @media (max-width: 600px) {
       .form-grid { grid-template-columns: 1fr; }
       .form-grid .full { grid-column: 1; }
       .admin-header { flex-wrap: wrap; gap: 1rem; }
+      .modal-form-grid { grid-template-columns: 1fr; }
+      .modal-info-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -243,7 +366,7 @@
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereço</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Ação</th></tr>
+                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereço</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Ações</th></tr>
               </thead>
               <tbody id="tbody-anuncios"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
             </table>
@@ -270,7 +393,136 @@
     </div>
   </div>
 
+  <!-- ===== MODAL APROVAR ANÚNCIO ===== -->
+  <div class="modal-overlay" id="modal-aprovar">
+    <div class="modal-box">
+      <h3>✅ Aprovar Anúncio</h3>
+      <p class="modal-sub">Complete as informações do imóvel antes de publicar no site.</p>
+
+      <div class="modal-info-grid" id="modal-info-anuncio"></div>
+
+      <div class="modal-form-grid">
+        <div class="form-group">
+          <label>Bairro *</label>
+          <input type="text" id="m-bairro" class="form-control" placeholder="Ex: Centro">
+        </div>
+        <div class="form-group">
+          <label>Cidade *</label>
+          <input type="text" id="m-cidade" class="form-control" placeholder="Ex: Getúlio Vargas">
+        </div>
+        <div class="form-group">
+          <label>Valor (R$) *</label>
+          <input type="text" id="m-valor" class="form-control" placeholder="Ex: 350000">
+        </div>
+        <div class="form-group">
+          <label>Finalidade *</label>
+          <select id="m-finalidade" class="form-control">
+            <option value="compra">Compra</option>
+            <option value="aluguel">Aluguel</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Área (m²)</label>
+          <input type="number" id="m-area" class="form-control" placeholder="Ex: 120">
+        </div>
+        <div class="form-group">
+          <label>Quartos</label>
+          <input type="number" id="m-quartos" class="form-control" placeholder="Ex: 3" min="0">
+        </div>
+        <div class="form-group">
+          <label>Banheiros</label>
+          <input type="number" id="m-banheiros" class="form-control" placeholder="Ex: 2" min="0">
+        </div>
+        <div class="form-group">
+          <label>Vagas</label>
+          <input type="number" id="m-vagas" class="form-control" placeholder="Ex: 1" min="0">
+        </div>
+        <div class="form-group full">
+          <label>Descrição</label>
+          <textarea id="m-descricao" class="form-control" rows="3" placeholder="Descreva o imóvel..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancelar" onclick="fecharModal('modal-aprovar')">Cancelar</button>
+        <button class="btn-confirmar-aprovar" onclick="confirmarAprovacao()">✅ Publicar Imóvel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL EDITAR IMÓVEL ===== -->
+  <div class="modal-overlay" id="modal-editar">
+    <div class="modal-box">
+      <h3>✏️ Editar Imóvel</h3>
+      <p class="modal-sub">Altere as informações do imóvel publicado. As mudanças ficam visíveis imediatamente no site.</p>
+
+      <div class="modal-form-grid">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="e-tipo" class="form-control">
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Cobertura">Cobertura</option>
+            <option value="Terreno">Terreno</option>
+            <option value="Comercial">Comercial</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Finalidade</label>
+          <select id="e-finalidade" class="form-control">
+            <option value="compra">Compra</option>
+            <option value="aluguel">Aluguel</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Bairro</label>
+          <input type="text" id="e-bairro" class="form-control" placeholder="Ex: Centro">
+        </div>
+        <div class="form-group">
+          <label>Cidade</label>
+          <input type="text" id="e-cidade" class="form-control" placeholder="Ex: Getúlio Vargas">
+        </div>
+        <div class="form-group">
+          <label>Endereço</label>
+          <input type="text" id="e-endereco" class="form-control" placeholder="Ex: Rua das Flores, 123">
+        </div>
+        <div class="form-group">
+          <label>Valor (R$)</label>
+          <input type="text" id="e-valor" class="form-control" placeholder="Ex: 350000">
+        </div>
+        <div class="form-group">
+          <label>Área (m²)</label>
+          <input type="number" id="e-area" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Quartos</label>
+          <input type="number" id="e-quartos" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Banheiros</label>
+          <input type="number" id="e-banheiros" class="form-control" min="0">
+        </div>
+        <div class="form-group">
+          <label>Vagas</label>
+          <input type="number" id="e-vagas" class="form-control" min="0">
+        </div>
+        <div class="form-group full">
+          <label>Descrição</label>
+          <textarea id="e-descricao" class="form-control" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancelar" onclick="fecharModal('modal-editar')">Cancelar</button>
+        <button class="btn-confirmar-editar" onclick="confirmarEdicao()">💾 Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let anuncioSelecionadoId = null;
+    let imovelEditandoId = null;  // ✅ ID do imóvel sendo editado
+
     function trocarAba(id, btn) {
       document.querySelectorAll('.admin-painel-aba').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.admin-aba-btn').forEach(b => b.classList.remove('active'));
@@ -327,6 +579,13 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.getElementById('tela-login').style.display !== 'none') loginAdmin();
     });
+
+    // ---- FECHAR MODAL GENÉRICO ----
+    function fecharModal(id) {
+      document.getElementById(id).classList.remove('aberto');
+      if (id === 'modal-aprovar') anuncioSelecionadoId = null;
+      if (id === 'modal-editar') imovelEditandoId = null;
+    }
 
     // USUÁRIOS
     let listaUsuarios = [];
@@ -407,11 +666,15 @@
         const anuncios = await res.json();
         const tbody = document.getElementById('tbody-anuncios');
 
-        const pendentes = anuncios.filter(a => a.status === 'pendente').length;
+        const pendentes  = anuncios.filter(a => a.status === 'pendente').length;
+        const aprovados  = anuncios.filter(a => a.status === 'aprovado').length;
+        const rejeitados = anuncios.filter(a => a.status === 'rejeitado').length;
 
         document.getElementById('stats-anuncios').innerHTML = `
           <div class="stat-card"><div class="stat-numero">${anuncios.length}</div><div class="stat-label">Total de anúncios</div></div>
-          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>`;
+          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>
+          <div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">${aprovados}</div><div class="stat-label">Aprovados</div></div>
+          <div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">${rejeitados}</div><div class="stat-label">Rejeitados</div></div>`;
 
         if (anuncios.length === 0) { tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anúncio recebido ainda.</td></tr>'; return; }
 
@@ -427,9 +690,163 @@
             <td>${a.finalidade || '—'}</td>
             <td>${a.data_envio || '—'}</td>
             <td><span class="badge badge-${a.status}">${a.status}</span></td>
-            <td><button class="btn-excluir" onclick="excluirAnuncio(${a.id})">Excluir</button></td>
+            <td>
+              ${a.status === 'pendente' ? `
+                <button class="btn-aprovar" onclick="abrirModalAprovar(${a.id}, '${esc(a.nome)}', '${esc(a.tipo)}', '${esc(a.endereco)}', '${esc(a.cidade)}', '${esc(a.valor)}', '${esc(a.finalidade)}', '${esc(a.descricao)}')">✅ Aprovar</button>
+                <button class="btn-rejeitar" onclick="rejeitarAnuncio(${a.id})">❌ Rejeitar</button>
+              ` : ''}
+              ${a.status === 'aprovado' ? `
+                <button class="btn-editar" onclick="abrirModalEditar(${JSON.stringify(a).replace(/"/g, '&quot;')})">✏️ Editar</button>
+              ` : ''}
+              <button class="btn-excluir" onclick="excluirAnuncio(${a.id})">Excluir</button>
+            </td>
           </tr>`).join('');
       } catch (err) { console.error('Erro ao carregar anúncios:', err); }
+    }
+
+    // Escapa aspas simples para uso inline em atributos HTML
+    function esc(str) {
+      return (str || '').toString().replace(/'/g, "\\'").replace(/\n/g, ' ');
+    }
+
+    // ---- MODAL APROVAR ----
+    function abrirModalAprovar(id, nome, tipo, endereco, cidade, valor, finalidade, descricao) {
+      anuncioSelecionadoId = id;
+
+      document.getElementById('modal-info-anuncio').innerHTML = `
+        <div><span>Cliente:</span><br><strong>${nome}</strong></div>
+        <div><span>Tipo:</span><br><strong>${tipo}</strong></div>
+        <div><span>Endereço:</span><br><strong>${endereco}</strong></div>
+        <div><span>Cidade informada:</span><br><strong>${cidade || '—'}</strong></div>
+      `;
+
+      document.getElementById('m-cidade').value    = cidade || '';
+      document.getElementById('m-valor').value     = valor || '';
+      document.getElementById('m-descricao').value = descricao || '';
+
+      const fin = (finalidade || '').toLowerCase();
+      document.getElementById('m-finalidade').value =
+        (fin.includes('loca') || fin.includes('aluguel')) ? 'aluguel' : 'compra';
+
+      document.getElementById('m-bairro').value    = '';
+      document.getElementById('m-area').value      = '';
+      document.getElementById('m-quartos').value   = '';
+      document.getElementById('m-banheiros').value = '';
+      document.getElementById('m-vagas').value     = '';
+
+      document.getElementById('modal-aprovar').classList.add('aberto');
+    }
+
+    async function confirmarAprovacao() {
+      if (!anuncioSelecionadoId) return;
+
+      const bairro  = document.getElementById('m-bairro').value.trim();
+      const cidade  = document.getElementById('m-cidade').value.trim();
+      const valor   = document.getElementById('m-valor').value.trim();
+
+      if (!bairro || !cidade || !valor) {
+        alert('Preencha pelo menos Bairro, Cidade e Valor antes de publicar.');
+        return;
+      }
+
+      const dados = {
+        bairro,
+        cidade,
+        valor,
+        finalidade: document.getElementById('m-finalidade').value,
+        area:      document.getElementById('m-area').value || null,
+        quartos:   parseInt(document.getElementById('m-quartos').value) || 0,
+        banheiros: parseInt(document.getElementById('m-banheiros').value) || 0,
+        vagas:     parseInt(document.getElementById('m-vagas').value) || 0,
+        descricao: document.getElementById('m-descricao').value.trim()
+      };
+
+      try {
+        const res = await fetch(`${API}/admin/imoveis/${anuncioSelecionadoId}/aprovar`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+        if (res.ok) { fecharModal('modal-aprovar'); carregarAnuncios(); }
+        else alert('Erro ao aprovar anúncio.');
+      } catch (err) {
+        alert('Erro ao conectar com o servidor.');
+      }
+    }
+
+    // ---- MODAL EDITAR ----
+    function abrirModalEditar(anuncio) {
+      imovelEditandoId = anuncio.id;
+
+      // Preenche todos os campos com os dados atuais do imóvel
+      document.getElementById('e-tipo').value      = anuncio.tipo || '';
+      document.getElementById('e-bairro').value    = anuncio.bairro || '';
+      document.getElementById('e-cidade').value    = anuncio.cidade || '';
+      document.getElementById('e-endereco').value  = anuncio.endereco || '';
+      document.getElementById('e-valor').value     = anuncio.valor || '';
+      document.getElementById('e-area').value      = anuncio.area || '';
+      document.getElementById('e-quartos').value   = anuncio.quartos || 0;
+      document.getElementById('e-banheiros').value = anuncio.banheiros || 0;
+      document.getElementById('e-vagas').value     = anuncio.vagas || 0;
+      document.getElementById('e-descricao').value = anuncio.descricao || '';
+
+      const fin = (anuncio.finalidade || '').toLowerCase();
+      document.getElementById('e-finalidade').value =
+        (fin.includes('loca') || fin.includes('aluguel')) ? 'aluguel' : 'compra';
+
+      document.getElementById('modal-editar').classList.add('aberto');
+    }
+
+    async function confirmarEdicao() {
+      if (!imovelEditandoId) return;
+
+      const dados = {
+        bairro:    document.getElementById('e-bairro').value.trim(),
+        cidade:    document.getElementById('e-cidade').value.trim(),
+        valor:     document.getElementById('e-valor').value.trim(),
+        finalidade: document.getElementById('e-finalidade').value,
+        area:      document.getElementById('e-area').value || null,
+        quartos:   parseInt(document.getElementById('e-quartos').value) || 0,
+        banheiros: parseInt(document.getElementById('e-banheiros').value) || 0,
+        vagas:     parseInt(document.getElementById('e-vagas').value) || 0,
+        descricao: document.getElementById('e-descricao').value.trim(),
+        tipo:      document.getElementById('e-tipo').value,
+        endereco:  document.getElementById('e-endereco').value.trim()
+      };
+
+      if (!dados.cidade || !dados.valor) {
+        alert('Cidade e Valor são obrigatórios.');
+        return;
+      }
+
+      try {
+        // ✅ Reutiliza a rota de aprovar (que já faz UPDATE nos campos)
+        // mas também precisamos do tipo e endereço — veja nota abaixo
+        const res = await fetch(`${API}/admin/imoveis/${imovelEditandoId}/editar`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        if (res.ok) {
+          fecharModal('modal-editar');
+          carregarAnuncios();
+          alert('Imóvel atualizado com sucesso!');
+        } else {
+          const data = await res.json();
+          alert(data.erro || 'Erro ao salvar alterações.');
+        }
+      } catch (err) {
+        alert('Erro ao conectar com o servidor.');
+      }
+    }
+
+    async function rejeitarAnuncio(id) {
+      if (!confirm('Rejeitar este anúncio?')) return;
+      try {
+        await fetch(`${API}/admin/imoveis/${id}/rejeitar`, { method: 'PATCH' });
+        carregarAnuncios();
+      } catch (err) { alert('Erro ao rejeitar anúncio.'); }
     }
 
     // SALVAR CONTRATO
@@ -501,6 +918,13 @@
       const [ano, mes, dia] = data.split('-');
       return `${dia}/${mes}/${ano}`;
     }
+
+    // Fecha modais clicando fora
+    ['modal-aprovar', 'modal-editar'].forEach(id => {
+      document.getElementById(id).addEventListener('click', function(e) {
+        if (e.target === this) fecharModal(id);
+      });
+    });
   </script>
 </body>
 </html>

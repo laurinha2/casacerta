@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Anunciar – Casa Certa Imobiliária</title>
   <link rel="stylesheet" href="css/style.css">
@@ -125,6 +124,22 @@
     .form-sucesso h3 { color: var(--verde-oliva); font-size: 1.4rem; margin-bottom: 1rem; }
     .form-sucesso p { color: var(--texto-medio); }
 
+    /* Preview de fotos */
+    .fotos-preview {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .fotos-preview img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid var(--bege-escuro);
+    }
+
     @media (max-width: 768px) {
       .anunciar-hero { grid-template-columns: 1fr; }
       .anunciar-hero-img { height: 220px; }
@@ -179,10 +194,8 @@
   <section class="form-section">
     <div class="form-wrap">
       <h2 class="form-titulo">Anuncie seu imóvel</h2>
-      <p class="form-sub">Quer vender ou alugar seu imóvel? Cadastre suas informações e nossa equipe entrará em contato.
-      </p>
+      <p class="form-sub">Quer vender ou alugar seu imóvel? Cadastre suas informações e nossa equipe entrará em contato.</p>
 
-      <!-- AVISO SE NÃO ESTIVER LOGADO -->
       <div class="aviso-login" id="aviso-login">
         <p>🔒 Você precisa estar logado para anunciar um imóvel.</p>
         <div class="btn-links">
@@ -243,9 +256,10 @@
               placeholder="Adicione uma breve descrição: área, quartos, diferenciais..."></textarea>
           </div>
           <div class="form-group form-full">
-            <label for="an-foto">Adicionar Fotos</label>
-            <input type="file" id="an-foto" class="form-control" accept="image/*" multiple>
+            <label for="an-foto">Adicionar Fotos (máx. 5)</label>
+            <input type="file" id="an-foto" class="form-control" accept="image/jpeg,image/png,image/webp" multiple>
             <p class="form-aviso">Aceitamos JPG, PNG ou WebP. Máximo 5 fotos.</p>
+            <div class="fotos-preview" id="fotos-preview"></div>
           </div>
         </div>
         <div class="form-erro" id="form-erro"></div>
@@ -268,7 +282,6 @@
 
   <div id="footer"></div>
 
-  <script src="js/dados.js"></script>
   <script src="js/config.js"></script>
   <script src="js/main.js"></script>
   <script src="js/componentes.js"></script>
@@ -279,17 +292,38 @@
       usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
 
       if (!usuarioLogado) {
-        // Mostra aviso e desabilita o formulário
         document.getElementById('aviso-login').style.display = 'block';
         document.getElementById('btn-enviar').disabled = true;
         document.getElementById('btn-enviar').style.opacity = '0.4';
         document.getElementById('btn-enviar').style.cursor = 'not-allowed';
       } else {
-        // Preenche nome, email e telefone automaticamente
-        document.getElementById('an-nome').value = usuarioLogado.nome || '';
+        document.getElementById('an-nome').value  = usuarioLogado.nome  || '';
         document.getElementById('an-email').value = usuarioLogado.email || '';
-        document.getElementById('an-tel').value = usuarioLogado.telefone || '';
+        document.getElementById('an-tel').value   = usuarioLogado.telefone || '';
       }
+
+      // Preview das fotos ao selecionar
+      document.getElementById('an-foto').addEventListener('change', function () {
+        const preview = document.getElementById('fotos-preview');
+        preview.innerHTML = '';
+        const arquivos = Array.from(this.files).slice(0, 5);
+
+        if (arquivos.length > 5) {
+          this.value = '';
+          alert('Máximo de 5 fotos permitidas.');
+          return;
+        }
+
+        arquivos.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            preview.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
     });
 
     async function enviarAnuncio() {
@@ -302,7 +336,6 @@
       const btn = document.getElementById('btn-enviar');
       erroEl.style.display = 'none';
 
-      // Validar campos obrigatórios
       const obrig = ['an-nome', 'an-email', 'an-tel', 'an-tipo', 'an-endereco'];
       let ok = true;
       obrig.forEach(id => {
@@ -320,24 +353,29 @@
       btn.textContent = 'Enviando...';
       btn.disabled = true;
 
-      const dados = {
-        usuario_id: usuarioLogado.id,
-        nome: document.getElementById('an-nome').value.trim(),
-        email: document.getElementById('an-email').value.trim(),
-        telefone: document.getElementById('an-tel').value.trim(),
-        tipo: document.getElementById('an-tipo').value,
-        endereco: document.getElementById('an-endereco').value.trim(),
-        cidade: document.getElementById('an-cidade').value.trim(),
-        valor: document.getElementById('an-valor').value.trim(),
-        finalidade: document.getElementById('an-finalidade').value,
-        descricao: document.getElementById('an-desc').value.trim()
-      };
+      // ✅ Usa FormData para enviar texto + arquivos juntos
+      const formData = new FormData();
+      formData.append('usuario_id', usuarioLogado.id);
+      formData.append('nome',       document.getElementById('an-nome').value.trim());
+      formData.append('email',      document.getElementById('an-email').value.trim());
+      formData.append('telefone',   document.getElementById('an-tel').value.trim());
+      formData.append('tipo',       document.getElementById('an-tipo').value);
+      formData.append('endereco',   document.getElementById('an-endereco').value.trim());
+      formData.append('cidade',     document.getElementById('an-cidade').value.trim());
+      formData.append('valor',      document.getElementById('an-valor').value.trim());
+      formData.append('finalidade', document.getElementById('an-finalidade').value);
+      formData.append('descricao',  document.getElementById('an-desc').value.trim());
+
+      const arquivos = document.getElementById('an-foto').files;
+      Array.from(arquivos).slice(0, 5).forEach(file => {
+        formData.append('fotos', file);
+      });
 
       try {
+        // ✅ Sem Content-Type — o browser define automaticamente com boundary
         const res = await fetch(`${API}/imoveis`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dados)
+          body: formData
         });
 
         const data = await res.json();

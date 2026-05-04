@@ -1,1 +1,1 @@
-const API = `${window.location.protocol}//${window.location.hostname}:3000`;
+const API = 'https://casacerta.onrender.com';

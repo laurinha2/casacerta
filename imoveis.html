@@ -153,26 +153,19 @@
           <option value="casa">Casa</option>
           <option value="apartamento">Apartamento</option>
           <option value="cobertura">Cobertura</option>
+          <option value="terreno">Terreno</option>
         </select>
       </div>
       <div class="filtro-grupo">
         <label>Cidade</label>
         <select id="f-cidade" class="form-control" onchange="aplicarFiltros()">
           <option value="">Todas</option>
-          <option value="Curitiba">Curitiba</option>
-          <option value="Porto Alegre">Porto Alegre</option>
         </select>
       </div>
       <div class="filtro-grupo">
         <label>Bairro</label>
         <select id="f-bairro" class="form-control" onchange="aplicarFiltros()">
           <option value="">Todos</option>
-          <option value="Centro">Centro</option>
-          <option value="Vila Nova">Vila Nova</option>
-          <option value="Jardim das Flores">Jardim das Flores</option>
-          <option value="Jardim Aurora">Jardim Aurora</option>
-          <option value="Alphaville">Alphaville</option>
-          <option value="Moinhos de Vento">Moinhos de Vento</option>
         </select>
       </div>
       <div class="filtro-grupo">
@@ -222,78 +215,80 @@
 
   <div id="footer"></div>
 
-  <!--script src="js/dados.js"></script-->
   <script src="js/config.js"></script>
   <script src="js/main.js"></script>
   <script src="js/componentes.js"></script>
-  <script let imoveisBanco = []; // variável global para armazenar os imóveis da API></script>
 
   <script>
-    async function testarAPI() {
-      const res = await fetch('http://localhost:3000/imoveis/publicos');
-      const data = await res.json();
-      console.log("DADOS DO BANCO:", data);
+    // ---- FILTROS ----
+    function aplicarFiltros() {
+      const finalidade = document.getElementById('f-finalidade').value;
+      const tipo = document.getElementById('f-tipo').value;
+      const cidade = document.getElementById('f-cidade').value;
+      const bairro = document.getElementById('f-bairro').value;
+      const quartos = parseInt(document.getElementById('f-quartos').value) || 0;
+      const preco = parseInt(document.getElementById('f-preco').value) || 0;
+      const ordenar = document.getElementById('ordenar').value;
+
+      let lista = imoveisBanco.filter(im => {
+        if (finalidade && im.finalidade !== finalidade) return false;
+        if (tipo && im.tipo !== tipo) return false;
+        if (cidade && im.cidade !== cidade) return false;
+        if (bairro && im.bairro !== bairro) return false;
+        if (quartos && im.quartos < quartos) return false;
+        if (preco && im.preco > preco) return false;
+        return true;
+      });
+
+      if (ordenar === 'menor-preco') lista.sort((a, b) => a.preco - b.preco);
+      else if (ordenar === 'maior-preco') lista.sort((a, b) => b.preco - a.preco);
+      else if (ordenar === 'maior-area') lista.sort((a, b) => b.area - a.area);
+
+      document.getElementById('count').textContent = lista.length;
+      const container = document.getElementById('lista-imoveis');
+
+      if (lista.length === 0) {
+        container.innerHTML = `<div class="sem-resultados"><h3>Nenhum imóvel encontrado</h3></div>`;
+      } else {
+        container.innerHTML = lista.map(im => renderCard(im)).join('');
+      }
+
+      // Popula dinamicamente cidades e bairros com base nos dados reais
+      popularSelectsDinamicos();
     }
-    
 
-  testarAPI();
+    function popularSelectsDinamicos() {
+      const cidadeSelect = document.getElementById('f-cidade');
+      const bairroSelect = document.getElementById('f-bairro');
 
-  function aplicarFiltros() {
-  const finalidade = document.getElementById('f-finalidade').value;
-  const tipo = document.getElementById('f-tipo').value;
-  const cidade = document.getElementById('f-cidade').value;
-  const bairro = document.getElementById('f-bairro').value;
-  const quartos = parseInt(document.getElementById('f-quartos').value) || 0;
-  const preco = parseInt(document.getElementById('f-preco').value) || 0;
-  const ordenar = document.getElementById('ordenar').value;
+      const cidadeAtual = cidadeSelect.value;
+      const bairroAtual = bairroSelect.value;
 
-  let lista = imoveisBanco.filter(im => {
-  if (finalidade && im.finalidade !== finalidade) return false;
-  if (tipo && im.tipo !== tipo) return false;
-  if (cidade && im.cidade !== cidade) return false;
-  if (bairro && im.bairro !== bairro) return false;
-  if (quartos && im.quartos < quartos) return false; if (preco && im.preco> preco) return false;
-    return true;
-    });
+      const cidades = [...new Set(imoveisBanco.map(im => im.cidade).filter(Boolean))].sort();
+      const bairros = [...new Set(imoveisBanco.map(im => im.bairro).filter(Boolean))].sort();
 
-    if (ordenar === 'menor-preco') lista.sort((a, b) => a.preco - b.preco);
-    else if (ordenar === 'maior-preco') lista.sort((a, b) => b.preco - a.preco);
-    else if (ordenar === 'maior-area') lista.sort((a, b) => b.area - a.area);
+      cidadeSelect.innerHTML = '<option value="">Todas</option>' +
+        cidades.map(c => `<option value="${c}" ${c === cidadeAtual ? 'selected' : ''}>${c}</option>`).join('');
 
-    document.getElementById('count').textContent = lista.length;
-    const container = document.getElementById('lista-imoveis');
-
-    if (lista.length === 0) {
-    container.innerHTML = `<div class="sem-resultados">
-      <h3>Nenhum imóvel encontrado</h3>
-    </div>`;
-    } else {
-    container.innerHTML = lista.map(im => `
-    <div class="card">
-      <h3>${im.tipo}</h3>
-      <p>${im.cidade}</p>
-      <p>${im.valor ? im.valor : 'Preço não informado'}</p>
-      <p>${im.descricao || ''}</p>
-    </div>
-    `).join('');
-    }
+      bairroSelect.innerHTML = '<option value="">Todos</option>' +
+        bairros.map(b => `<option value="${b}" ${b === bairroAtual ? 'selected' : ''}>${b}</option>`).join('');
     }
 
     function limparFiltros() {
-    ['f-finalidade', 'f-tipo', 'f-cidade', 'f-bairro', 'f-quartos', 'f-preco', 'ordenar']
-    .forEach(id => document.getElementById(id).value = '');
-    aplicarFiltros();
+      ['f-finalidade', 'f-tipo', 'f-cidade', 'f-bairro', 'f-quartos', 'f-preco', 'ordenar']
+        .forEach(id => document.getElementById(id).value = '');
+      aplicarFiltros();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(location.search);
-    if (params.get('finalidade')) document.getElementById('f-finalidade').value = params.get('finalidade');
-    if (params.get('tipo')) document.getElementById('f-tipo').value = params.get('tipo');
-    if (params.get('cidade')) document.getElementById('f-cidade').value = params.get('cidade');
-    if (params.get('bairro')) document.getElementById('f-bairro').value = params.get('bairro');
-    aplicarFiltros();
+      const params = new URLSearchParams(location.search);
+      if (params.get('finalidade')) document.getElementById('f-finalidade').value = params.get('finalidade');
+      if (params.get('tipo')) document.getElementById('f-tipo').value = params.get('tipo');
+      if (params.get('cidade')) document.getElementById('f-cidade').value = params.get('cidade');
+      if (params.get('bairro')) document.getElementById('f-bairro').value = params.get('bairro');
     });
-    </script>
+  </script>
+
 </body>
 
 </html>
