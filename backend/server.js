@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, '..')));
 // ===== CLOUDINARY =====
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
@@ -36,21 +36,35 @@ const upload = multer({
 
 // ===== BANCO DE DADOS =====
 const db = mysql.createConnection({
-  host:     process.env.DB_HOST     || 'localhost',
-  port:     process.env.DB_PORT     || 3307,
-  user:     process.env.DB_USER     || 'root',
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 3307,
+  user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME     || 'casacerta'
+  database: process.env.DB_NAME || 'casacerta'
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar no MySQL:', err.message);
-  } else {
+function conectarDB() {
+  db.connect((err) => {
+    if (err) {
+      console.error('Erro ao conectar no MySQL:', err.message);
+      setTimeout(conectarDB, 5000);
+      return;
+    }
     console.log('Conectado ao MySQL!');
     criarTabelas();
-  }
-});
+  });
+
+  db.on('error', (err) => {
+    console.error('Erro na conexão MySQL:', err.message);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      conectarDB();
+    } else {
+      throw err;
+    }
+  });
+}
+
+conectarDB();
 
 function criarTabelas() {
   db.query(`CREATE TABLE IF NOT EXISTS usuarios (
@@ -128,7 +142,7 @@ function criarTabelas() {
     `ALTER TABLE imoveis_anuncios ADD COLUMN vagas INT DEFAULT 0`,
     `ALTER TABLE imoveis_anuncios ADD COLUMN fotos TEXT`,
   ];
-  novasColunas.forEach(sql => { db.query(sql, () => {}); });
+  novasColunas.forEach(sql => { db.query(sql, () => { }); });
 }
 
 // ===== USUÁRIOS =====
