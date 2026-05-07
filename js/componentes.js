@@ -49,7 +49,7 @@ const FOOTER_HTML = `
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 Casa Certa Imobiliária. Todos os direitos reservados.</p>
+    <p>© 2025 Casa Certa Imobiliária. Todos os direitos reservados. · <a href="admin.html" style="color:rgba(255,255,255,0.3); font-size:0.75rem; text-decoration:none;" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">Acesso Admin</a></p>
   </div>
 </footer>
 <a href="https://wa.me/5554981111111" target="_blank" class="whatsapp-float" title="Fale conosco no WhatsApp">
