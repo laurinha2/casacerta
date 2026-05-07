@@ -4,44 +4,43 @@ const mysql = require('mysql2');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, '..')));
 
-// ===== CONFIGURAÇÃO DO MULTER (upload de fotos) =====
-const pastaUploads = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(pastaUploads)) fs.mkdirSync(pastaUploads, { recursive: true });
+// ===== CLOUDINARY =====
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, pastaUploads),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `imovel_${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`);
+// ===== MULTER + CLOUDINARY =====
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'casacerta',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ width: 1200, crop: 'limit' }]
   }
 });
 
 const upload = multer({
   storage,
-  limits: { files: 5, fileSize: 5 * 1024 * 1024 }, // máx 5 fotos, 5MB cada
-  fileFilter: (req, file, cb) => {
-    const permitidos = /jpeg|jpg|png|webp/;
-    if (permitidos.test(path.extname(file.originalname).toLowerCase())) cb(null, true);
-    else cb(new Error('Apenas imagens JPG, PNG ou WebP são permitidas.'));
-  }
+  limits: { files: 5, fileSize: 5 * 1024 * 1024 }
 });
-
-// Servir pasta de uploads como estática
-app.use('/uploads', express.static(pastaUploads));
 
 // ===== BANCO DE DADOS =====
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3307,
-  user: process.env.DB_USER || 'root',
+  host:     process.env.DB_HOST     || 'localhost',
+  port:     process.env.DB_PORT     || 3307,
+  user:     process.env.DB_USER     || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'casacerta'
+  database: process.env.DB_NAME     || 'casacerta'
 });
 
 db.connect((err) => {
@@ -121,7 +120,6 @@ function criarTabelas() {
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
   )`, (err) => { if (err) console.error('Erro imoveis_anuncios:', err.message); });
 
-  // Adiciona colunas novas caso a tabela já exista
   const novasColunas = [
     `ALTER TABLE imoveis_anuncios ADD COLUMN bairro VARCHAR(255)`,
     `ALTER TABLE imoveis_anuncios ADD COLUMN area VARCHAR(20)`,
@@ -130,7 +128,7 @@ function criarTabelas() {
     `ALTER TABLE imoveis_anuncios ADD COLUMN vagas INT DEFAULT 0`,
     `ALTER TABLE imoveis_anuncios ADD COLUMN fotos TEXT`,
   ];
-  novasColunas.forEach(sql => { db.query(sql, () => { }); });
+  novasColunas.forEach(sql => { db.query(sql, () => {}); });
 }
 
 // ===== USUÁRIOS =====
@@ -328,7 +326,7 @@ app.delete('/contratos/:id', (req, res) => {
 
 // ===== ANÚNCIOS DE IMÓVEIS =====
 
-// ✅ Enviar anúncio COM fotos (usuário logado)
+// ✅ Upload de fotos agora vai para o Cloudinary
 app.post('/imoveis', upload.array('fotos', 5), (req, res) => {
   const { usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao } = req.body;
   if (!usuario_id || !nome || !email || !telefone || !tipo || !endereco)
@@ -336,9 +334,9 @@ app.post('/imoveis', upload.array('fotos', 5), (req, res) => {
 
   const data_envio = new Date().toLocaleDateString('pt-BR');
 
-  // Salva os caminhos das fotos como JSON
+  // ✅ Salva as URLs do Cloudinary
   const fotos = req.files && req.files.length > 0
-    ? JSON.stringify(req.files.map(f => `/uploads/${f.filename}`))
+    ? JSON.stringify(req.files.map(f => f.path))
     : null;
 
   db.query(
@@ -352,7 +350,6 @@ app.post('/imoveis', upload.array('fotos', 5), (req, res) => {
   );
 });
 
-// Listar todos os anúncios (admin)
 app.get('/admin/imoveis', (req, res) => {
   db.query(
     `SELECT a.*, u.nome AS nome_usuario FROM imoveis_anuncios a
@@ -365,7 +362,6 @@ app.get('/admin/imoveis', (req, res) => {
   );
 });
 
-// Aprovar anúncio com dados completos (admin)
 app.patch('/admin/imoveis/:id/aprovar', (req, res) => {
   const { bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
   db.query(
@@ -380,9 +376,7 @@ app.patch('/admin/imoveis/:id/aprovar', (req, res) => {
     }
   );
 });
-// ✅ Cole este trecho no server.js, logo abaixo da rota de "aprovar" (/admin/imoveis/:id/aprovar)
 
-// Editar imóvel aprovado (admin) — atualiza qualquer campo
 app.patch('/admin/imoveis/:id/editar', (req, res) => {
   const { tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
   db.query(
@@ -397,7 +391,7 @@ app.patch('/admin/imoveis/:id/editar', (req, res) => {
     }
   );
 });
-// Rejeitar anúncio (admin)
+
 app.patch('/admin/imoveis/:id/rejeitar', (req, res) => {
   db.query(`UPDATE imoveis_anuncios SET status = 'rejeitado' WHERE id = ?`, [req.params.id], (err) => {
     if (err) return res.status(500).json({ erro: err.message });
@@ -405,7 +399,6 @@ app.patch('/admin/imoveis/:id/rejeitar', (req, res) => {
   });
 });
 
-// Listagem pública — só imóveis aprovados
 app.get('/imoveis/publicos', (req, res) => {
   db.query(
     `SELECT id, tipo, endereco, bairro, cidade, valor, finalidade, descricao, area, quartos, banheiros, vagas, fotos
@@ -419,7 +412,6 @@ app.get('/imoveis/publicos', (req, res) => {
   );
 });
 
-// Excluir anúncio (admin)
 app.delete('/imoveis/:id', (req, res) => {
   db.query('DELETE FROM imoveis_anuncios WHERE id = ?', [req.params.id], (err) => {
     if (err) return res.status(500).json({ erro: err.message });
