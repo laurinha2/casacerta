@@ -35,37 +35,36 @@ const upload = multer({
 });
 
 // ===== BANCO DE DADOS =====
-const db = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3307,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'casacerta'
-});
+function criarConexao() {
+  const conexao = mysql.createConnection({
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3307,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'casacerta'
+  });
 
-function conectarDB() {
-  db.connect((err) => {
+  conexao.connect((err) => {
     if (err) {
       console.error('Erro ao conectar no MySQL:', err.message);
-      setTimeout(conectarDB, 5000);
+      setTimeout(criarConexao, 5000);
       return;
     }
     console.log('Conectado ao MySQL!');
     criarTabelas();
   });
 
-  db.on('error', (err) => {
-    console.error('Erro na conexão MySQL:', err.message);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      conectarDB();
-    } else {
-      throw err;
+  conexao.on('error', (err) => {
+    console.error('Erro MySQL:', err.message);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.fatal) {
+      db = criarConexao();
     }
   });
+
+  return conexao;
 }
 
-conectarDB();
-
+let db = criarConexao();
 function criarTabelas() {
   db.query(`CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
