@@ -178,13 +178,11 @@ function parsearFotos(fotosJson) {
   if (!fotosJson) return [];
   try {
     const arr = JSON.parse(fotosJson);
-    // Garante URL absoluta com a origem do servidor
-    return arr.map(f => `${location.origin}${f}`);
+    return arr.map(f => f.startsWith('http') ? f : `${location.origin}${f}`);
   } catch {
     return [];
   }
 }
-
 // ---- CARREGAR IMÓVEIS DO BANCO ----
 async function carregarImoveisPeloBanco() {
   const container = document.getElementById('lista-imoveis');
