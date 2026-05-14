@@ -38,14 +38,15 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar no PostgreSQL:', err.message);
-  } else {
+// ✅ FIX: usar db.query() é mais confiável para testar conexão com Pool
+db.query('SELECT 1')
+  .then(() => {
     console.log('Conectado ao Supabase!');
     criarTabelas();
-  }
-});
+  })
+  .catch(err => {
+    console.error('Erro ao conectar no PostgreSQL:', err.message);
+  });
 
 async function criarTabelas() {
   try {
@@ -141,7 +142,7 @@ app.post('/usuarios', async (req, res) => {
 
 app.get('/usuarios', async (req, res) => {
   try {
-    const result = await db.query('SELECT id, nome, email, telefone, cpf_cnpj FROM usuarios');
+    const result = await db.query('SELECT id, nome, email, telefone, cpf_cnpj FROM usuarios ORDER BY id');
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -164,10 +165,11 @@ app.get('/usuarios/:id', async (req, res) => {
 app.patch('/usuarios/:id', async (req, res) => {
   const { nome, telefone, cpf_cnpj } = req.body;
   try {
-    await db.query(
+    const result = await db.query(
       'UPDATE usuarios SET nome=$1, telefone=$2, cpf_cnpj=$3 WHERE id=$4',
       [nome, telefone, cpf_cnpj, req.params.id]
     );
+    if (result.rowCount === 0) return res.status(404).json({ erro: 'Usuário não encontrado.' });
     res.json({ sucesso: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -218,7 +220,8 @@ app.post('/recuperar', async (req, res) => {
 
 app.patch('/usuarios/:id/senha', async (req, res) => {
   const { senha } = req.body;
-  if (!senha || senha.length < 6) return res.status(400).json({ erro: 'A senha deve ter pelo menos 6 caracteres.' });
+  if (!senha || senha.length < 6)
+    return res.status(400).json({ erro: 'A senha deve ter pelo menos 6 caracteres.' });
   try {
     const result = await db.query('UPDATE usuarios SET senha=$1 WHERE id=$2', [senha, req.params.id]);
     if (result.rowCount === 0) return res.status(404).json({ erro: 'Usuário não encontrado.' });
@@ -231,7 +234,10 @@ app.patch('/usuarios/:id/senha', async (req, res) => {
 // ===== FAVORITOS =====
 app.get('/favoritos/:usuario_id', async (req, res) => {
   try {
-    const result = await db.query('SELECT imovel_id FROM favoritos WHERE usuario_id=$1', [req.params.usuario_id]);
+    const result = await db.query(
+      'SELECT imovel_id FROM favoritos WHERE usuario_id=$1',
+      [req.params.usuario_id]
+    );
     res.json(result.rows.map(r => r.imovel_id));
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -254,8 +260,12 @@ app.post('/favoritos', async (req, res) => {
 
 app.delete('/favoritos', async (req, res) => {
   const { usuario_id, imovel_id } = req.body;
+  if (!usuario_id || !imovel_id) return res.status(400).json({ erro: 'Dados incompletos' });
   try {
-    await db.query('DELETE FROM favoritos WHERE usuario_id=$1 AND imovel_id=$2', [usuario_id, imovel_id]);
+    await db.query(
+      'DELETE FROM favoritos WHERE usuario_id=$1 AND imovel_id=$2',
+      [usuario_id, imovel_id]
+    );
     res.json({ sucesso: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -265,7 +275,10 @@ app.delete('/favoritos', async (req, res) => {
 // ===== SIMULAÇÕES =====
 app.get('/simulacoes/:usuario_id', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM simulacoes WHERE usuario_id=$1 ORDER BY id DESC', [req.params.usuario_id]);
+    const result = await db.query(
+      'SELECT * FROM simulacoes WHERE usuario_id=$1 ORDER BY id DESC',
+      [req.params.usuario_id]
+    );
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -298,7 +311,10 @@ app.delete('/simulacoes/:id', async (req, res) => {
 // ===== CONTRATOS =====
 app.get('/contratos/:usuario_id', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM contratos WHERE usuario_id=$1 ORDER BY id DESC', [req.params.usuario_id]);
+    const result = await db.query(
+      'SELECT * FROM contratos WHERE usuario_id=$1 ORDER BY id DESC',
+      [req.params.usuario_id]
+    );
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -349,13 +365,16 @@ app.post('/imoveis', upload.array('fotos', 5), async (req, res) => {
     return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
 
   const data_envio = new Date().toLocaleDateString('pt-BR');
+
+  // ✅ Salva URLs do Cloudinary (f.path já contém a URL completa)
   const fotos = req.files && req.files.length > 0
     ? JSON.stringify(req.files.map(f => f.path))
     : null;
 
   try {
     const result = await db.query(
-      `INSERT INTO imoveis_anuncios (usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, fotos, status, data_envio)
+      `INSERT INTO imoveis_anuncios
+        (usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, fotos, status, data_envio)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'pendente',$12) RETURNING id`,
       [usuario_id, nome, email, telefone, tipo, endereco, cidade, valor, finalidade, descricao, fotos, data_envio]
     );
@@ -368,7 +387,8 @@ app.post('/imoveis', upload.array('fotos', 5), async (req, res) => {
 app.get('/admin/imoveis', async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT a.*, u.nome AS nome_usuario FROM imoveis_anuncios a
+      `SELECT a.*, u.nome AS nome_usuario
+       FROM imoveis_anuncios a
        LEFT JOIN usuarios u ON a.usuario_id = u.id
        ORDER BY a.id DESC`
     );
@@ -380,13 +400,15 @@ app.get('/admin/imoveis', async (req, res) => {
 
 app.patch('/admin/imoveis/:id/aprovar', async (req, res) => {
   const { bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
+  if (!bairro || !cidade || !valor)
+    return res.status(400).json({ erro: 'Bairro, cidade e valor são obrigatórios.' });
   try {
     await db.query(
-      `UPDATE imoveis_anuncios 
+      `UPDATE imoveis_anuncios
        SET status='aprovado', bairro=$1, cidade=$2, valor=$3, finalidade=$4,
            area=$5, quartos=$6, banheiros=$7, vagas=$8, descricao=$9
        WHERE id=$10`,
-      [bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao, req.params.id]
+      [bairro, cidade, valor, finalidade, area, quartos || 0, banheiros || 0, vagas || 0, descricao, req.params.id]
     );
     res.json({ sucesso: true });
   } catch (err) {
@@ -398,11 +420,11 @@ app.patch('/admin/imoveis/:id/editar', async (req, res) => {
   const { tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
   try {
     await db.query(
-      `UPDATE imoveis_anuncios 
+      `UPDATE imoveis_anuncios
        SET tipo=$1, endereco=$2, bairro=$3, cidade=$4, valor=$5, finalidade=$6,
            area=$7, quartos=$8, banheiros=$9, vagas=$10, descricao=$11
        WHERE id=$12`,
-      [tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao, req.params.id]
+      [tipo, endereco, bairro, cidade, valor, finalidade, area, quartos || 0, banheiros || 0, vagas || 0, descricao, req.params.id]
     );
     res.json({ sucesso: true });
   } catch (err) {
@@ -440,13 +462,14 @@ app.delete('/imoveis/:id', async (req, res) => {
   }
 });
 
-// ===== ROTA DE TESTE =====
+// ===== ROTAS DE SUPORTE =====
 app.get('/api', (req, res) => res.send('Servidor funcionando!'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
+// ===== INICIAR SERVIDOR =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);
