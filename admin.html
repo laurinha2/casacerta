@@ -821,6 +821,7 @@
       document.getElementById('e-banheiros').value = anuncio.banheiros || 0;
       document.getElementById('e-vagas').value     = anuncio.vagas     || 0;
       document.getElementById('e-descricao').value = anuncio.descricao || '';
+      
 
       const fin = (anuncio.finalidade || '').toLowerCase();
       document.getElementById('e-finalidade').value =
@@ -878,6 +879,7 @@
         btn.disabled = false;
       }
     }
+    <option value="Sala Comercial">Sala Comercial</option>
 
     // ===== REJEITAR =====
     async function rejeitarAnuncio(id) {
