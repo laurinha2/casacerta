@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const bcrypt = require('bcrypt'); // ✅ NOVO
 
 const app = express();
 app.use(express.json());
@@ -38,7 +39,6 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ✅ FIX: usar db.query() é mais confiável para testar conexão com Pool
 db.query('SELECT 1')
   .then(() => {
     console.log('Conectado ao Supabase!');
@@ -123,15 +123,29 @@ async function criarTabelas() {
   }
 }
 
+// ===== MIDDLEWARE DE AUTENTICAÇÃO ADMIN ✅ NOVO =====
+// Coloque no header de toda requisição admin: { "x-admin-token": "admin123" }
+// Em produção real, use JWT. Para fins acadêmicos, este token fixo já protege as rotas.
+function verificarAdmin(req, res, next) {
+  const token = req.headers['x-admin-token'];
+  if (token !== process.env.ADMIN_TOKEN && token !== 'admin123') {
+    return res.status(401).json({ erro: 'Acesso não autorizado.' });
+  }
+  next();
+}
+
 // ===== USUÁRIOS =====
 app.post('/usuarios', async (req, res) => {
   const { nome, email, telefone, cpf_cnpj, senha } = req.body;
   if (!nome || !email || !telefone || !cpf_cnpj || !senha)
     return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
   try {
+    // ✅ Hash da senha antes de salvar
+    const hashSenha = await bcrypt.hash(senha, 10);
+
     const result = await db.query(
       'INSERT INTO usuarios (nome, email, telefone, cpf_cnpj, senha) VALUES ($1,$2,$3,$4,$5) RETURNING id',
-      [nome, email, telefone, cpf_cnpj, senha]
+      [nome, email, telefone, cpf_cnpj, hashSenha] // ✅ hashSenha no lugar de senha
     );
     res.json({ id: result.rows[0].id, nome, email, telefone, cpf_cnpj });
   } catch (err) {
@@ -181,22 +195,39 @@ app.post('/login', async (req, res) => {
   const { email, senha } = req.body;
   if (!email || !senha) return res.status(400).json({ erro: 'Preencha todos os campos' });
   try {
+    // ✅ Busca pelo email apenas (não compara senha no SQL)
     const result = await db.query(
-      'SELECT id, nome, email, telefone, cpf_cnpj FROM usuarios WHERE email=$1 AND senha=$2',
-      [email, senha]
+      'SELECT id, nome, email, telefone, cpf_cnpj, senha FROM usuarios WHERE email=$1',
+      [email]
     );
-    if (result.rows.length === 0) return res.status(401).json({ erro: 'E-mail ou senha incorretos' });
-    res.json({ sucesso: true, usuario: result.rows[0] });
+    if (result.rows.length === 0)
+      return res.status(401).json({ erro: 'E-mail ou senha incorretos' });
+
+    const usuario = result.rows[0];
+
+    // ✅ Compara a senha digitada com o hash salvo no banco
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+    if (!senhaCorreta)
+      return res.status(401).json({ erro: 'E-mail ou senha incorretos' });
+
+    // ✅ Nunca retorna o campo senha para o frontend
+    const { senha: _, ...usuarioSemSenha } = usuario;
+    res.json({ sucesso: true, usuario: usuarioSemSenha });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
 });
 
 // ===== LOGIN ADMIN =====
+// ✅ Agora lê a senha de variável de ambiente (fallback 'admin123' para dev local)
 app.post('/admin/login', (req, res) => {
   const { usuario, senha } = req.body;
-  if (usuario === 'admin' && senha === 'admin123') {
-    res.json({ sucesso: true });
+  const senhaAdmin = process.env.ADMIN_SENHA || 'admin123';
+  const usuarioAdmin = process.env.ADMIN_USUARIO || 'admin';
+
+  if (usuario === usuarioAdmin && senha === senhaAdmin) {
+    // ✅ Devolve um token simples que será exigido nas rotas protegidas
+    res.json({ sucesso: true, token: senhaAdmin });
   } else {
     res.status(401).json({ erro: 'Usuário ou senha incorretos.' });
   }
@@ -223,7 +254,9 @@ app.patch('/usuarios/:id/senha', async (req, res) => {
   if (!senha || senha.length < 6)
     return res.status(400).json({ erro: 'A senha deve ter pelo menos 6 caracteres.' });
   try {
-    const result = await db.query('UPDATE usuarios SET senha=$1 WHERE id=$2', [senha, req.params.id]);
+    // ✅ Hash da nova senha também
+    const hashSenha = await bcrypt.hash(senha, 10);
+    const result = await db.query('UPDATE usuarios SET senha=$1 WHERE id=$2', [hashSenha, req.params.id]);
     if (result.rowCount === 0) return res.status(404).json({ erro: 'Usuário não encontrado.' });
     res.json({ sucesso: true });
   } catch (err) {
@@ -321,7 +354,8 @@ app.get('/contratos/:usuario_id', async (req, res) => {
   }
 });
 
-app.get('/admin/contratos', async (req, res) => {
+// ✅ Rota protegida com verificarAdmin
+app.get('/admin/contratos', verificarAdmin, async (req, res) => {
   try {
     const result = await db.query(
       `SELECT c.*, u.nome AS nome_usuario, u.email AS email_usuario
@@ -366,7 +400,6 @@ app.post('/imoveis', upload.array('fotos', 5), async (req, res) => {
 
   const data_envio = new Date().toLocaleDateString('pt-BR');
 
-  // ✅ Salva URLs do Cloudinary (f.path já contém a URL completa)
   const fotos = req.files && req.files.length > 0
     ? JSON.stringify(req.files.map(f => f.path))
     : null;
@@ -384,7 +417,8 @@ app.post('/imoveis', upload.array('fotos', 5), async (req, res) => {
   }
 });
 
-app.get('/admin/imoveis', async (req, res) => {
+// ✅ Rotas admin protegidas com verificarAdmin
+app.get('/admin/imoveis', verificarAdmin, async (req, res) => {
   try {
     const result = await db.query(
       `SELECT a.*, u.nome AS nome_usuario
@@ -398,7 +432,7 @@ app.get('/admin/imoveis', async (req, res) => {
   }
 });
 
-app.patch('/admin/imoveis/:id/aprovar', async (req, res) => {
+app.patch('/admin/imoveis/:id/aprovar', verificarAdmin, async (req, res) => {
   const { bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
   if (!bairro || !cidade || !valor)
     return res.status(400).json({ erro: 'Bairro, cidade e valor são obrigatórios.' });
@@ -416,7 +450,7 @@ app.patch('/admin/imoveis/:id/aprovar', async (req, res) => {
   }
 });
 
-app.patch('/admin/imoveis/:id/editar', async (req, res) => {
+app.patch('/admin/imoveis/:id/editar', verificarAdmin, async (req, res) => {
   const { tipo, endereco, bairro, cidade, valor, finalidade, area, quartos, banheiros, vagas, descricao } = req.body;
   try {
     await db.query(
@@ -432,9 +466,18 @@ app.patch('/admin/imoveis/:id/editar', async (req, res) => {
   }
 });
 
-app.patch('/admin/imoveis/:id/rejeitar', async (req, res) => {
+app.patch('/admin/imoveis/:id/rejeitar', verificarAdmin, async (req, res) => {
   try {
     await db.query(`UPDATE imoveis_anuncios SET status='rejeitado' WHERE id=$1`, [req.params.id]);
+    res.json({ sucesso: true });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+app.delete('/imoveis/:id', verificarAdmin, async (req, res) => {
+  try {
+    await db.query('DELETE FROM imoveis_anuncios WHERE id=$1', [req.params.id]);
     res.json({ sucesso: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -448,15 +491,6 @@ app.get('/imoveis/publicos', async (req, res) => {
        FROM imoveis_anuncios WHERE status='aprovado' ORDER BY id DESC`
     );
     res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ erro: err.message });
-  }
-});
-
-app.delete('/imoveis/:id', async (req, res) => {
-  try {
-    await db.query('DELETE FROM imoveis_anuncios WHERE id=$1', [req.params.id]);
-    res.json({ sucesso: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
