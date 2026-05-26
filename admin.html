@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin – Casa Certa</title>
+  <title>Painel Admin - Casa Certa</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/config.js"></script>
   <style>
@@ -117,10 +117,10 @@
     .btn-excluir { background: transparent; border: 1px solid var(--vermelho); color: var(--vermelho); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); }
     .btn-excluir:hover { background: var(--vermelho); color: var(--branco); }
 
-    .btn-aprovar { background: transparent; border: 1px solid #2e7d32; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); margin-right: 0.3rem; display: block; margin-bottom: 0.3rem; }
+    .btn-aprovar { background: transparent; border: 1px solid #2e7d32; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
     .btn-aprovar:hover { background: #2e7d32; color: var(--branco); }
 
-    .btn-rejeitar { background: transparent; border: 1px solid #f57f17; color: #f57f17; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); margin-right: 0.3rem; display: block; margin-bottom: 0.3rem; }
+    .btn-rejeitar { background: transparent; border: 1px solid #f57f17; color: #f57f17; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
     .btn-rejeitar:hover { background: #f57f17; color: var(--branco); }
 
     .btn-editar { background: transparent; border: 1px solid var(--azul); color: var(--azul); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
@@ -135,7 +135,6 @@
     .stat-numero { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--azul); font-weight: 700; line-height: 1; }
     .stat-label { font-size: 0.82rem; color: var(--texto-medio); text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700; }
 
-    /* ===== MODAL BASE ===== */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
@@ -204,7 +203,6 @@
     .btn-confirmar-editar:hover { opacity: 0.85; }
     .btn-confirmar-editar:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Toast de sucesso */
     .toast {
       display: none;
       position: fixed; bottom: 2rem; right: 2rem;
@@ -212,9 +210,8 @@
       padding: 1rem 1.5rem; border-radius: var(--radius);
       font-size: 0.9rem; font-weight: 700;
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      z-index: 9999; animation: slideIn 0.3s ease;
+      z-index: 9999;
     }
-    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
     @media (max-width: 600px) {
       .form-grid { grid-template-columns: 1fr; }
@@ -230,11 +227,11 @@
   <!-- LOGIN -->
   <div class="admin-login" id="tela-login">
     <div class="admin-login-box fade-up">
-      <div class="login-avatar">🏢</div>
+      <div class="login-avatar">&#127970;</div>
       <h1>Painel Admin</h1>
-      <p>Acesso restrito à equipe Casa Certa</p>
+      <p>Acesso restrito a equipe Casa Certa</p>
       <div class="admin-login-form">
-        <input type="text" id="adm-usuario" class="form-control" placeholder="Usuário">
+        <input type="text" id="adm-usuario" class="form-control" placeholder="Usuario">
         <input type="password" id="adm-senha" class="form-control" placeholder="Senha">
         <div class="login-erro" id="adm-erro"></div>
         <button class="btn-entrar-admin" id="btn-adm-login" onclick="loginAdmin()">Entrar</button>
@@ -247,17 +244,17 @@
 
     <div class="admin-header">
       <div>
-        <h2>Casa Certa — Painel Administrativo</h2>
-        <p>Gerencie contratos, anúncios e usuários</p>
+        <h2>Casa Certa - Painel Administrativo</h2>
+        <p>Gerencie contratos, anuncios e usuarios</p>
       </div>
-      <button class="btn-sair" onclick="sairAdmin()">↩ Sair</button>
+      <button class="btn-sair" onclick="sairAdmin()">&#8592; Sair</button>
     </div>
 
     <div class="admin-abas-wrap">
       <div class="admin-abas">
-        <button class="admin-aba-btn active" onclick="trocarAba('contratos', this)">📄 Contratos</button>
-        <button class="admin-aba-btn" onclick="trocarAba('anuncios', this)">🏠 Anúncios</button>
-        <button class="admin-aba-btn" onclick="trocarAba('usuarios', this)">👥 Usuários</button>
+        <button class="admin-aba-btn active" onclick="trocarAba('contratos', this)">&#128196; Contratos</button>
+        <button class="admin-aba-btn" onclick="trocarAba('anuncios', this)">&#127968; Anuncios</button>
+        <button class="admin-aba-btn" onclick="trocarAba('usuarios', this)">&#128101; Usuarios</button>
       </div>
     </div>
 
@@ -270,7 +267,7 @@
           <h3>Novo Contrato</h3>
           <div class="form-grid">
             <div class="form-group">
-              <label>Usuário (cliente) *</label>
+              <label>Usuario (cliente) *</label>
               <select id="ct-usuario" class="form-control"><option value="">Selecione o cliente...</option></select>
             </div>
             <div class="form-group">
@@ -281,11 +278,11 @@
               </select>
             </div>
             <div class="form-group full">
-              <label>Imóvel *</label>
-              <input type="text" id="ct-imovel" class="form-control" placeholder="Ex: Rua das Flores, 123 – Centro">
+              <label>Imovel *</label>
+              <input type="text" id="ct-imovel" class="form-control" placeholder="Ex: Rua das Flores, 123 - Centro">
             </div>
             <div class="form-group">
-              <label>Locatário / Comprador *</label>
+              <label>Locatario / Comprador *</label>
               <input type="text" id="ct-locatario" class="form-control" placeholder="Nome completo">
             </div>
             <div class="form-group">
@@ -305,7 +302,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label>Data de Início *</label>
+              <label>Data de Inicio *</label>
               <input type="date" id="ct-inicio" class="form-control">
             </div>
             <div class="form-group">
@@ -321,7 +318,7 @@
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Cliente</th><th>Tipo</th><th>Imóvel</th><th>Locatário</th><th>Avalista</th><th>Valor</th><th>Início</th><th>Fim</th><th>Status</th><th>Ação</th></tr>
+                <tr><th>#</th><th>Cliente</th><th>Tipo</th><th>Imovel</th><th>Locatario</th><th>Avalista</th><th>Valor</th><th>Inicio</th><th>Fim</th><th>Status</th><th>Acao</th></tr>
               </thead>
               <tbody id="tbody-contratos"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
             </table>
@@ -329,15 +326,15 @@
         </div>
       </div>
 
-      <!-- ABA ANÚNCIOS -->
+      <!-- ABA ANUNCIOS -->
       <div class="admin-painel-aba" id="aba-anuncios">
         <div class="stats-grid" id="stats-anuncios"></div>
         <div class="admin-card">
-          <h3>Anúncios Recebidos</h3>
+          <h3>Anuncios Recebidos</h3>
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereço</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Ações</th></tr>
+                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereco</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Acoes</th></tr>
               </thead>
               <tbody id="tbody-anuncios"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
             </table>
@@ -345,11 +342,11 @@
         </div>
       </div>
 
-      <!-- ABA USUÁRIOS -->
+      <!-- ABA USUARIOS -->
       <div class="admin-painel-aba" id="aba-usuarios">
         <div class="stats-grid" id="stats-usuarios"></div>
         <div class="admin-card">
-          <h3>Usuários Cadastrados</h3>
+          <h3>Usuarios Cadastrados</h3>
           <div class="tabela-wrap">
             <table>
               <thead>
@@ -364,11 +361,11 @@
     </div>
   </div>
 
-  <!-- ===== MODAL APROVAR ANÚNCIO ===== -->
+  <!-- MODAL APROVAR -->
   <div class="modal-overlay" id="modal-aprovar">
     <div class="modal-box">
-      <h3>✅ Aprovar Anúncio</h3>
-      <p class="modal-sub">Complete as informações do imóvel antes de publicar no site.</p>
+      <h3>Aprovar Anuncio</h3>
+      <p class="modal-sub">Complete as informacoes do imovel antes de publicar no site.</p>
       <div class="modal-info-grid" id="modal-info-anuncio"></div>
       <div class="modal-form-grid">
         <div class="form-group">
@@ -377,7 +374,7 @@
         </div>
         <div class="form-group">
           <label>Cidade *</label>
-          <input type="text" id="m-cidade" class="form-control" placeholder="Ex: Getúlio Vargas">
+          <input type="text" id="m-cidade" class="form-control" placeholder="Ex: Getulio Vargas">
         </div>
         <div class="form-group">
           <label>Valor (R$) *</label>
@@ -391,7 +388,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Área (m²)</label>
+          <label>Area (m2)</label>
           <input type="number" id="m-area" class="form-control" placeholder="Ex: 120" min="0">
         </div>
         <div class="form-group">
@@ -407,22 +404,22 @@
           <input type="number" id="m-vagas" class="form-control" placeholder="Ex: 1" min="0">
         </div>
         <div class="form-group full">
-          <label>Descrição</label>
-          <textarea id="m-descricao" class="form-control" rows="3" placeholder="Descreva o imóvel..."></textarea>
+          <label>Descricao</label>
+          <textarea id="m-descricao" class="form-control" rows="3" placeholder="Descreva o imovel..."></textarea>
         </div>
       </div>
       <div class="modal-actions">
         <button class="btn-cancelar" onclick="fecharModal('modal-aprovar')">Cancelar</button>
-        <button class="btn-confirmar-aprovar" id="btn-confirmar-aprovar" onclick="confirmarAprovacao()">✅ Publicar Imóvel</button>
+        <button class="btn-confirmar-aprovar" id="btn-confirmar-aprovar" onclick="confirmarAprovacao()">Publicar Imovel</button>
       </div>
     </div>
   </div>
 
-  <!-- ===== MODAL EDITAR IMÓVEL ===== -->
+  <!-- MODAL EDITAR -->
   <div class="modal-overlay" id="modal-editar">
     <div class="modal-box">
-      <h3>✏️ Editar Imóvel</h3>
-      <p class="modal-sub">Altere as informações do imóvel publicado. As mudanças ficam visíveis imediatamente no site.</p>
+      <h3>Editar Imovel</h3>
+      <p class="modal-sub">Altere as informacoes do imovel publicado. As mudancas ficam visiveis imediatamente no site.</p>
       <div class="modal-form-grid">
         <div class="form-group">
           <label>Tipo</label>
@@ -432,6 +429,7 @@
             <option value="Cobertura">Cobertura</option>
             <option value="Terreno">Terreno</option>
             <option value="Comercial">Comercial</option>
+            <option value="Sala Comercial">Sala Comercial</option>
           </select>
         </div>
         <div class="form-group">
@@ -447,10 +445,10 @@
         </div>
         <div class="form-group">
           <label>Cidade</label>
-          <input type="text" id="e-cidade" class="form-control" placeholder="Ex: Getúlio Vargas">
+          <input type="text" id="e-cidade" class="form-control" placeholder="Ex: Getulio Vargas">
         </div>
         <div class="form-group">
-          <label>Endereço</label>
+          <label>Endereco</label>
           <input type="text" id="e-endereco" class="form-control" placeholder="Ex: Rua das Flores, 123">
         </div>
         <div class="form-group">
@@ -458,7 +456,7 @@
           <input type="text" id="e-valor" class="form-control" placeholder="Ex: 350000">
         </div>
         <div class="form-group">
-          <label>Área (m²)</label>
+          <label>Area (m2)</label>
           <input type="number" id="e-area" class="form-control" min="0">
         </div>
         <div class="form-group">
@@ -474,51 +472,68 @@
           <input type="number" id="e-vagas" class="form-control" min="0">
         </div>
         <div class="form-group full">
-          <label>Descrição</label>
+          <label>Descricao</label>
           <textarea id="e-descricao" class="form-control" rows="4"></textarea>
         </div>
       </div>
       <div class="modal-actions">
         <button class="btn-cancelar" onclick="fecharModal('modal-editar')">Cancelar</button>
-        <button class="btn-confirmar-editar" id="btn-confirmar-editar" onclick="confirmarEdicao()">💾 Salvar Alterações</button>
+        <button class="btn-confirmar-editar" id="btn-confirmar-editar" onclick="confirmarEdicao()">Salvar Alteracoes</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast de feedback -->
   <div class="toast" id="toast"></div>
 
   <script>
-    // ===== VARIÁVEIS GLOBAIS =====
-    let anunciosBanco = [];       // ✅ FIX: armazena anúncios para delegação de eventos
-    let anuncioSelecionadoId = null;
-    let imovelEditandoId = null;
-    let listaUsuarios = [];
+    var anunciosBanco = [];
+    var anuncioSelecionadoId = null;
+    var imovelEditandoId = null;
+    var listaUsuarios = [];
 
-    // ===== TOAST =====
-    function mostrarToast(msg, cor = '#2e7d32') {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.style.background = cor;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    // ✅ Helper: retorna o token salvo no sessionStorage
+    function getAdminToken() {
+      return sessionStorage.getItem('adminToken') || '';
     }
 
-    // ===== ABAS =====
+    // ✅ Helper: fetch com header de autenticação admin
+    function fetchAdmin(url, opcoes) {
+      opcoes = opcoes || {};
+      var headers = Object.assign({ 'Content-Type': 'application/json', 'x-admin-token': getAdminToken() }, opcoes.headers || {});
+      return fetch(url, Object.assign({}, opcoes, { headers: headers }));
+    }
+
+    // ✅ Verifica se sessão expirou (401) e redireciona para login
+    function checarSessao(res) {
+      if (res.status === 401) {
+        alert('Sessao expirada. Faca login novamente.');
+        sairAdmin();
+        throw new Error('Nao autorizado');
+      }
+      return res;
+    }
+
+    function mostrarToast(msg, cor) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.background = cor || '#2e7d32';
+      t.style.display = 'block';
+      setTimeout(function() { t.style.display = 'none'; }, 3000);
+    }
+
     function trocarAba(id, btn) {
-      document.querySelectorAll('.admin-painel-aba').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.admin-aba-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-painel-aba').forEach(function(p) { p.classList.remove('active'); });
+      document.querySelectorAll('.admin-aba-btn').forEach(function(b) { b.classList.remove('active'); });
       document.getElementById('aba-' + id).classList.add('active');
       btn.classList.add('active');
       if (id === 'anuncios') carregarAnuncios();
     }
 
-    // ===== LOGIN =====
-    async function loginAdmin() {
-      const usuario = document.getElementById('adm-usuario').value.trim();
-      const senha   = document.getElementById('adm-senha').value.trim();
-      const erroEl  = document.getElementById('adm-erro');
-      const btn     = document.getElementById('btn-adm-login');
+    function loginAdmin() {
+      var usuario = document.getElementById('adm-usuario').value.trim();
+      var senha = document.getElementById('adm-senha').value.trim();
+      var erroEl = document.getElementById('adm-erro');
+      var btn = document.getElementById('btn-adm-login');
 
       erroEl.style.display = 'none';
       if (!usuario || !senha) {
@@ -530,385 +545,340 @@
       btn.textContent = 'Entrando...';
       btn.disabled = true;
 
-      try {
-        const res  = await fetch(`${API}/admin/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ usuario, senha })
-        });
-        const data = await res.json();
-        if (res.ok) {
+      fetch(API + '/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuario: usuario, senha: senha })
+      })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (result.ok) {
+          // ✅ Salva o token retornado pelo servidor
           sessionStorage.setItem('adminLogado', 'true');
+          sessionStorage.setItem('adminToken', result.data.token);
           mostrarPainel();
         } else {
-          erroEl.textContent = data.erro || 'Credenciais inválidas.';
+          erroEl.textContent = result.data.erro || 'Credenciais invalidas.';
           erroEl.style.display = 'block';
         }
-      } catch {
+      })
+      .catch(function() {
         erroEl.textContent = 'Erro ao conectar com o servidor.';
         erroEl.style.display = 'block';
-      } finally {
+      })
+      .finally(function() {
         btn.textContent = 'Entrar';
         btn.disabled = false;
-      }
+      });
     }
 
     function sairAdmin() {
       sessionStorage.removeItem('adminLogado');
+      sessionStorage.removeItem('adminToken'); // ✅ limpa o token também
       document.getElementById('tela-painel').style.display = 'none';
-      document.getElementById('tela-login').style.display  = 'flex';
+      document.getElementById('tela-login').style.display = 'flex';
     }
 
-    async function mostrarPainel() {
-      document.getElementById('tela-login').style.display  = 'none';
+    function mostrarPainel() {
+      document.getElementById('tela-login').style.display = 'none';
       document.getElementById('tela-painel').style.display = 'block';
-      await carregarUsuarios();
-      await carregarContratos();
+      carregarUsuarios();
+      carregarContratos();
     }
 
-    if (sessionStorage.getItem('adminLogado') === 'true') mostrarPainel();
+    if (sessionStorage.getItem('adminLogado') === 'true' && sessionStorage.getItem('adminToken')) mostrarPainel();
 
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && document.getElementById('tela-login').style.display !== 'none') loginAdmin();
     });
 
-    // ===== FECHAR MODAL =====
     function fecharModal(id) {
       document.getElementById(id).classList.remove('aberto');
       if (id === 'modal-aprovar') anuncioSelecionadoId = null;
-      if (id === 'modal-editar')  imovelEditandoId     = null;
+      if (id === 'modal-editar') imovelEditandoId = null;
     }
 
-    // Fechar clicando fora
-    ['modal-aprovar', 'modal-editar'].forEach(id => {
+    ['modal-aprovar', 'modal-editar'].forEach(function(id) {
       document.getElementById(id).addEventListener('click', function(e) {
         if (e.target === this) fecharModal(id);
       });
     });
 
-    // ===== DELEGAÇÃO DE EVENTOS — FIX PRINCIPAL =====
-    // Resolve o problema de caracteres especiais (acentos, aspas) quebrando onclick inline
     document.getElementById('tbody-anuncios').addEventListener('click', function(e) {
-      const btnAprovar  = e.target.closest('.btn-aprovar');
-      const btnRejeitar = e.target.closest('.btn-rejeitar');
-      const btnEditar   = e.target.closest('.btn-editar');
-      const btnExcluir  = e.target.closest('.btn-excluir[data-tipo="anuncio"]');
+      var btnAprovar = e.target.closest('.btn-aprovar');
+      var btnRejeitar = e.target.closest('.btn-rejeitar');
+      var btnEditar = e.target.closest('.btn-editar');
+      var btnExcluir = e.target.closest('.btn-excluir[data-tipo="anuncio"]');
 
       if (btnAprovar) {
-        const id      = parseInt(btnAprovar.dataset.id);
-        const anuncio = anunciosBanco.find(a => a.id === id);
+        var id = parseInt(btnAprovar.dataset.id);
+        var anuncio = anunciosBanco.find(function(a) { return a.id === id; });
         if (anuncio) abrirModalAprovar(anuncio);
       }
-
       if (btnRejeitar) {
-        const id = parseInt(btnRejeitar.dataset.id);
-        rejeitarAnuncio(id);
+        rejeitarAnuncio(parseInt(btnRejeitar.dataset.id));
       }
-
       if (btnEditar) {
-        const id      = parseInt(btnEditar.dataset.id);
-        const anuncio = anunciosBanco.find(a => a.id === id);
-        if (anuncio) abrirModalEditar(anuncio);
+        var id2 = parseInt(btnEditar.dataset.id);
+        var anuncio2 = anunciosBanco.find(function(a) { return a.id === id2; });
+        if (anuncio2) abrirModalEditar(anuncio2);
       }
-
       if (btnExcluir) {
-        const id = parseInt(btnExcluir.dataset.id);
-        excluirAnuncio(id);
+        excluirAnuncio(parseInt(btnExcluir.dataset.id));
       }
     });
 
-    // ===== USUÁRIOS =====
-    async function carregarUsuarios() {
-      try {
-        const res = await fetch(`${API}/usuarios`);
-        listaUsuarios = await res.json();
-
-        const select = document.getElementById('ct-usuario');
+    function carregarUsuarios() {
+      // Usuários é rota pública — sem token
+      fetch(API + '/usuarios')
+      .then(function(res) { return res.json(); })
+      .then(function(users) {
+        listaUsuarios = users;
+        var select = document.getElementById('ct-usuario');
         select.innerHTML = '<option value="">Selecione o cliente...</option>' +
-          listaUsuarios.map(u => `<option value="${u.id}">${u.nome} (${u.email})</option>`).join('');
+          users.map(function(u) { return '<option value="' + u.id + '">' + u.nome + ' (' + u.email + ')</option>'; }).join('');
 
-        document.getElementById('stats-usuarios').innerHTML = `
-          <div class="stat-card">
-            <div class="stat-numero">${listaUsuarios.length}</div>
-            <div class="stat-label">Usuários cadastrados</div>
-          </div>`;
+        document.getElementById('stats-usuarios').innerHTML =
+          '<div class="stat-card"><div class="stat-numero">' + users.length + '</div><div class="stat-label">Usuarios cadastrados</div></div>';
 
-        const tbody = document.getElementById('tbody-usuarios');
-        tbody.innerHTML = listaUsuarios.length === 0
-          ? '<tr><td colspan="5" class="sem-dados">Nenhum usuário cadastrado.</td></tr>'
-          : listaUsuarios.map(u => `
-              <tr>
-                <td>${u.id}</td>
-                <td><strong>${u.nome}</strong></td>
-                <td>${u.email}</td>
-                <td>${u.telefone || '—'}</td>
-                <td>${u.cpf_cnpj || '—'}</td>
-              </tr>`).join('');
-      } catch (err) { console.error('Erro ao carregar usuários:', err); }
+        var tbody = document.getElementById('tbody-usuarios');
+        tbody.innerHTML = users.length === 0
+          ? '<tr><td colspan="5" class="sem-dados">Nenhum usuario cadastrado.</td></tr>'
+          : users.map(function(u) {
+              return '<tr><td>' + u.id + '</td><td><strong>' + u.nome + '</strong></td><td>' + u.email + '</td><td>' + (u.telefone || '-') + '</td><td>' + (u.cpf_cnpj || '-') + '</td></tr>';
+            }).join('');
+      })
+      .catch(function(err) { console.error('Erro ao carregar usuarios:', err); });
     }
 
-    // ===== CONTRATOS =====
-    async function carregarContratos() {
-      try {
-        const res      = await fetch(`${API}/admin/contratos`);
-        const contratos = await res.json();
-        const tbody    = document.getElementById('tbody-contratos');
+    function carregarContratos() {
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/admin/contratos')
+      .then(function(res) { return checarSessao(res).json(); })
+      .then(function(contratos) {
+        var ativos = contratos.filter(function(c) { return c.status === 'ativo'; }).length;
+        var pendentes = contratos.filter(function(c) { return c.status === 'pendente'; }).length;
+        var encerrados = contratos.filter(function(c) { return c.status === 'encerrado'; }).length;
 
-        const ativos     = contratos.filter(c => c.status === 'ativo').length;
-        const pendentes  = contratos.filter(c => c.status === 'pendente').length;
-        const encerrados = contratos.filter(c => c.status === 'encerrado').length;
+        document.getElementById('stats-contratos').innerHTML =
+          '<div class="stat-card"><div class="stat-numero">' + contratos.length + '</div><div class="stat-label">Total de contratos</div></div>' +
+          '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + ativos + '</div><div class="stat-label">Ativos</div></div>' +
+          '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
+          '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + encerrados + '</div><div class="stat-label">Encerrados</div></div>';
 
-        document.getElementById('stats-contratos').innerHTML = `
-          <div class="stat-card"><div class="stat-numero">${contratos.length}</div><div class="stat-label">Total de contratos</div></div>
-          <div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">${ativos}</div><div class="stat-label">Ativos</div></div>
-          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>
-          <div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">${encerrados}</div><div class="stat-label">Encerrados</div></div>`;
-
+        var tbody = document.getElementById('tbody-contratos');
         tbody.innerHTML = contratos.length === 0
           ? '<tr><td colspan="11" class="sem-dados">Nenhum contrato cadastrado ainda.</td></tr>'
-          : contratos.map(c => `
-              <tr>
-                <td>${c.id}</td>
-                <td><strong>${c.nome_usuario || '—'}</strong><br><small style="color:var(--texto-medio)">${c.email_usuario || ''}</small></td>
-                <td>${c.tipo}</td>
-                <td>${c.imovel}</td>
-                <td>${c.locatario}</td>
-                <td>${c.avalista || '—'}</td>
-                <td>R$ ${Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                <td>${formatarData(c.data_inicio)}</td>
-                <td>${c.data_fim ? formatarData(c.data_fim) : '—'}</td>
-                <td><span class="badge badge-${c.status}">${c.status}</span></td>
-                <td><button class="btn-excluir" onclick="excluirContrato(${c.id})">Excluir</button></td>
-              </tr>`).join('');
-      } catch (err) { console.error('Erro ao carregar contratos:', err); }
+          : contratos.map(function(c) {
+              return '<tr><td>' + c.id + '</td><td><strong>' + (c.nome_usuario || '-') + '</strong><br><small>' + (c.email_usuario || '') + '</small></td><td>' + c.tipo + '</td><td>' + c.imovel + '</td><td>' + c.locatario + '</td><td>' + (c.avalista || '-') + '</td><td>R$ ' + Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '</td><td>' + formatarData(c.data_inicio) + '</td><td>' + (c.data_fim ? formatarData(c.data_fim) : '-') + '</td><td><span class="badge badge-' + c.status + '">' + c.status + '</span></td><td><button class="btn-excluir" onclick="excluirContrato(' + c.id + ')">Excluir</button></td></tr>';
+            }).join('');
+      })
+      .catch(function(err) { console.error('Erro ao carregar contratos:', err); });
     }
 
-    // ===== ANÚNCIOS =====
-    async function carregarAnuncios() {
-      try {
-        const res     = await fetch(`${API}/admin/imoveis`);
-        const anuncios = await res.json();
-        anunciosBanco  = anuncios; // ✅ FIX: salva globalmente para delegação de eventos
+    function carregarAnuncios() {
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/admin/imoveis')
+      .then(function(res) { return checarSessao(res).json(); })
+      .then(function(anuncios) {
+        anunciosBanco = anuncios;
+        var pendentes = anuncios.filter(function(a) { return a.status === 'pendente'; }).length;
+        var aprovados = anuncios.filter(function(a) { return a.status === 'aprovado'; }).length;
+        var rejeitados = anuncios.filter(function(a) { return a.status === 'rejeitado'; }).length;
 
-        const tbody      = document.getElementById('tbody-anuncios');
-        const pendentes  = anuncios.filter(a => a.status === 'pendente').length;
-        const aprovados  = anuncios.filter(a => a.status === 'aprovado').length;
-        const rejeitados = anuncios.filter(a => a.status === 'rejeitado').length;
+        document.getElementById('stats-anuncios').innerHTML =
+          '<div class="stat-card"><div class="stat-numero">' + anuncios.length + '</div><div class="stat-label">Total de anuncios</div></div>' +
+          '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
+          '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + aprovados + '</div><div class="stat-label">Aprovados</div></div>' +
+          '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + rejeitados + '</div><div class="stat-label">Rejeitados</div></div>';
 
-        document.getElementById('stats-anuncios').innerHTML = `
-          <div class="stat-card"><div class="stat-numero">${anuncios.length}</div><div class="stat-label">Total de anúncios</div></div>
-          <div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">${pendentes}</div><div class="stat-label">Pendentes</div></div>
-          <div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">${aprovados}</div><div class="stat-label">Aprovados</div></div>
-          <div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">${rejeitados}</div><div class="stat-label">Rejeitados</div></div>`;
-
+        var tbody = document.getElementById('tbody-anuncios');
         if (anuncios.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anúncio recebido ainda.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anuncio recebido ainda.</td></tr>';
           return;
         }
 
-        // ✅ FIX: botões usam data-id em vez de onclick com parâmetros inline
-        tbody.innerHTML = anuncios.map(a => `
-          <tr>
-            <td>${a.id}</td>
-            <td><strong>${a.nome}</strong><br><small style="color:var(--texto-medio)">${a.nome_usuario || ''}</small></td>
-            <td>${a.email}<br><small>${a.telefone}</small></td>
-            <td>${a.tipo || '—'}</td>
-            <td>${a.endereco}</td>
-            <td>${a.cidade || '—'}</td>
-            <td>${a.valor || '—'}</td>
-            <td>${a.finalidade || '—'}</td>
-            <td>${a.data_envio || '—'}</td>
-            <td><span class="badge badge-${a.status}">${a.status}</span></td>
-            <td>
-              ${a.status === 'pendente' ? `
-                <button class="btn-aprovar"  data-id="${a.id}">✅ Aprovar</button>
-                <button class="btn-rejeitar" data-id="${a.id}">❌ Rejeitar</button>
-              ` : ''}
-              ${a.status === 'aprovado' ? `
-                <button class="btn-editar" data-id="${a.id}">✏️ Editar</button>
-              ` : ''}
-              <button class="btn-excluir" data-tipo="anuncio" data-id="${a.id}">Excluir</button>
-            </td>
-          </tr>`).join('');
-      } catch (err) { console.error('Erro ao carregar anúncios:', err); }
+        tbody.innerHTML = anuncios.map(function(a) {
+          var acoes = '';
+          if (a.status === 'pendente') {
+            acoes += '<button class="btn-aprovar" data-id="' + a.id + '">Aprovar</button>';
+            acoes += '<button class="btn-rejeitar" data-id="' + a.id + '">Rejeitar</button>';
+          }
+          if (a.status === 'aprovado') {
+            acoes += '<button class="btn-editar" data-id="' + a.id + '">Editar</button>';
+          }
+          acoes += '<button class="btn-excluir" data-tipo="anuncio" data-id="' + a.id + '">Excluir</button>';
+          return '<tr><td>' + a.id + '</td><td><strong>' + a.nome + '</strong><br><small>' + (a.nome_usuario || '') + '</small></td><td>' + a.email + '<br><small>' + a.telefone + '</small></td><td>' + (a.tipo || '-') + '</td><td>' + a.endereco + '</td><td>' + (a.cidade || '-') + '</td><td>' + (a.valor || '-') + '</td><td>' + (a.finalidade || '-') + '</td><td>' + (a.data_envio || '-') + '</td><td><span class="badge badge-' + a.status + '">' + a.status + '</span></td><td>' + acoes + '</td></tr>';
+        }).join('');
+      })
+      .catch(function(err) { console.error('Erro ao carregar anuncios:', err); });
     }
 
-    // ===== MODAL APROVAR =====
     function abrirModalAprovar(anuncio) {
       anuncioSelecionadoId = anuncio.id;
+      document.getElementById('modal-info-anuncio').innerHTML =
+        '<div><span>Cliente:</span><br><strong>' + anuncio.nome + '</strong></div>' +
+        '<div><span>Tipo:</span><br><strong>' + anuncio.tipo + '</strong></div>' +
+        '<div><span>Endereco:</span><br><strong>' + anuncio.endereco + '</strong></div>' +
+        '<div><span>Cidade informada:</span><br><strong>' + (anuncio.cidade || '-') + '</strong></div>';
 
-      document.getElementById('modal-info-anuncio').innerHTML = `
-        <div><span>Cliente:</span><br><strong>${anuncio.nome}</strong></div>
-        <div><span>Tipo:</span><br><strong>${anuncio.tipo}</strong></div>
-        <div><span>Endereço:</span><br><strong>${anuncio.endereco}</strong></div>
-        <div><span>Cidade informada:</span><br><strong>${anuncio.cidade || '—'}</strong></div>
-      `;
-
-      document.getElementById('m-cidade').value    = anuncio.cidade || '';
-      document.getElementById('m-valor').value     = anuncio.valor  || '';
+      document.getElementById('m-cidade').value = anuncio.cidade || '';
+      document.getElementById('m-valor').value = anuncio.valor || '';
       document.getElementById('m-descricao').value = anuncio.descricao || '';
-      document.getElementById('m-bairro').value    = '';
-      document.getElementById('m-area').value      = '';
-      document.getElementById('m-quartos').value   = '';
+      document.getElementById('m-bairro').value = '';
+      document.getElementById('m-area').value = '';
+      document.getElementById('m-quartos').value = '';
       document.getElementById('m-banheiros').value = '';
-      document.getElementById('m-vagas').value     = '';
+      document.getElementById('m-vagas').value = '';
 
-      const fin = (anuncio.finalidade || '').toLowerCase();
-      document.getElementById('m-finalidade').value =
-        (fin.includes('loca') || fin.includes('aluguel')) ? 'aluguel' : 'compra';
-
+      var fin = (anuncio.finalidade || '').toLowerCase();
+      document.getElementById('m-finalidade').value = (fin.indexOf('loca') >= 0 || fin.indexOf('aluguel') >= 0) ? 'aluguel' : 'compra';
       document.getElementById('modal-aprovar').classList.add('aberto');
     }
 
-    async function confirmarAprovacao() {
+    function confirmarAprovacao() {
       if (!anuncioSelecionadoId) return;
 
-      const bairro = document.getElementById('m-bairro').value.trim();
-      const cidade = document.getElementById('m-cidade').value.trim();
-      const valor  = document.getElementById('m-valor').value.trim();
+      var bairro = document.getElementById('m-bairro').value.trim();
+      var cidade = document.getElementById('m-cidade').value.trim();
+      var valor = document.getElementById('m-valor').value.trim();
 
       if (!bairro || !cidade || !valor) {
         alert('Preencha pelo menos Bairro, Cidade e Valor antes de publicar.');
         return;
       }
 
-      const btn = document.getElementById('btn-confirmar-aprovar');
+      var btn = document.getElementById('btn-confirmar-aprovar');
       btn.textContent = 'Publicando...';
       btn.disabled = true;
 
-      const dados = {
-        bairro, cidade, valor,
+      var dados = {
+        bairro: bairro, cidade: cidade, valor: valor,
         finalidade: document.getElementById('m-finalidade').value,
-        area:       document.getElementById('m-area').value      || null,
-        quartos:    parseInt(document.getElementById('m-quartos').value)   || 0,
-        banheiros:  parseInt(document.getElementById('m-banheiros').value) || 0,
-        vagas:      parseInt(document.getElementById('m-vagas').value)     || 0,
-        descricao:  document.getElementById('m-descricao').value.trim()
+        area: document.getElementById('m-area').value || null,
+        quartos: parseInt(document.getElementById('m-quartos').value) || 0,
+        banheiros: parseInt(document.getElementById('m-banheiros').value) || 0,
+        vagas: parseInt(document.getElementById('m-vagas').value) || 0,
+        descricao: document.getElementById('m-descricao').value.trim()
       };
 
-      try {
-        const res = await fetch(`${API}/admin/imoveis/${anuncioSelecionadoId}/aprovar`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dados)
-        });
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/admin/imoveis/' + anuncioSelecionadoId + '/aprovar', {
+        method: 'PATCH',
+        body: JSON.stringify(dados)
+      })
+      .then(function(res) { return checarSessao(res); })
+      .then(function(res) {
         if (res.ok) {
           fecharModal('modal-aprovar');
-          await carregarAnuncios();
-          mostrarToast('✅ Imóvel publicado com sucesso!');
+          carregarAnuncios();
+          mostrarToast('Imovel publicado com sucesso!');
         } else {
-          alert('Erro ao aprovar anúncio.');
+          alert('Erro ao aprovar anuncio.');
         }
-      } catch {
-        alert('Erro ao conectar com o servidor.');
-      } finally {
-        btn.textContent = '✅ Publicar Imóvel';
+      })
+      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao conectar com o servidor.'); })
+      .finally(function() {
+        btn.textContent = 'Publicar Imovel';
         btn.disabled = false;
-      }
+      });
     }
 
-    // ===== MODAL EDITAR =====
     function abrirModalEditar(anuncio) {
       imovelEditandoId = anuncio.id;
-
-      document.getElementById('e-tipo').value      = anuncio.tipo      || '';
-      document.getElementById('e-bairro').value    = anuncio.bairro    || '';
-      document.getElementById('e-cidade').value    = anuncio.cidade    || '';
-      document.getElementById('e-endereco').value  = anuncio.endereco  || '';
-      document.getElementById('e-valor').value     = anuncio.valor     || '';
-      document.getElementById('e-area').value      = anuncio.area      || '';
-      document.getElementById('e-quartos').value   = anuncio.quartos   || 0;
+      document.getElementById('e-tipo').value = anuncio.tipo || '';
+      document.getElementById('e-bairro').value = anuncio.bairro || '';
+      document.getElementById('e-cidade').value = anuncio.cidade || '';
+      document.getElementById('e-endereco').value = anuncio.endereco || '';
+      document.getElementById('e-valor').value = anuncio.valor || '';
+      document.getElementById('e-area').value = anuncio.area || '';
+      document.getElementById('e-quartos').value = anuncio.quartos || 0;
       document.getElementById('e-banheiros').value = anuncio.banheiros || 0;
-      document.getElementById('e-vagas').value     = anuncio.vagas     || 0;
+      document.getElementById('e-vagas').value = anuncio.vagas || 0;
       document.getElementById('e-descricao').value = anuncio.descricao || '';
-      
-
-      const fin = (anuncio.finalidade || '').toLowerCase();
-      document.getElementById('e-finalidade').value =
-        (fin.includes('loca') || fin.includes('aluguel')) ? 'aluguel' : 'compra';
-
+      var fin = (anuncio.finalidade || '').toLowerCase();
+      document.getElementById('e-finalidade').value = (fin.indexOf('loca') >= 0 || fin.indexOf('aluguel') >= 0) ? 'aluguel' : 'compra';
       document.getElementById('modal-editar').classList.add('aberto');
     }
 
-    async function confirmarEdicao() {
+    function confirmarEdicao() {
       if (!imovelEditandoId) return;
 
-      const cidade = document.getElementById('e-cidade').value.trim();
-      const valor  = document.getElementById('e-valor').value.trim();
+      var cidade = document.getElementById('e-cidade').value.trim();
+      var valor = document.getElementById('e-valor').value.trim();
 
       if (!cidade || !valor) {
-        alert('Cidade e Valor são obrigatórios.');
+        alert('Cidade e Valor sao obrigatorios.');
         return;
       }
 
-      const btn = document.getElementById('btn-confirmar-editar');
+      var btn = document.getElementById('btn-confirmar-editar');
       btn.textContent = 'Salvando...';
       btn.disabled = true;
 
-      const dados = {
-        tipo:       document.getElementById('e-tipo').value,
-        endereco:   document.getElementById('e-endereco').value.trim(),
-        bairro:     document.getElementById('e-bairro').value.trim(),
-        cidade, valor,
+      var dados = {
+        tipo: document.getElementById('e-tipo').value,
+        endereco: document.getElementById('e-endereco').value.trim(),
+        bairro: document.getElementById('e-bairro').value.trim(),
+        cidade: cidade, valor: valor,
         finalidade: document.getElementById('e-finalidade').value,
-        area:       document.getElementById('e-area').value      || null,
-        quartos:    parseInt(document.getElementById('e-quartos').value)   || 0,
-        banheiros:  parseInt(document.getElementById('e-banheiros').value) || 0,
-        vagas:      parseInt(document.getElementById('e-vagas').value)     || 0,
-        descricao:  document.getElementById('e-descricao').value.trim()
+        area: document.getElementById('e-area').value || null,
+        quartos: parseInt(document.getElementById('e-quartos').value) || 0,
+        banheiros: parseInt(document.getElementById('e-banheiros').value) || 0,
+        vagas: parseInt(document.getElementById('e-vagas').value) || 0,
+        descricao: document.getElementById('e-descricao').value.trim()
       };
 
-      try {
-        const res = await fetch(`${API}/admin/imoveis/${imovelEditandoId}/editar`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dados)
-        });
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/admin/imoveis/' + imovelEditandoId + '/editar', {
+        method: 'PATCH',
+        body: JSON.stringify(dados)
+      })
+      .then(function(res) { return checarSessao(res); })
+      .then(function(res) {
         if (res.ok) {
           fecharModal('modal-editar');
-          await carregarAnuncios();
-          mostrarToast('💾 Imóvel atualizado com sucesso!');
+          carregarAnuncios();
+          mostrarToast('Imovel atualizado com sucesso!');
         } else {
-          const data = await res.json();
-          alert(data.erro || 'Erro ao salvar alterações.');
+          return res.json().then(function(data) { alert(data.erro || 'Erro ao salvar alteracoes.'); });
         }
-      } catch {
-        alert('Erro ao conectar com o servidor.');
-      } finally {
-        btn.textContent = '💾 Salvar Alterações';
+      })
+      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao conectar com o servidor.'); })
+      .finally(function() {
+        btn.textContent = 'Salvar Alteracoes';
         btn.disabled = false;
-      }
-    }
-    // ===== REJEITAR =====
-    async function rejeitarAnuncio(id) {
-      if (!confirm('Rejeitar este anúncio?')) return;
-      try {
-        await fetch(`${API}/admin/imoveis/${id}/rejeitar`, { method: 'PATCH' });
-        await carregarAnuncios();
-        mostrarToast('❌ Anúncio rejeitado.', '#c62828');
-      } catch { alert('Erro ao rejeitar anúncio.'); }
+      });
     }
 
-    // ===== SALVAR CONTRATO =====
-    async function salvarContrato() {
-      const erroEl = document.getElementById('erro-contrato');
-      const btn    = document.getElementById('btn-salvar');
+    function rejeitarAnuncio(id) {
+      if (!confirm('Rejeitar este anuncio?')) return;
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/admin/imoveis/' + id + '/rejeitar', { method: 'PATCH' })
+      .then(function(res) { return checarSessao(res); })
+      .then(function() { carregarAnuncios(); mostrarToast('Anuncio rejeitado.', '#c62828'); })
+      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao rejeitar anuncio.'); });
+    }
+
+    function salvarContrato() {
+      var erroEl = document.getElementById('erro-contrato');
+      var btn = document.getElementById('btn-salvar');
       erroEl.style.display = 'none';
 
-      const dados = {
-        usuario_id:  document.getElementById('ct-usuario').value,
-        tipo:        document.getElementById('ct-tipo').value,
-        imovel:      document.getElementById('ct-imovel').value.trim(),
-        locatario:   document.getElementById('ct-locatario').value.trim(),
-        avalista:    document.getElementById('ct-avalista').value.trim(),
-        valor:       document.getElementById('ct-valor').value,
+      var dados = {
+        usuario_id: document.getElementById('ct-usuario').value,
+        tipo: document.getElementById('ct-tipo').value,
+        imovel: document.getElementById('ct-imovel').value.trim(),
+        locatario: document.getElementById('ct-locatario').value.trim(),
+        avalista: document.getElementById('ct-avalista').value.trim(),
+        valor: document.getElementById('ct-valor').value,
         data_inicio: document.getElementById('ct-inicio').value,
-        data_fim:    document.getElementById('ct-fim').value,
-        status:      document.getElementById('ct-status').value
+        data_fim: document.getElementById('ct-fim').value,
+        status: document.getElementById('ct-status').value
       };
 
       if (!dados.usuario_id || !dados.imovel || !dados.locatario || !dados.valor || !dados.data_inicio) {
-        erroEl.textContent = 'Preencha todos os campos obrigatórios (*).';
+        erroEl.textContent = 'Preencha todos os campos obrigatorios (*).';
         erroEl.style.display = 'block';
         return;
       }
@@ -916,56 +886,54 @@
       btn.textContent = 'Salvando...';
       btn.disabled = true;
 
-      try {
-        const res  = await fetch(`${API}/contratos`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dados)
-        });
-        const data = await res.json();
-        if (res.ok) {
+      fetch(API + '/contratos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+      .then(function(result) {
+        if (result.ok) {
           ['ct-usuario','ct-imovel','ct-locatario','ct-avalista','ct-valor','ct-inicio','ct-fim']
-            .forEach(id => document.getElementById(id).value = '');
+            .forEach(function(id) { document.getElementById(id).value = ''; });
           document.getElementById('ct-status').value = 'ativo';
-          await carregarContratos();
-          mostrarToast('📄 Contrato salvo com sucesso!');
+          carregarContratos();
+          mostrarToast('Contrato salvo com sucesso!');
         } else {
-          erroEl.textContent = data.erro || 'Erro ao salvar contrato.';
+          erroEl.textContent = result.data.erro || 'Erro ao salvar contrato.';
           erroEl.style.display = 'block';
         }
-      } catch {
+      })
+      .catch(function() {
         erroEl.textContent = 'Erro ao conectar com o servidor.';
         erroEl.style.display = 'block';
-      } finally {
+      })
+      .finally(function() {
         btn.textContent = 'Salvar Contrato';
         btn.disabled = false;
-      }
+      });
     }
 
-    // ===== EXCLUIR =====
-    async function excluirContrato(id) {
+    function excluirContrato(id) {
       if (!confirm('Tem certeza que deseja excluir este contrato?')) return;
-      try {
-        await fetch(`${API}/contratos/${id}`, { method: 'DELETE' });
-        await carregarContratos();
-        mostrarToast('🗑️ Contrato excluído.', '#c62828');
-      } catch { alert('Erro ao excluir contrato.'); }
+      fetch(API + '/contratos/' + id, { method: 'DELETE' })
+      .then(function() { carregarContratos(); mostrarToast('Contrato excluido.', '#c62828'); })
+      .catch(function() { alert('Erro ao excluir contrato.'); });
     }
 
-    async function excluirAnuncio(id) {
-      if (!confirm('Tem certeza que deseja excluir este anúncio?')) return;
-      try {
-        await fetch(`${API}/imoveis/${id}`, { method: 'DELETE' });
-        await carregarAnuncios();
-        mostrarToast('🗑️ Anúncio excluído.', '#c62828');
-      } catch { alert('Erro ao excluir anúncio.'); }
+    function excluirAnuncio(id) {
+      if (!confirm('Tem certeza que deseja excluir este anuncio?')) return;
+      // ✅ Rota protegida — usa fetchAdmin
+      fetchAdmin(API + '/imoveis/' + id, { method: 'DELETE' })
+      .then(function(res) { return checarSessao(res); })
+      .then(function() { carregarAnuncios(); mostrarToast('Anuncio excluido.', '#c62828'); })
+      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao excluir anuncio.'); });
     }
 
-    // ===== UTILITÁRIOS =====
     function formatarData(data) {
-      if (!data) return '—';
-      const [ano, mes, dia] = data.split('-');
-      return `${dia}/${mes}/${ano}`;
+      if (!data) return '-';
+      var partes = data.split('-');
+      return partes[2] + '/' + partes[1] + '/' + partes[0];
     }
   </script>
 </body>
