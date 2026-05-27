@@ -247,14 +247,14 @@
         <h2>Casa Certa - Painel Administrativo</h2>
         <p>Gerencie contratos, anuncios e usuarios</p>
       </div>
-      <button class="btn-sair" onclick="sairAdmin()">&#8592; Sair</button>
+      <button class="btn-sair" onclick="sairAdmin()">Sair</button>
     </div>
 
     <div class="admin-abas-wrap">
       <div class="admin-abas">
-        <button class="admin-aba-btn active" onclick="trocarAba('contratos', this)">&#128196; Contratos</button>
-        <button class="admin-aba-btn" onclick="trocarAba('anuncios', this)">&#127968; Anuncios</button>
-        <button class="admin-aba-btn" onclick="trocarAba('usuarios', this)">&#128101; Usuarios</button>
+        <button class="admin-aba-btn active" onclick="trocarAba('contratos', this)">Contratos</button>
+        <button class="admin-aba-btn" onclick="trocarAba('anuncios', this)">Anuncios</button>
+        <button class="admin-aba-btn" onclick="trocarAba('usuarios', this)">Usuarios</button>
       </div>
     </div>
 
@@ -491,28 +491,6 @@
     var imovelEditandoId = null;
     var listaUsuarios = [];
 
-    // ✅ Helper: retorna o token salvo no sessionStorage
-    function getAdminToken() {
-      return sessionStorage.getItem('adminToken') || '';
-    }
-
-    // ✅ Helper: fetch com header de autenticação admin
-    function fetchAdmin(url, opcoes) {
-      opcoes = opcoes || {};
-      var headers = Object.assign({ 'Content-Type': 'application/json', 'x-admin-token': getAdminToken() }, opcoes.headers || {});
-      return fetch(url, Object.assign({}, opcoes, { headers: headers }));
-    }
-
-    // ✅ Verifica se sessão expirou (401) e redireciona para login
-    function checarSessao(res) {
-      if (res.status === 401) {
-        alert('Sessao expirada. Faca login novamente.');
-        sairAdmin();
-        throw new Error('Nao autorizado');
-      }
-      return res;
-    }
-
     function mostrarToast(msg, cor) {
       var t = document.getElementById('toast');
       t.textContent = msg;
@@ -553,9 +531,7 @@
       .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
       .then(function(result) {
         if (result.ok) {
-          // ✅ Salva o token retornado pelo servidor
           sessionStorage.setItem('adminLogado', 'true');
-          sessionStorage.setItem('adminToken', result.data.token);
           mostrarPainel();
         } else {
           erroEl.textContent = result.data.erro || 'Credenciais invalidas.';
@@ -574,7 +550,6 @@
 
     function sairAdmin() {
       sessionStorage.removeItem('adminLogado');
-      sessionStorage.removeItem('adminToken'); // ✅ limpa o token também
       document.getElementById('tela-painel').style.display = 'none';
       document.getElementById('tela-login').style.display = 'flex';
     }
@@ -586,7 +561,7 @@
       carregarContratos();
     }
 
-    if (sessionStorage.getItem('adminLogado') === 'true' && sessionStorage.getItem('adminToken')) mostrarPainel();
+    if (sessionStorage.getItem('adminLogado') === 'true') mostrarPainel();
 
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && document.getElementById('tela-login').style.display !== 'none') loginAdmin();
@@ -629,7 +604,6 @@
     });
 
     function carregarUsuarios() {
-      // Usuários é rota pública — sem token
       fetch(API + '/usuarios')
       .then(function(res) { return res.json(); })
       .then(function(users) {
@@ -652,9 +626,8 @@
     }
 
     function carregarContratos() {
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/admin/contratos')
-      .then(function(res) { return checarSessao(res).json(); })
+      fetch(API + '/admin/contratos')
+      .then(function(res) { return res.json(); })
       .then(function(contratos) {
         var ativos = contratos.filter(function(c) { return c.status === 'ativo'; }).length;
         var pendentes = contratos.filter(function(c) { return c.status === 'pendente'; }).length;
@@ -677,9 +650,8 @@
     }
 
     function carregarAnuncios() {
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/admin/imoveis')
-      .then(function(res) { return checarSessao(res).json(); })
+      fetch(API + '/admin/imoveis')
+      .then(function(res) { return res.json(); })
       .then(function(anuncios) {
         anunciosBanco = anuncios;
         var pendentes = anuncios.filter(function(a) { return a.status === 'pendente'; }).length;
@@ -762,12 +734,11 @@
         descricao: document.getElementById('m-descricao').value.trim()
       };
 
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/admin/imoveis/' + anuncioSelecionadoId + '/aprovar', {
+      fetch(API + '/admin/imoveis/' + anuncioSelecionadoId + '/aprovar', {
         method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
       })
-      .then(function(res) { return checarSessao(res); })
       .then(function(res) {
         if (res.ok) {
           fecharModal('modal-aprovar');
@@ -777,7 +748,7 @@
           alert('Erro ao aprovar anuncio.');
         }
       })
-      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao conectar com o servidor.'); })
+      .catch(function() { alert('Erro ao conectar com o servidor.'); })
       .finally(function() {
         btn.textContent = 'Publicar Imovel';
         btn.disabled = false;
@@ -829,12 +800,11 @@
         descricao: document.getElementById('e-descricao').value.trim()
       };
 
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/admin/imoveis/' + imovelEditandoId + '/editar', {
+      fetch(API + '/admin/imoveis/' + imovelEditandoId + '/editar', {
         method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
       })
-      .then(function(res) { return checarSessao(res); })
       .then(function(res) {
         if (res.ok) {
           fecharModal('modal-editar');
@@ -844,7 +814,7 @@
           return res.json().then(function(data) { alert(data.erro || 'Erro ao salvar alteracoes.'); });
         }
       })
-      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao conectar com o servidor.'); })
+      .catch(function() { alert('Erro ao conectar com o servidor.'); })
       .finally(function() {
         btn.textContent = 'Salvar Alteracoes';
         btn.disabled = false;
@@ -853,11 +823,9 @@
 
     function rejeitarAnuncio(id) {
       if (!confirm('Rejeitar este anuncio?')) return;
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/admin/imoveis/' + id + '/rejeitar', { method: 'PATCH' })
-      .then(function(res) { return checarSessao(res); })
+      fetch(API + '/admin/imoveis/' + id + '/rejeitar', { method: 'PATCH' })
       .then(function() { carregarAnuncios(); mostrarToast('Anuncio rejeitado.', '#c62828'); })
-      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao rejeitar anuncio.'); });
+      .catch(function() { alert('Erro ao rejeitar anuncio.'); });
     }
 
     function salvarContrato() {
@@ -923,11 +891,9 @@
 
     function excluirAnuncio(id) {
       if (!confirm('Tem certeza que deseja excluir este anuncio?')) return;
-      // ✅ Rota protegida — usa fetchAdmin
-      fetchAdmin(API + '/imoveis/' + id, { method: 'DELETE' })
-      .then(function(res) { return checarSessao(res); })
+      fetch(API + '/imoveis/' + id, { method: 'DELETE' })
       .then(function() { carregarAnuncios(); mostrarToast('Anuncio excluido.', '#c62828'); })
-      .catch(function(err) { if (err.message !== 'Nao autorizado') alert('Erro ao excluir anuncio.'); });
+      .catch(function() { alert('Erro ao excluir anuncio.'); });
     }
 
     function formatarData(data) {
