@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Moeda
   aplicarMascara(document.getElementById('an-valor'), 'moeda');
+  aplicarMascara(document.getElementById('fin-valor'), 'moeda');
+  aplicarMascara(document.getElementById('fin-entrada'), 'moeda');
 
   // Placeholders informativos
   const placeholders = {
@@ -124,4 +126,8 @@ function validarEmail(email) {
 
 function validarTelefone(tel) {
   return tel.replace(/\D/g, '').length >= 10;
+}
+
+function validarSenha(senha) {
+  return senha.length >= 6;
 }

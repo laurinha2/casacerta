@@ -282,8 +282,13 @@
       border-left: 4px solid var(--azul);
     }
 
-    .contrato-card.aluguel { border-left-color: var(--vermelho); }
-    .contrato-card.compra  { border-left-color: #2e7d32; }
+    .contrato-card.aluguel {
+      border-left-color: var(--vermelho);
+    }
+
+    .contrato-card.compra {
+      border-left-color: #2e7d32;
+    }
 
     .contrato-header {
       display: flex;
@@ -338,9 +343,20 @@
       text-transform: uppercase;
     }
 
-    .status-ativo     { background: #e6f4ea; color: #2d7a3a; }
-    .status-encerrado { background: #fdecea; color: var(--vermelho); }
-    .status-pendente  { background: #fff8e1; color: #b8860b; }
+    .status-ativo {
+      background: #e6f4ea;
+      color: #2d7a3a;
+    }
+
+    .status-encerrado {
+      background: #fdecea;
+      color: var(--vermelho);
+    }
+
+    .status-pendente {
+      background: #fff8e1;
+      color: #b8860b;
+    }
 
     /* SEÇÃO TÍTULO */
     .secao-titulo {
@@ -363,12 +379,29 @@
     }
 
     @media (max-width: 768px) {
-      .perfil-hero { flex-wrap: wrap; }
-      .perfil-sair { margin-left: 0; }
-      .dados-form { grid-template-columns: 1fr; }
-      .dados-form .full { grid-column: 1; }
-      .fin-card { grid-template-columns: 1fr; }
-      .fin-parcela { text-align: left; }
+      .perfil-hero {
+        flex-wrap: wrap;
+      }
+
+      .perfil-sair {
+        margin-left: 0;
+      }
+
+      .dados-form {
+        grid-template-columns: 1fr;
+      }
+
+      .dados-form .full {
+        grid-column: 1;
+      }
+
+      .fin-card {
+        grid-template-columns: 1fr;
+      }
+
+      .fin-parcela {
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -406,7 +439,8 @@
       </button>
       <button class="aba-btn" onclick="trocarAba('favoritos', this)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
         </svg>
         Favoritos
       </button>
@@ -454,7 +488,8 @@
             <input type="text" id="edit-cpf" class="form-control">
           </div>
           <div class="form-group full">
-            <label>Nova Senha <small style="color:var(--texto-medio); font-weight:400">(deixe em branco para manter a atual)</small></label>
+            <label>Nova Senha <small style="color:var(--texto-medio); font-weight:400">(deixe em branco para manter a
+                atual)</small></label>
             <input type="password" id="edit-senha" class="form-control" placeholder="Nova senha">
           </div>
         </div>
@@ -479,7 +514,8 @@
     <div class="aba-painel" id="aba-financiamentos">
       <div class="secao-titulo">
         Simulações de Financiamento
-        <a href="financiamento.html" class="btn-outline" style="font-size:0.82rem; padding:0.4rem 1rem;">+ Nova simulação</a>
+        <a href="financiamento.html" class="btn-outline" style="font-size:0.82rem; padding:0.4rem 1rem;">+ Nova
+          simulação</a>
       </div>
       <div id="lista-financiamentos" class="fin-lista"></div>
     </div>
@@ -540,10 +576,22 @@
         console.error('Erro ao carregar dados:', err);
       }
     }
+    if (!validarSenha(senha)) {
+  alert('A senha deve ter pelo menos 6 caracteres.');
+  return;
+}
 
     async function salvarDados() {
       const novaSenha = document.getElementById('edit-senha').value;
       const msg = document.getElementById('dados-msg');
+
+      // Validar senha mínima se preenchida
+      if (novaSenha && novaSenha.length < 6) {
+        msg.style.display = 'block';
+        msg.style.color = 'var(--vermelho)';
+        msg.textContent = 'A nova senha deve ter pelo menos 6 caracteres.';
+        return;
+      }
 
       try {
         // Atualizar senha se preenchida
@@ -623,8 +671,8 @@
             <div>
               <h4>Simulação de Financiamento</h4>
               <div class="fin-detalhes">
-                <div class="fin-item"><strong>R$ ${Number(s.valor).toLocaleString('pt-BR', {minimumFractionDigits:2})}</strong>Valor do imóvel</div>
-                <div class="fin-item"><strong>R$ ${Number(s.entrada).toLocaleString('pt-BR', {minimumFractionDigits:2})}</strong>Entrada</div>
+                <div class="fin-item"><strong>R$ ${Number(s.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>Valor do imóvel</div>
+                <div class="fin-item"><strong>R$ ${Number(s.entrada).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>Entrada</div>
                 <div class="fin-item"><strong>${s.prazo} anos</strong>Prazo</div>
                 <div class="fin-item"><strong>${s.taxa}% a.a.</strong>Taxa</div>
               </div>
@@ -692,7 +740,7 @@
               </div>` : ''}
               <div class="contrato-item">
                 <label>Valor</label>
-                <span>R$ ${Number(c.valor).toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
+                <span>R$ ${Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
               <div class="contrato-item">
                 <label>Início</label>

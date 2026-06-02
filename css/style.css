@@ -179,6 +179,15 @@ h3 {
   transition: var(--transition);
 }
 
+/* ADICIONE ISSO LOGO ABAIXO: */
+.aluguel-tags span,
+.cards-grid span:not(.hamburger span) {
+  background: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+}
+
 /* ===== MOBILE NAV ===== */
 @media (max-width: 768px) {
   .hamburger {
@@ -584,4 +593,21 @@ textarea.form-control {
   .cards-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.aluguel-tags span,
+.cards-grid span:not(.hamburger span) {
+  background: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+}
+
+.tag-amenidade {
+  background-color: #f5e6e6 !important;
+  color: #8b1a1a !important;
+  border: 1px solid #c97a7a !important;
+  border-radius: 20px !important;
+  width: auto !important;
+  height: auto !important;
 }

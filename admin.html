@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,15 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="js/config.js"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { background: var(--bege-claro); font-family: 'Lato', sans-serif; margin: 0; }
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bege-claro);
+      font-family: 'Lato', sans-serif;
+      margin: 0;
+    }
 
     .admin-login {
       min-height: 100vh;
@@ -19,132 +27,466 @@
       background: var(--bege-claro);
     }
 
-    .admin-login-box { text-align: center; max-width: 440px; width: 100%; }
+    .admin-login-box {
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+    }
 
     .login-avatar {
-      width: 90px; height: 90px;
+      width: 90px;
+      height: 90px;
       background: var(--azul);
       border-radius: 50%;
       margin: 0 auto 2rem;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 2.5rem;
     }
 
-    .admin-login-box h1 { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 2.2rem; margin-bottom: 0.4rem; }
-    .admin-login-box p { color: var(--texto-medio); font-size: 0.92rem; margin-bottom: 2.5rem; font-weight: 700; }
+    .admin-login-box h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
 
-    .admin-login-form { display: flex; flex-direction: column; gap: 1rem; text-align: left; }
-    .admin-login-form .form-control { background: var(--branco); padding: 0.9rem 1.2rem; font-size: 1rem; }
+    .admin-login-box p {
+      color: var(--texto-medio);
+      font-size: 0.92rem;
+      margin-bottom: 2.5rem;
+      font-weight: 700;
+    }
+
+    .admin-login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .admin-login-form .form-control {
+      background: var(--branco);
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+    }
 
     .btn-entrar-admin {
-      padding: 0.9rem; font-size: 1rem;
-      border: 2px solid var(--vermelho); background: transparent; color: var(--vermelho);
-      font-weight: 700; border-radius: var(--radius); cursor: pointer;
-      font-family: 'Lato', sans-serif; transition: var(--transition);
+      padding: 0.9rem;
+      font-size: 1rem;
+      border: 2px solid var(--vermelho);
+      background: transparent;
+      color: var(--vermelho);
+      font-weight: 700;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
     }
-    .btn-entrar-admin:hover { background: var(--vermelho); color: var(--branco); }
-    .btn-entrar-admin:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-entrar-admin:hover {
+      background: var(--vermelho);
+      color: var(--branco);
+    }
+
+    .btn-entrar-admin:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .login-erro {
-      display: none; background: #fdecea; color: var(--vermelho);
-      padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.88rem; text-align: center;
+      display: none;
+      background: #fdecea;
+      color: var(--vermelho);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      text-align: center;
     }
 
-    .admin-painel { display: none; }
+    .admin-painel {
+      display: none;
+    }
 
     .admin-header {
       background: linear-gradient(135deg, var(--azul) 0%, var(--verde-oliva) 100%);
-      color: var(--branco); padding: 1.2rem 2rem;
-      display: flex; align-items: center; justify-content: space-between;
+      color: var(--branco);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .admin-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0; }
-    .admin-header p { font-size: 0.8rem; opacity: 0.7; margin: 0; }
+    .admin-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    .admin-header p {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin: 0;
+    }
 
     .btn-sair {
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3);
-      color: var(--branco); padding: 0.5rem 1.2rem; border-radius: var(--radius);
-      cursor: pointer; font-size: 0.85rem; font-family: 'Lato', sans-serif;
-      font-weight: 700; transition: var(--transition);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--branco);
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      transition: var(--transition);
     }
-    .btn-sair:hover { background: rgba(255,255,255,0.22); }
 
-    .admin-abas-wrap { background: var(--branco); border-bottom: 2px solid var(--bege); position: sticky; top: 0; z-index: 50; }
-    .admin-abas { display: flex; max-width: 1200px; margin: 0 auto; padding: 0 2rem; overflow-x: auto; }
+    .btn-sair:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .admin-abas-wrap {
+      background: var(--branco);
+      border-bottom: 2px solid var(--bege);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .admin-abas {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      overflow-x: auto;
+    }
 
     .admin-aba-btn {
-      padding: 1rem 1.4rem; border: none; background: transparent;
-      color: var(--texto-medio); font-family: 'Lato', sans-serif;
-      font-size: 0.88rem; font-weight: 700; cursor: pointer;
-      border-bottom: 3px solid transparent; margin-bottom: -2px;
-      transition: var(--transition); white-space: nowrap;
+      padding: 1rem 1.4rem;
+      border: none;
+      background: transparent;
+      color: var(--texto-medio);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition);
+      white-space: nowrap;
     }
-    .admin-aba-btn.active { color: var(--azul); border-bottom-color: var(--vermelho); }
-    .admin-aba-btn:hover { color: var(--azul); }
 
-    .admin-content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
-    .admin-painel-aba { display: none; }
-    .admin-painel-aba.active { display: block; }
+    .admin-aba-btn.active {
+      color: var(--azul);
+      border-bottom-color: var(--vermelho);
+    }
 
-    .admin-card { background: var(--branco); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
-    .admin-card h3 { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 1.3rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--bege); }
+    .admin-aba-btn:hover {
+      color: var(--azul);
+    }
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-grid .full { grid-column: 1 / -1; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-group label { font-size: 0.82rem; font-weight: 700; color: var(--azul); text-transform: uppercase; letter-spacing: 0.3px; }
-    .form-group select { padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: var(--radius); font-size: 0.95rem; font-family: 'Lato', sans-serif; background: var(--branco); color: var(--texto-escuro); }
+    .admin-content {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-    .form-erro-contrato { display: none; background: #fdecea; color: var(--vermelho); padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.88rem; margin-top: 0.5rem; }
+    .admin-painel-aba {
+      display: none;
+    }
 
-    .btn-salvar { margin-top: 1.2rem; padding: 0.85rem 2rem; background: var(--azul); color: var(--branco); border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Lato', sans-serif; transition: var(--transition); }
-    .btn-salvar:hover { opacity: 0.85; }
-    .btn-salvar:disabled { opacity: 0.6; cursor: not-allowed; }
+    .admin-painel-aba.active {
+      display: block;
+    }
 
-    .tabela-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { background: var(--azul); color: var(--branco); padding: 0.8rem 1rem; text-align: left; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.3px; }
-    td { padding: 0.8rem 1rem; border-bottom: 1px solid #eee; color: var(--texto-escuro); vertical-align: middle; }
-    tr:hover td { background: #f9f6f0; }
+    .admin-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
 
-    .badge { padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .badge-ativo      { background: #e6f4ea; color: #2e7d32; }
-    .badge-aprovado   { background: #e6f4ea; color: #2e7d32; }
-    .badge-encerrado  { background: #fdecea; color: #c62828; }
-    .badge-rejeitado  { background: #fdecea; color: #c62828; }
-    .badge-pendente   { background: #fff8e1; color: #f57f17; }
+    .admin-card h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--bege);
+    }
 
-    .btn-excluir { background: transparent; border: 1px solid var(--vermelho); color: var(--vermelho); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); }
-    .btn-excluir:hover { background: var(--vermelho); color: var(--branco); }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
 
-    .btn-aprovar { background: transparent; border: 1px solid #2e7d32; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
-    .btn-aprovar:hover { background: #2e7d32; color: var(--branco); }
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
 
-    .btn-rejeitar { background: transparent; border: 1px solid #f57f17; color: #f57f17; padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
-    .btn-rejeitar:hover { background: #f57f17; color: var(--branco); }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
 
-    .btn-editar { background: transparent; border: 1px solid var(--azul); color: var(--azul); padding: 0.3rem 0.8rem; border-radius: var(--radius); cursor: pointer; font-size: 0.8rem; font-family: 'Lato', sans-serif; transition: var(--transition); display: block; margin-bottom: 0.3rem; }
-    .btn-editar:hover { background: var(--azul); color: var(--branco); }
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
 
-    .sem-dados { text-align: center; color: var(--texto-medio); padding: 2.5rem; font-size: 0.9rem; }
+    .form-group select {
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-family: 'Lato', sans-serif;
+      background: var(--branco);
+      color: var(--texto-escuro);
+    }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--branco); border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--azul); display: flex; flex-direction: column; gap: 0.3rem; }
-    .stat-card.vermelho { border-left-color: var(--vermelho); }
-    .stat-card.verde    { border-left-color: #2e7d32; }
-    .stat-numero { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--azul); font-weight: 700; line-height: 1; }
-    .stat-label { font-size: 0.82rem; color: var(--texto-medio); text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700; }
+    .form-erro-contrato {
+      display: none;
+      background: #fdecea;
+      color: var(--vermelho);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-salvar {
+      margin-top: 1.2rem;
+      padding: 0.85rem 2rem;
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+    }
+
+    .btn-salvar:hover {
+      opacity: 0.85;
+    }
+
+    .btn-salvar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .tabela-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: var(--azul);
+      color: var(--branco);
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #eee;
+      color: var(--texto-escuro);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: #f9f6f0;
+    }
+
+    .badge {
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-ativo {
+      background: #e6f4ea;
+      color: #2e7d32;
+    }
+
+    .badge-aprovado {
+      background: #e6f4ea;
+      color: #2e7d32;
+    }
+
+    .badge-encerrado {
+      background: #fdecea;
+      color: #c62828;
+    }
+
+    .badge-rejeitado {
+      background: #fdecea;
+      color: #c62828;
+    }
+
+    .badge-pendente {
+      background: #fff8e1;
+      color: #f57f17;
+    }
+
+    .btn-excluir {
+      background: transparent;
+      border: 1px solid var(--vermelho);
+      color: var(--vermelho);
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+    }
+
+    .btn-excluir:hover {
+      background: var(--vermelho);
+      color: var(--branco);
+    }
+
+    .btn-aprovar {
+      background: transparent;
+      border: 1px solid #2e7d32;
+      color: #2e7d32;
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .btn-aprovar:hover {
+      background: #2e7d32;
+      color: var(--branco);
+    }
+
+    .btn-rejeitar {
+      background: transparent;
+      border: 1px solid #f57f17;
+      color: #f57f17;
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .btn-rejeitar:hover {
+      background: #f57f17;
+      color: var(--branco);
+    }
+
+    .btn-editar {
+      background: transparent;
+      border: 1px solid var(--azul);
+      color: var(--azul);
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: 'Lato', sans-serif;
+      transition: var(--transition);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .btn-editar:hover {
+      background: var(--azul);
+      color: var(--branco);
+    }
+
+    .sem-dados {
+      text-align: center;
+      color: var(--texto-medio);
+      padding: 2.5rem;
+      font-size: 0.9rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      border-left: 4px solid var(--azul);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .stat-card.vermelho {
+      border-left-color: var(--vermelho);
+    }
+
+    .stat-card.verde {
+      border-left-color: #2e7d32;
+    }
+
+    .stat-numero {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--azul);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--texto-medio);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      font-weight: 700;
+    }
 
     .modal-overlay {
       display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
       z-index: 1000;
       align-items: center;
       justify-content: center;
       padding: 1rem;
     }
-    .modal-overlay.aberto { display: flex; }
+
+    .modal-overlay.aberto {
+      display: flex;
+    }
 
     .modal-box {
       background: var(--branco);
@@ -154,74 +496,159 @@
       max-width: 640px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
     }
 
-    .modal-box h3 { font-family: 'Playfair Display', serif; color: var(--azul); font-size: 1.3rem; margin-bottom: 0.4rem; }
+    .modal-box h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--azul);
+      font-size: 1.3rem;
+      margin-bottom: 0.4rem;
+    }
 
     .modal-box .modal-sub {
-      font-size: 0.85rem; color: var(--texto-medio);
-      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      font-size: 0.85rem;
+      color: var(--texto-medio);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--bege);
     }
 
     .modal-info-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 0.5rem 1.5rem; margin-bottom: 1.5rem; font-size: 0.88rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
     }
-    .modal-info-grid span { color: var(--texto-medio); }
-    .modal-info-grid strong { color: var(--azul); }
+
+    .modal-info-grid span {
+      color: var(--texto-medio);
+    }
+
+    .modal-info-grid strong {
+      color: var(--azul);
+    }
 
     .modal-form-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 0.8rem; margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
     }
-    .modal-form-grid .full { grid-column: 1 / -1; }
-    .modal-form-grid .form-group label { font-size: 0.78rem; font-weight: 700; color: var(--azul); text-transform: uppercase; }
 
-    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; }
+    .modal-form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-form-grid .form-group label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--azul);
+      text-transform: uppercase;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
 
     .btn-cancelar {
-      padding: 0.7rem 1.5rem; background: transparent;
-      border: 1px solid #ccc; border-radius: var(--radius);
-      cursor: pointer; font-family: 'Lato', sans-serif; font-size: 0.9rem;
+      padding: 0.7rem 1.5rem;
+      background: transparent;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
     }
 
     .btn-confirmar-aprovar {
-      padding: 0.7rem 1.8rem; background: #2e7d32; color: var(--branco);
-      border: none; border-radius: var(--radius); cursor: pointer;
-      font-family: 'Lato', sans-serif; font-size: 0.9rem; font-weight: 700; transition: var(--transition);
+      padding: 0.7rem 1.8rem;
+      background: #2e7d32;
+      color: var(--branco);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: var(--transition);
     }
-    .btn-confirmar-aprovar:hover { opacity: 0.85; }
-    .btn-confirmar-aprovar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-confirmar-aprovar:hover {
+      opacity: 0.85;
+    }
+
+    .btn-confirmar-aprovar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .btn-confirmar-editar {
-      padding: 0.7rem 1.8rem; background: var(--azul); color: var(--branco);
-      border: none; border-radius: var(--radius); cursor: pointer;
-      font-family: 'Lato', sans-serif; font-size: 0.9rem; font-weight: 700; transition: var(--transition);
+      padding: 0.7rem 1.8rem;
+      background: var(--azul);
+      color: var(--branco);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: var(--transition);
     }
-    .btn-confirmar-editar:hover { opacity: 0.85; }
-    .btn-confirmar-editar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-confirmar-editar:hover {
+      opacity: 0.85;
+    }
+
+    .btn-confirmar-editar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .toast {
       display: none;
-      position: fixed; bottom: 2rem; right: 2rem;
-      background: #2e7d32; color: white;
-      padding: 1rem 1.5rem; border-radius: var(--radius);
-      font-size: 0.9rem; font-weight: 700;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #2e7d32;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       z-index: 9999;
     }
 
     @media (max-width: 600px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-grid .full { grid-column: 1; }
-      .admin-header { flex-wrap: wrap; gap: 1rem; }
-      .modal-form-grid { grid-template-columns: 1fr; }
-      .modal-info-grid { grid-template-columns: 1fr; }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid .full {
+        grid-column: 1;
+      }
+
+      .admin-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .modal-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-info-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- LOGIN -->
@@ -268,7 +695,9 @@
           <div class="form-grid">
             <div class="form-group">
               <label>Usuario (cliente) *</label>
-              <select id="ct-usuario" class="form-control"><option value="">Selecione o cliente...</option></select>
+              <select id="ct-usuario" class="form-control">
+                <option value="">Selecione o cliente...</option>
+              </select>
             </div>
             <div class="form-group">
               <label>Tipo *</label>
@@ -318,9 +747,25 @@
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Cliente</th><th>Tipo</th><th>Imovel</th><th>Locatario</th><th>Avalista</th><th>Valor</th><th>Inicio</th><th>Fim</th><th>Status</th><th>Acao</th></tr>
+                <tr>
+                  <th>#</th>
+                  <th>Cliente</th>
+                  <th>Tipo</th>
+                  <th>Imovel</th>
+                  <th>Locatario</th>
+                  <th>Avalista</th>
+                  <th>Valor</th>
+                  <th>Inicio</th>
+                  <th>Fim</th>
+                  <th>Status</th>
+                  <th>Acao</th>
+                </tr>
               </thead>
-              <tbody id="tbody-contratos"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
+              <tbody id="tbody-contratos">
+                <tr>
+                  <td colspan="11" class="sem-dados">Carregando...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -334,9 +779,25 @@
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Cliente</th><th>Contato</th><th>Tipo</th><th>Endereco</th><th>Cidade</th><th>Valor</th><th>Finalidade</th><th>Data</th><th>Status</th><th>Acoes</th></tr>
+                <tr>
+                  <th>#</th>
+                  <th>Cliente</th>
+                  <th>Contato</th>
+                  <th>Tipo</th>
+                  <th>Endereco</th>
+                  <th>Cidade</th>
+                  <th>Valor</th>
+                  <th>Finalidade</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                  <th>Acoes</th>
+                </tr>
               </thead>
-              <tbody id="tbody-anuncios"><tr><td colspan="11" class="sem-dados">Carregando...</td></tr></tbody>
+              <tbody id="tbody-anuncios">
+                <tr>
+                  <td colspan="11" class="sem-dados">Carregando...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -350,9 +811,19 @@
           <div class="tabela-wrap">
             <table>
               <thead>
-                <tr><th>#</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>CPF / CNPJ</th></tr>
+                <tr>
+                  <th>#</th>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Telefone</th>
+                  <th>CPF / CNPJ</th>
+                </tr>
               </thead>
-              <tbody id="tbody-usuarios"><tr><td colspan="5" class="sem-dados">Carregando...</td></tr></tbody>
+              <tbody id="tbody-usuarios">
+                <tr>
+                  <td colspan="5" class="sem-dados">Carregando...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -410,7 +881,8 @@
       </div>
       <div class="modal-actions">
         <button class="btn-cancelar" onclick="fecharModal('modal-aprovar')">Cancelar</button>
-        <button class="btn-confirmar-aprovar" id="btn-confirmar-aprovar" onclick="confirmarAprovacao()">Publicar Imovel</button>
+        <button class="btn-confirmar-aprovar" id="btn-confirmar-aprovar" onclick="confirmarAprovacao()">Publicar
+          Imovel</button>
       </div>
     </div>
   </div>
@@ -419,7 +891,8 @@
   <div class="modal-overlay" id="modal-editar">
     <div class="modal-box">
       <h3>Editar Imovel</h3>
-      <p class="modal-sub">Altere as informacoes do imovel publicado. As mudancas ficam visiveis imediatamente no site.</p>
+      <p class="modal-sub">Altere as informacoes do imovel publicado. As mudancas ficam visiveis imediatamente no site.
+      </p>
       <div class="modal-form-grid">
         <div class="form-group">
           <label>Tipo</label>
@@ -478,7 +951,8 @@
       </div>
       <div class="modal-actions">
         <button class="btn-cancelar" onclick="fecharModal('modal-editar')">Cancelar</button>
-        <button class="btn-confirmar-editar" id="btn-confirmar-editar" onclick="confirmarEdicao()">Salvar Alteracoes</button>
+        <button class="btn-confirmar-editar" id="btn-confirmar-editar" onclick="confirmarEdicao()">Salvar
+          Alteracoes</button>
       </div>
     </div>
   </div>
@@ -496,12 +970,12 @@
       t.textContent = msg;
       t.style.background = cor || '#2e7d32';
       t.style.display = 'block';
-      setTimeout(function() { t.style.display = 'none'; }, 3000);
+      setTimeout(function () { t.style.display = 'none'; }, 3000);
     }
 
     function trocarAba(id, btn) {
-      document.querySelectorAll('.admin-painel-aba').forEach(function(p) { p.classList.remove('active'); });
-      document.querySelectorAll('.admin-aba-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.admin-painel-aba').forEach(function (p) { p.classList.remove('active'); });
+      document.querySelectorAll('.admin-aba-btn').forEach(function (b) { b.classList.remove('active'); });
       document.getElementById('aba-' + id).classList.add('active');
       btn.classList.add('active');
       if (id === 'anuncios') carregarAnuncios();
@@ -528,24 +1002,25 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ usuario: usuario, senha: senha })
       })
-      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
-      .then(function(result) {
-        if (result.ok) {
-          sessionStorage.setItem('adminLogado', 'true');
-          mostrarPainel();
-        } else {
-          erroEl.textContent = result.data.erro || 'Credenciais invalidas.';
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (result) {
+          if (result.ok) {
+            sessionStorage.setItem('adminLogado', 'true');
+            sessionStorage.setItem('adminToken', result.data.token);
+            mostrarPainel();
+          } else {
+            erroEl.textContent = result.data.erro || 'Credenciais invalidas.';
+            erroEl.style.display = 'block';
+          }
+        })
+        .catch(function () {
+          erroEl.textContent = 'Erro ao conectar com o servidor.';
           erroEl.style.display = 'block';
-        }
-      })
-      .catch(function() {
-        erroEl.textContent = 'Erro ao conectar com o servidor.';
-        erroEl.style.display = 'block';
-      })
-      .finally(function() {
-        btn.textContent = 'Entrar';
-        btn.disabled = false;
-      });
+        })
+        .finally(function () {
+          btn.textContent = 'Entrar';
+          btn.disabled = false;
+        });
     }
 
     function sairAdmin() {
@@ -563,9 +1038,15 @@
 
     if (sessionStorage.getItem('adminLogado') === 'true') mostrarPainel();
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && document.getElementById('tela-login').style.display !== 'none') loginAdmin();
     });
+    function getAdminHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'x-admin-token': sessionStorage.getItem('adminToken') || ''
+      };
+    }
 
     function fecharModal(id) {
       document.getElementById(id).classList.remove('aberto');
@@ -573,13 +1054,13 @@
       if (id === 'modal-editar') imovelEditandoId = null;
     }
 
-    ['modal-aprovar', 'modal-editar'].forEach(function(id) {
-      document.getElementById(id).addEventListener('click', function(e) {
+    ['modal-aprovar', 'modal-editar'].forEach(function (id) {
+      document.getElementById(id).addEventListener('click', function (e) {
         if (e.target === this) fecharModal(id);
       });
     });
 
-    document.getElementById('tbody-anuncios').addEventListener('click', function(e) {
+    document.getElementById('tbody-anuncios').addEventListener('click', function (e) {
       var btnAprovar = e.target.closest('.btn-aprovar');
       var btnRejeitar = e.target.closest('.btn-rejeitar');
       var btnEditar = e.target.closest('.btn-editar');
@@ -587,7 +1068,7 @@
 
       if (btnAprovar) {
         var id = parseInt(btnAprovar.dataset.id);
-        var anuncio = anunciosBanco.find(function(a) { return a.id === id; });
+        var anuncio = anunciosBanco.find(function (a) { return a.id === id; });
         if (anuncio) abrirModalAprovar(anuncio);
       }
       if (btnRejeitar) {
@@ -595,7 +1076,7 @@
       }
       if (btnEditar) {
         var id2 = parseInt(btnEditar.dataset.id);
-        var anuncio2 = anunciosBanco.find(function(a) { return a.id === id2; });
+        var anuncio2 = anunciosBanco.find(function (a) { return a.id === id2; });
         if (anuncio2) abrirModalEditar(anuncio2);
       }
       if (btnExcluir) {
@@ -605,85 +1086,85 @@
 
     function carregarUsuarios() {
       fetch(API + '/usuarios')
-      .then(function(res) { return res.json(); })
-      .then(function(users) {
-        listaUsuarios = users;
-        var select = document.getElementById('ct-usuario');
-        select.innerHTML = '<option value="">Selecione o cliente...</option>' +
-          users.map(function(u) { return '<option value="' + u.id + '">' + u.nome + ' (' + u.email + ')</option>'; }).join('');
+        .then(function (res) { return res.json(); })
+        .then(function (users) {
+          listaUsuarios = users;
+          var select = document.getElementById('ct-usuario');
+          select.innerHTML = '<option value="">Selecione o cliente...</option>' +
+            users.map(function (u) { return '<option value="' + u.id + '">' + u.nome + ' (' + u.email + ')</option>'; }).join('');
 
-        document.getElementById('stats-usuarios').innerHTML =
-          '<div class="stat-card"><div class="stat-numero">' + users.length + '</div><div class="stat-label">Usuarios cadastrados</div></div>';
+          document.getElementById('stats-usuarios').innerHTML =
+            '<div class="stat-card"><div class="stat-numero">' + users.length + '</div><div class="stat-label">Usuarios cadastrados</div></div>';
 
-        var tbody = document.getElementById('tbody-usuarios');
-        tbody.innerHTML = users.length === 0
-          ? '<tr><td colspan="5" class="sem-dados">Nenhum usuario cadastrado.</td></tr>'
-          : users.map(function(u) {
+          var tbody = document.getElementById('tbody-usuarios');
+          tbody.innerHTML = users.length === 0
+            ? '<tr><td colspan="5" class="sem-dados">Nenhum usuario cadastrado.</td></tr>'
+            : users.map(function (u) {
               return '<tr><td>' + u.id + '</td><td><strong>' + u.nome + '</strong></td><td>' + u.email + '</td><td>' + (u.telefone || '-') + '</td><td>' + (u.cpf_cnpj || '-') + '</td></tr>';
             }).join('');
-      })
-      .catch(function(err) { console.error('Erro ao carregar usuarios:', err); });
+        })
+        .catch(function (err) { console.error('Erro ao carregar usuarios:', err); });
     }
 
     function carregarContratos() {
-      fetch(API + '/admin/contratos')
-      .then(function(res) { return res.json(); })
-      .then(function(contratos) {
-        var ativos = contratos.filter(function(c) { return c.status === 'ativo'; }).length;
-        var pendentes = contratos.filter(function(c) { return c.status === 'pendente'; }).length;
-        var encerrados = contratos.filter(function(c) { return c.status === 'encerrado'; }).length;
+      fetch(API + '/admin/contratos', { headers: getAdminHeaders() })
+        .then(function (res) { return res.json(); })
+        .then(function (contratos) {
+          var ativos = contratos.filter(function (c) { return c.status === 'ativo'; }).length;
+          var pendentes = contratos.filter(function (c) { return c.status === 'pendente'; }).length;
+          var encerrados = contratos.filter(function (c) { return c.status === 'encerrado'; }).length;
 
-        document.getElementById('stats-contratos').innerHTML =
-          '<div class="stat-card"><div class="stat-numero">' + contratos.length + '</div><div class="stat-label">Total de contratos</div></div>' +
-          '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + ativos + '</div><div class="stat-label">Ativos</div></div>' +
-          '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
-          '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + encerrados + '</div><div class="stat-label">Encerrados</div></div>';
+          document.getElementById('stats-contratos').innerHTML =
+            '<div class="stat-card"><div class="stat-numero">' + contratos.length + '</div><div class="stat-label">Total de contratos</div></div>' +
+            '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + ativos + '</div><div class="stat-label">Ativos</div></div>' +
+            '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
+            '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + encerrados + '</div><div class="stat-label">Encerrados</div></div>';
 
-        var tbody = document.getElementById('tbody-contratos');
-        tbody.innerHTML = contratos.length === 0
-          ? '<tr><td colspan="11" class="sem-dados">Nenhum contrato cadastrado ainda.</td></tr>'
-          : contratos.map(function(c) {
+          var tbody = document.getElementById('tbody-contratos');
+          tbody.innerHTML = contratos.length === 0
+            ? '<tr><td colspan="11" class="sem-dados">Nenhum contrato cadastrado ainda.</td></tr>'
+            : contratos.map(function (c) {
               return '<tr><td>' + c.id + '</td><td><strong>' + (c.nome_usuario || '-') + '</strong><br><small>' + (c.email_usuario || '') + '</small></td><td>' + c.tipo + '</td><td>' + c.imovel + '</td><td>' + c.locatario + '</td><td>' + (c.avalista || '-') + '</td><td>R$ ' + Number(c.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '</td><td>' + formatarData(c.data_inicio) + '</td><td>' + (c.data_fim ? formatarData(c.data_fim) : '-') + '</td><td><span class="badge badge-' + c.status + '">' + c.status + '</span></td><td><button class="btn-excluir" onclick="excluirContrato(' + c.id + ')">Excluir</button></td></tr>';
             }).join('');
-      })
-      .catch(function(err) { console.error('Erro ao carregar contratos:', err); });
+        })
+        .catch(function (err) { console.error('Erro ao carregar contratos:', err); });
     }
 
     function carregarAnuncios() {
-      fetch(API + '/admin/imoveis')
-      .then(function(res) { return res.json(); })
-      .then(function(anuncios) {
-        anunciosBanco = anuncios;
-        var pendentes = anuncios.filter(function(a) { return a.status === 'pendente'; }).length;
-        var aprovados = anuncios.filter(function(a) { return a.status === 'aprovado'; }).length;
-        var rejeitados = anuncios.filter(function(a) { return a.status === 'rejeitado'; }).length;
+      fetch(API + '/admin/imoveis', { headers: getAdminHeaders() })
+        .then(function (res) { return res.json(); })
+        .then(function (anuncios) {
+          anunciosBanco = anuncios;
+          var pendentes = anuncios.filter(function (a) { return a.status === 'pendente'; }).length;
+          var aprovados = anuncios.filter(function (a) { return a.status === 'aprovado'; }).length;
+          var rejeitados = anuncios.filter(function (a) { return a.status === 'rejeitado'; }).length;
 
-        document.getElementById('stats-anuncios').innerHTML =
-          '<div class="stat-card"><div class="stat-numero">' + anuncios.length + '</div><div class="stat-label">Total de anuncios</div></div>' +
-          '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
-          '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + aprovados + '</div><div class="stat-label">Aprovados</div></div>' +
-          '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + rejeitados + '</div><div class="stat-label">Rejeitados</div></div>';
+          document.getElementById('stats-anuncios').innerHTML =
+            '<div class="stat-card"><div class="stat-numero">' + anuncios.length + '</div><div class="stat-label">Total de anuncios</div></div>' +
+            '<div class="stat-card" style="border-left-color:#f57f17"><div class="stat-numero" style="color:#f57f17">' + pendentes + '</div><div class="stat-label">Pendentes</div></div>' +
+            '<div class="stat-card verde"><div class="stat-numero" style="color:#2e7d32">' + aprovados + '</div><div class="stat-label">Aprovados</div></div>' +
+            '<div class="stat-card vermelho"><div class="stat-numero" style="color:#c62828">' + rejeitados + '</div><div class="stat-label">Rejeitados</div></div>';
 
-        var tbody = document.getElementById('tbody-anuncios');
-        if (anuncios.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anuncio recebido ainda.</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = anuncios.map(function(a) {
-          var acoes = '';
-          if (a.status === 'pendente') {
-            acoes += '<button class="btn-aprovar" data-id="' + a.id + '">Aprovar</button>';
-            acoes += '<button class="btn-rejeitar" data-id="' + a.id + '">Rejeitar</button>';
+          var tbody = document.getElementById('tbody-anuncios');
+          if (anuncios.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" class="sem-dados">Nenhum anuncio recebido ainda.</td></tr>';
+            return;
           }
-          if (a.status === 'aprovado') {
-            acoes += '<button class="btn-editar" data-id="' + a.id + '">Editar</button>';
-          }
-          acoes += '<button class="btn-excluir" data-tipo="anuncio" data-id="' + a.id + '">Excluir</button>';
-          return '<tr><td>' + a.id + '</td><td><strong>' + a.nome + '</strong><br><small>' + (a.nome_usuario || '') + '</small></td><td>' + a.email + '<br><small>' + a.telefone + '</small></td><td>' + (a.tipo || '-') + '</td><td>' + a.endereco + '</td><td>' + (a.cidade || '-') + '</td><td>' + (a.valor || '-') + '</td><td>' + (a.finalidade || '-') + '</td><td>' + (a.data_envio || '-') + '</td><td><span class="badge badge-' + a.status + '">' + a.status + '</span></td><td>' + acoes + '</td></tr>';
-        }).join('');
-      })
-      .catch(function(err) { console.error('Erro ao carregar anuncios:', err); });
+
+          tbody.innerHTML = anuncios.map(function (a) {
+            var acoes = '';
+            if (a.status === 'pendente') {
+              acoes += '<button class="btn-aprovar" data-id="' + a.id + '">Aprovar</button>';
+              acoes += '<button class="btn-rejeitar" data-id="' + a.id + '">Rejeitar</button>';
+            }
+            if (a.status === 'aprovado') {
+              acoes += '<button class="btn-editar" data-id="' + a.id + '">Editar</button>';
+            }
+            acoes += '<button class="btn-excluir" data-tipo="anuncio" data-id="' + a.id + '">Excluir</button>';
+            return '<tr><td>' + a.id + '</td><td><strong>' + a.nome + '</strong><br><small>' + (a.nome_usuario || '') + '</small></td><td>' + a.email + '<br><small>' + a.telefone + '</small></td><td>' + (a.tipo || '-') + '</td><td>' + a.endereco + '</td><td>' + (a.cidade || '-') + '</td><td>' + (a.valor || '-') + '</td><td>' + (a.finalidade || '-') + '</td><td>' + (a.data_envio || '-') + '</td><td><span class="badge badge-' + a.status + '">' + a.status + '</span></td><td>' + acoes + '</td></tr>';
+          }).join('');
+        })
+        .catch(function (err) { console.error('Erro ao carregar anuncios:', err); });
     }
 
     function abrirModalAprovar(anuncio) {
@@ -736,23 +1217,23 @@
 
       fetch(API + '/admin/imoveis/' + anuncioSelecionadoId + '/aprovar', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify(dados)
       })
-      .then(function(res) {
-        if (res.ok) {
-          fecharModal('modal-aprovar');
-          carregarAnuncios();
-          mostrarToast('Imovel publicado com sucesso!');
-        } else {
-          alert('Erro ao aprovar anuncio.');
-        }
-      })
-      .catch(function() { alert('Erro ao conectar com o servidor.'); })
-      .finally(function() {
-        btn.textContent = 'Publicar Imovel';
-        btn.disabled = false;
-      });
+        .then(function (res) {
+          if (res.ok) {
+            fecharModal('modal-aprovar');
+            carregarAnuncios();
+            mostrarToast('Imovel publicado com sucesso!');
+          } else {
+            alert('Erro ao aprovar anuncio.');
+          }
+        })
+        .catch(function () { alert('Erro ao conectar com o servidor.'); })
+        .finally(function () {
+          btn.textContent = 'Publicar Imovel';
+          btn.disabled = false;
+        });
     }
 
     function abrirModalEditar(anuncio) {
@@ -802,30 +1283,33 @@
 
       fetch(API + '/admin/imoveis/' + imovelEditandoId + '/editar', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders(),
         body: JSON.stringify(dados)
       })
-      .then(function(res) {
-        if (res.ok) {
-          fecharModal('modal-editar');
-          carregarAnuncios();
-          mostrarToast('Imovel atualizado com sucesso!');
-        } else {
-          return res.json().then(function(data) { alert(data.erro || 'Erro ao salvar alteracoes.'); });
-        }
-      })
-      .catch(function() { alert('Erro ao conectar com o servidor.'); })
-      .finally(function() {
-        btn.textContent = 'Salvar Alteracoes';
-        btn.disabled = false;
-      });
+        .then(function (res) {
+          if (res.ok) {
+            fecharModal('modal-editar');
+            carregarAnuncios();
+            mostrarToast('Imovel atualizado com sucesso!');
+          } else {
+            return res.json().then(function (data) { alert(data.erro || 'Erro ao salvar alteracoes.'); });
+          }
+        })
+        .catch(function () { alert('Erro ao conectar com o servidor.'); })
+        .finally(function () {
+          btn.textContent = 'Salvar Alteracoes';
+          btn.disabled = false;
+        });
     }
 
     function rejeitarAnuncio(id) {
       if (!confirm('Rejeitar este anuncio?')) return;
-      fetch(API + '/admin/imoveis/' + id + '/rejeitar', { method: 'PATCH' })
-      .then(function() { carregarAnuncios(); mostrarToast('Anuncio rejeitado.', '#c62828'); })
-      .catch(function() { alert('Erro ao rejeitar anuncio.'); });
+      fetch(API + '/admin/imoveis/' + id + '/rejeitar', {
+        method: 'PATCH',
+        headers: getAdminHeaders()
+      })
+        .then(function () { carregarAnuncios(); mostrarToast('Anuncio rejeitado.', '#c62828'); })
+        .catch(function () { alert('Erro ao rejeitar anuncio.'); });
     }
 
     function salvarContrato() {
@@ -859,41 +1343,44 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
       })
-      .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
-      .then(function(result) {
-        if (result.ok) {
-          ['ct-usuario','ct-imovel','ct-locatario','ct-avalista','ct-valor','ct-inicio','ct-fim']
-            .forEach(function(id) { document.getElementById(id).value = ''; });
-          document.getElementById('ct-status').value = 'ativo';
-          carregarContratos();
-          mostrarToast('Contrato salvo com sucesso!');
-        } else {
-          erroEl.textContent = result.data.erro || 'Erro ao salvar contrato.';
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (result) {
+          if (result.ok) {
+            ['ct-usuario', 'ct-imovel', 'ct-locatario', 'ct-avalista', 'ct-valor', 'ct-inicio', 'ct-fim']
+              .forEach(function (id) { document.getElementById(id).value = ''; });
+            document.getElementById('ct-status').value = 'ativo';
+            carregarContratos();
+            mostrarToast('Contrato salvo com sucesso!');
+          } else {
+            erroEl.textContent = result.data.erro || 'Erro ao salvar contrato.';
+            erroEl.style.display = 'block';
+          }
+        })
+        .catch(function () {
+          erroEl.textContent = 'Erro ao conectar com o servidor.';
           erroEl.style.display = 'block';
-        }
-      })
-      .catch(function() {
-        erroEl.textContent = 'Erro ao conectar com o servidor.';
-        erroEl.style.display = 'block';
-      })
-      .finally(function() {
-        btn.textContent = 'Salvar Contrato';
-        btn.disabled = false;
-      });
+        })
+        .finally(function () {
+          btn.textContent = 'Salvar Contrato';
+          btn.disabled = false;
+        });
     }
 
     function excluirContrato(id) {
       if (!confirm('Tem certeza que deseja excluir este contrato?')) return;
       fetch(API + '/contratos/' + id, { method: 'DELETE' })
-      .then(function() { carregarContratos(); mostrarToast('Contrato excluido.', '#c62828'); })
-      .catch(function() { alert('Erro ao excluir contrato.'); });
+        .then(function () { carregarContratos(); mostrarToast('Contrato excluido.', '#c62828'); })
+        .catch(function () { alert('Erro ao excluir contrato.'); });
     }
 
     function excluirAnuncio(id) {
       if (!confirm('Tem certeza que deseja excluir este anuncio?')) return;
-      fetch(API + '/imoveis/' + id, { method: 'DELETE' })
-      .then(function() { carregarAnuncios(); mostrarToast('Anuncio excluido.', '#c62828'); })
-      .catch(function() { alert('Erro ao excluir anuncio.'); });
+      fetch(API + '/imoveis/' + id, {
+        method: 'DELETE',
+        headers: getAdminHeaders()
+      })
+        .then(function () { carregarAnuncios(); mostrarToast('Anuncio excluido.', '#c62828'); })
+        .catch(function () { alert('Erro ao excluir anuncio.'); });
     }
 
     function formatarData(data) {
@@ -903,4 +1390,5 @@
     }
   </script>
 </body>
+
 </html>

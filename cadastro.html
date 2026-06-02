@@ -215,7 +215,10 @@
       if (!termos) {
         alert('Você precisa aceitar os termos para continuar.'); return;
       }
-
+if (!validarSenha(senha)) {
+  alert('A senha deve ter pelo menos 6 caracteres.');
+  return;
+}
       // Verificar e-mail duplicado
       // Enviar para o backend
      fetch(`${API}/usuarios`, {

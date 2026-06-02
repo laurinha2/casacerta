@@ -146,11 +146,11 @@
           <div class="fin-row">
             <div class="form-group">
               <label>Valor do imóvel (R$)</label>
-              <input type="number" id="fin-valor" class="form-control" placeholder="Ex: 350000" min="0">
+              <input type="text" id="fin-valor" class="form-control" placeholder="R$ 0,00">
             </div>
             <div class="form-group">
               <label>Entrada (R$)</label>
-              <input type="number" id="fin-entrada" class="form-control" placeholder="Ex: 70000" min="0">
+              <input type="text" id="fin-entrada" class="form-control" placeholder="R$ 0,00">
             </div>
           </div>
           <div class="fin-row">
@@ -213,20 +213,20 @@
               <span class="resultado-val" id="r-juros">—</span>
             </div>
             <div style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;"></div>
-              <a href="contato.html" class="btn-primary"
-                style="flex:1; justify-content:center; display:flex; align-items:center;">Falar com especialista →</a>
-              <button class="btn-secondary" style="flex:1;" onclick="salvarSimulacaoLocal()">Salvar simulação</button>
-            </div>
-            <div id="salvo-msg"
-              style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--verde-oliva); text-align:center;">
-              ✓ Simulação salva no seu perfil!</div>
+            <a href="contato.html" class="btn-primary"
+              style="flex:1; justify-content:center; display:flex; align-items:center;">Falar com especialista →</a>
+            <button class="btn-secondary" style="flex:1;" onclick="salvarSimulacaoLocal()">Salvar simulação</button>
           </div>
+          <div id="salvo-msg"
+            style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--verde-oliva); text-align:center;">
+            ✓ Simulação salva no seu perfil!</div>
         </div>
       </div>
+    </div>
 
-      <div class="fin-img">
-        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=80" alt="Financiamento imóvel">
-      </div>
+    <div class="fin-img">
+      <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=80" alt="Financiamento imóvel">
+    </div>
     </div>
   </section>
 
@@ -269,15 +269,21 @@
 
     function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
 
+
     function simular() {
-      const valor = parseFloat(document.getElementById('fin-valor').value);
-      const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
+      //const valor = parseFloat(document.getElementById('fin-valor').value);
+     //const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
       const prazo = parseInt(document.getElementById('fin-prazo').value);
       const taxa = parseFloat(document.getElementById('fin-taxa').value);
+      const valor = parseFloat(document.getElementById('fin-valor').value.replace(/\D/g, '')) / 100;
+      const entrada = parseFloat(document.getElementById('fin-entrada').value.replace(/\D/g, '') || '0') / 100;
 
       if (!valor || valor <= 0) { alert('Informe o valor do imóvel.'); return; }
+      if (valor > 50000000) { alert('Valor do imóvel muito alto. Verifique o valor digitado.'); return; }
       if (entrada >= valor) { alert('A entrada não pode ser maior ou igual ao valor do imóvel.'); return; }
+      if (entrada > 50000000) { alert('Valor de entrada muito alto. Verifique o valor digitado.'); return; }
       if (!taxa || taxa <= 0) { alert('Informe a taxa de juros anual.'); return; }
+      // ... resto do código
 
       const { parcela, total, jurosTotal } = calcularFinanciamento(valor, entrada, prazo, taxa);
       const financiado = valor - entrada;
