@@ -576,10 +576,6 @@
         console.error('Erro ao carregar dados:', err);
       }
     }
-    if (!validarSenha(senha)) {
-  alert('A senha deve ter pelo menos 6 caracteres.');
-  return;
-}
 
     async function salvarDados() {
       const novaSenha = document.getElementById('edit-senha').value;
