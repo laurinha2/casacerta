@@ -6,7 +6,7 @@
   min-height: 520px;
   display: flex;
   align-items: center;
-  background-image: url('https://res.cloudinary.com/dgcwvblfw/image/upload/pexels-cmoon-12558933_umziv0.jpg');
+   background-image: url('https://res.cloudinary.com/dgcwvblfw/image/upload/pexels-cmoon-12558933_umziv0.jpg');
   background-size: cover;
   background-position: center 40%;
   overflow: hidden;
