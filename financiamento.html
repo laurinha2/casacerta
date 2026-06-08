@@ -56,7 +56,6 @@
       line-height: 1.5;
     }
 
-    /* RESULTADO */
     .resultado-box {
       display: none;
       background: var(--azul);
@@ -102,6 +101,13 @@
       color: var(--bege-claro);
     }
 
+    .resultado-acoes {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
     .fin-img {
       border-radius: var(--radius);
       overflow: hidden;
@@ -124,6 +130,10 @@
       }
 
       .fin-row {
+        grid-template-columns: 1fr;
+      }
+
+      .resultado-acoes {
         grid-template-columns: 1fr;
       }
     }
@@ -174,8 +184,7 @@
           <p class="aviso">⚠️ Esta é uma simulação aproximada pelo Sistema Price (tabela de amortização). Consulte
             sempre um especialista financeiro para condições exatas.</p>
 
-          <button class="btn-primary" onclick="simular()" style="font-size:1rem; padding:0.9rem 2rem;">Calcular
-            →</button>
+          <button class="btn-primary" onclick="simular()" style="font-size:1rem; padding:0.9rem 2rem;">Calcular →</button>
 
           <!-- RESULTADO -->
           <div class="resultado-box" id="resultado">
@@ -212,21 +221,22 @@
               <span class="resultado-label">Total de juros</span>
               <span class="resultado-val" id="r-juros">—</span>
             </div>
-            <div style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;"></div>
-            <a href="contato.html" class="btn-primary"
-              style="flex:1; justify-content:center; display:flex; align-items:center;">Falar com especialista →</a>
-            <button class="btn-secondary" style="flex:1;" onclick="salvarSimulacaoLocal()">Salvar simulação</button>
+
+            <div class="resultado-acoes">
+              <a href="contato.html" class="btn-primary" style="justify-content:center; display:flex; align-items:center;">Falar com especialista →</a>
+              <button class="btn-secondary" onclick="salvarSimulacaoNoBanco()">Salvar simulação</button>
+            </div>
           </div>
-          <div id="salvo-msg"
-            style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--verde-oliva); text-align:center;">
-            ✓ Simulação salva no seu perfil!</div>
+
+          <div id="salvo-msg" style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--verde-oliva); text-align:center;">
+            ✓ Simulação salva no seu perfil!
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="fin-img">
-      <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=80" alt="Financiamento imóvel">
-    </div>
+      <div class="fin-img">
+        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=80" alt="Financiamento imóvel">
+      </div>
     </div>
   </section>
 
@@ -237,53 +247,20 @@
   <script src="js/main.js"></script>
   <script src="js/componentes.js"></script>
   <script>
-    function salvarSimulacaoLocal() {
-      const logado = localStorage.getItem('usuarioLogado');
-      if (!logado) {
-        alert('Você precisa estar logado para salvar simulações.\nFaça login na Área do Cliente.');
-        window.location.href = 'login.html';
-        return;
-      }
-      const usuario = JSON.parse(logado);
-      const valor = parseFloat(document.getElementById('fin-valor').value);
-      const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
-      const prazo = parseInt(document.getElementById('fin-prazo').value);
-      const taxa = parseFloat(document.getElementById('fin-taxa').value);
-      const parcelaEl = document.getElementById('r-parcela').textContent;
-      if (!valor || parcelaEl === '—') { alert('Faça uma simulação primeiro!'); return; }
-
-      const sims = JSON.parse(localStorage.getItem('simulacoes_' + usuario.email) || '[]');
-      sims.unshift({
-        id: Date.now(),
-        valor, entrada, prazo, taxa,
-        valorFormatado: document.getElementById('r-valor').textContent,
-        entradaFormatada: document.getElementById('r-entrada').textContent,
-        parcelaFormatada: parcelaEl,
-        data: new Date().toLocaleDateString('pt-BR')
-      });
-      localStorage.setItem('simulacoes_' + usuario.email, JSON.stringify(sims));
-      const msg = document.getElementById('salvo-msg');
-      msg.style.display = 'block';
-      setTimeout(() => msg.style.display = 'none', 3000);
+    function fmt(v) {
+      return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 });
     }
 
-    function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
-
-
     function simular() {
-      //const valor = parseFloat(document.getElementById('fin-valor').value);
-     //const entrada = parseFloat(document.getElementById('fin-entrada').value) || 0;
-      const prazo = parseInt(document.getElementById('fin-prazo').value);
-      const taxa = parseFloat(document.getElementById('fin-taxa').value);
       const valor = parseFloat(document.getElementById('fin-valor').value.replace(/\D/g, '')) / 100;
       const entrada = parseFloat(document.getElementById('fin-entrada').value.replace(/\D/g, '') || '0') / 100;
+      const prazo = parseInt(document.getElementById('fin-prazo').value);
+      const taxa = parseFloat(document.getElementById('fin-taxa').value);
 
       if (!valor || valor <= 0) { alert('Informe o valor do imóvel.'); return; }
       if (valor > 50000000) { alert('Valor do imóvel muito alto. Verifique o valor digitado.'); return; }
       if (entrada >= valor) { alert('A entrada não pode ser maior ou igual ao valor do imóvel.'); return; }
-      if (entrada > 50000000) { alert('Valor de entrada muito alto. Verifique o valor digitado.'); return; }
       if (!taxa || taxa <= 0) { alert('Informe a taxa de juros anual.'); return; }
-      // ... resto do código
 
       const { parcela, total, jurosTotal } = calcularFinanciamento(valor, entrada, prazo, taxa);
       const financiado = valor - entrada;
@@ -299,6 +276,33 @@
 
       document.getElementById('resultado').style.display = 'block';
       document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function salvarSimulacaoNoBanco() {
+      const logado = localStorage.getItem('usuarioLogado');
+      if (!logado) {
+        alert('Você precisa estar logado para salvar simulações.\nFaça login na Área do Cliente.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const parcelaEl = document.getElementById('r-parcela').textContent;
+      if (!parcelaEl || parcelaEl === '—') {
+        alert('Faça uma simulação primeiro!');
+        return;
+      }
+
+      const valor = parseFloat(document.getElementById('fin-valor').value.replace(/\D/g, '')) / 100;
+      const entrada = parseFloat(document.getElementById('fin-entrada').value.replace(/\D/g, '') || '0') / 100;
+      const prazo = parseInt(document.getElementById('fin-prazo').value);
+      const taxa = parseFloat(document.getElementById('fin-taxa').value);
+      const data = new Date().toLocaleDateString('pt-BR');
+
+      await salvarSimulacao({ valor, entrada, prazo, taxa, parcela: parcelaEl, total: document.getElementById('r-total').textContent, data });
+
+      const msg = document.getElementById('salvo-msg');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 3000);
     }
   </script>
 </body>
