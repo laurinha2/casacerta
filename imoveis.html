@@ -24,7 +24,6 @@
       font-size: 1rem;
     }
 
-    /* FILTROS AVANÇADOS */
     .filtros-bar {
       background: var(--bege);
       padding: 1.5rem 2rem;
@@ -59,7 +58,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* RESULTADOS */
     .resultados-section {
       background: var(--bege-claro);
       padding: 3rem 2rem;
@@ -221,7 +219,6 @@
   <script src="js/componentes.js"></script>
 
   <script>
-    // ---- FILTROS ----
     function aplicarFiltros() {
       const finalidade = document.getElementById('f-finalidade').value;
       const tipo = document.getElementById('f-tipo').value;
@@ -254,23 +251,19 @@
         container.innerHTML = lista.map(im => renderCard(im)).join('');
       }
 
-      // Popula dinamicamente cidades e bairros com base nos dados reais
       popularSelectsDinamicos();
+      atualizarFavoritos();
     }
 
     function popularSelectsDinamicos() {
       const cidadeSelect = document.getElementById('f-cidade');
       const bairroSelect = document.getElementById('f-bairro');
-
       const cidadeAtual = cidadeSelect.value;
       const bairroAtual = bairroSelect.value;
-
       const cidades = [...new Set(imoveisBanco.map(im => im.cidade).filter(Boolean))].sort();
       const bairros = [...new Set(imoveisBanco.map(im => im.bairro).filter(Boolean))].sort();
-
       cidadeSelect.innerHTML = '<option value="">Todas</option>' +
         cidades.map(c => `<option value="${c}" ${c === cidadeAtual ? 'selected' : ''}>${c}</option>`).join('');
-
       bairroSelect.innerHTML = '<option value="">Todos</option>' +
         bairros.map(b => `<option value="${b}" ${b === bairroAtual ? 'selected' : ''}>${b}</option>`).join('');
     }

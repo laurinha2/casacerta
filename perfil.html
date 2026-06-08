@@ -620,21 +620,45 @@
     async function carregarFavoritos() {
       const container = document.getElementById('lista-favoritos');
       try {
+        // Busca IDs favoritos do usuário
         const res = await fetch(`${API}/favoritos/${usuarioAtual.id}`);
         const favIds = await res.json();
-        const favImoveis = imoveis.filter(im => favIds.includes(im.id));
+
+        // Busca imóveis reais do banco (não o array estático)
+        const resImoveis = await fetch(`${API}/imoveis/publicos`);
+        const todosImoveis = await resImoveis.json();
+
+        const favImoveis = todosImoveis
+          .filter(im => favIds.includes(im.id))
+          .map(im => {
+            const fotos = parsearFotos(im.fotos);
+            return {
+              id: im.id,
+              nome: im.tipo,
+              tipo: (im.tipo || '').toLowerCase(),
+              imagem: fotos.length > 0 ? fotos[0] : 'img/casa-padrao.jpg',
+              bairro: im.bairro || '--',
+              cidade: im.cidade || '--',
+              preco: Number((im.valor || '0').toString().replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
+              finalidade: im.finalidade ? im.finalidade.toLowerCase() : 'venda',
+              area: im.area || '--',
+              quartos: im.quartos || 0,
+              banheiros: im.banheiros || '--',
+              vagas: im.vagas || 0,
+            };
+          });
 
         document.getElementById('qtd-favoritos').textContent = favImoveis.length + ' imóvel(is)';
 
         if (favImoveis.length === 0) {
           container.innerHTML = `
-            <div class="vazio" style="grid-column:1/-1">
-              <div class="vazio-icon">♡</div>
-              <h3>Nenhum favorito ainda</h3>
-              <p>Explore os imóveis e clique no coração para favoritar!</p>
-              <br>
-              <a href="imoveis.html" class="btn-outline">Ver imóveis</a>
-            </div>`;
+        <div class="vazio" style="grid-column:1/-1">
+          <div class="vazio-icon">♡</div>
+          <h3>Nenhum favorito ainda</h3>
+          <p>Explore os imóveis e clique no coração para favoritar!</p>
+          <br>
+          <a href="imoveis.html" class="btn-outline">Ver imóveis</a>
+        </div>`;
         } else {
           container.innerHTML = favImoveis.map(renderCard).join('');
         }

@@ -1,6 +1,5 @@
 // ===== MAIN.JS - Funcionalidades globais =====
 
-// Variável global para armazenar os imóveis (usada no aplicarFiltros)
 let imoveisBanco = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,11 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const paginaAtual = location.pathname.split('/').pop() || 'index.html';
 
   // 1. Carregar imóveis da API se estivermos na página correta
+  // atualizarFavoritos() é chamado DENTRO de carregarImoveisPeloBanco, após renderizar
   if (paginaAtual === 'imoveis.html' || paginaAtual === 'aluguel.html') {
     carregarImoveisPeloBanco();
   }
 
-  // 2. Menu hamburger (desktop e mobile)
+  // 2. Menu hamburger
   if (hamburger && navLinks) {
     hamburger.addEventListener('click', () => {
       navLinks.classList.toggle('active');
@@ -28,12 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.navbar-links a').forEach(link => {
     if (link.getAttribute('href') === paginaAtual) link.classList.add('active');
   });
-
-  // 4. Atualizar favoritos
-  atualizarFavoritos().catch(() => { });
 });
 
 // ---- FAVORITOS ----
+async function getFavoritosBanco() {
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+  if (!usuario) return [];
+  try {
+    const res = await fetch(`${API}/favoritos/${usuario.id}`);
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
 async function atualizarFavoritos() {
   const favoritosBanco = await getFavoritosBanco();
   document.querySelectorAll('.card-favorito').forEach(btn => {
@@ -54,12 +62,10 @@ async function toggleFavorito(id) {
     alert('Você precisa estar logado para favoritar.');
     return false;
   }
-
   try {
     const res = await fetch(`${API}/favoritos/${usuario.id}`);
     const favoritos = await res.json();
     const jaExiste = favoritos.find(f => f == id);
-
     if (jaExiste) {
       await fetch(`${API}/favoritos`, {
         method: 'DELETE',
@@ -172,8 +178,6 @@ function formatarPreco(preco, finalidade) {
 }
 
 // ---- PARSEAR FOTOS DO BANCO ----
-// O banco salva fotos como string JSON: '["/uploads/foto1.jpg", "/uploads/foto2.jpg"]'
-// Esta função retorna um array de URLs absolutas
 function parsearFotos(fotosJson) {
   if (!fotosJson) return [];
   try {
@@ -183,11 +187,11 @@ function parsearFotos(fotosJson) {
     return [];
   }
 }
+
 // ---- CARREGAR IMÓVEIS DO BANCO ----
 async function carregarImoveisPeloBanco() {
   const container = document.getElementById('lista-imoveis');
   if (!container) return;
-
   try {
     const res = await fetch(`${API}/imoveis/publicos`);
     const imoveis = await res.json();
@@ -195,14 +199,13 @@ async function carregarImoveisPeloBanco() {
     imoveisBanco = imoveis.map(im => {
       const fotos = parsearFotos(im.fotos);
       const imagem = fotos.length > 0 ? fotos[0] : 'img/casa-padrao.jpg';
-
       return {
         id: im.id,
         nome: im.tipo,
         tipo: (im.tipo || '').toLowerCase(),
-        imagem,           // ✅ primeira foto do banco (ou fallback)
-        galeria: fotos.slice(1),  // ✅ demais fotos para a galeria
-        fotos,            // ✅ array completo de fotos
+        imagem,
+        galeria: fotos.slice(1),
+        fotos,
         bairro: im.bairro || '--',
         cidade: im.cidade || '--',
         preco: Number((im.valor || im.preco || '0').toString().replace(/[R$\s.]/g, '').replace(',', '.')) || 0,
@@ -217,6 +220,7 @@ async function carregarImoveisPeloBanco() {
     });
 
     aplicarFiltros();
+    await atualizarFavoritos(); // ← roda APÓS os cards estarem no DOM
   } catch (err) {
     console.error('Erro ao listar imóveis:', err);
     container.innerHTML = '<p>Erro ao carregar imóveis.</p>';
@@ -251,14 +255,12 @@ function renderCard(im) {
 }
 
 // ---- BUSCAR IMÓVEL POR ID (do banco) ----
-// Usado pelo detalhes.html
 async function getImovelByIdBanco(id) {
   try {
     const res = await fetch(`${API}/imoveis/publicos`);
     const imoveis = await res.json();
     const im = imoveis.find(i => i.id === parseInt(id));
     if (!im) return null;
-
     const fotos = parsearFotos(im.fotos);
     return {
       id: im.id,
