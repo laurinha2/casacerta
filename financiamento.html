@@ -308,3 +308,22 @@
 </body>
 
 </html>
+<!-- PATCH: lê ?valor= da URL e preenche o campo -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(location.search);
+    const valor = params.get('valor');
+    if (valor) {
+      // Formata como R$ 0,00 (centavos * 100)
+      const valorNum = parseFloat(valor);
+      if (!isNaN(valorNum) && valorNum > 0) {
+        const valorCentavos = Math.round(valorNum * 100);
+        const valorFormatado = (valorCentavos / 100).toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        document.getElementById('fin-valor').value = 'R$ ' + valorFormatado;
+      }
+    }
+  });
+</script>

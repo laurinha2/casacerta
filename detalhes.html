@@ -30,7 +30,6 @@
       align-items: start;
     }
 
-    /* GALERIA */
     .galeria-main {
       border-radius: var(--radius);
       overflow: hidden;
@@ -58,9 +57,7 @@
       transition: var(--transition);
     }
 
-    .galeria-fav.ativo {
-      color: var(--vermelho);
-    }
+    .galeria-fav.ativo { color: var(--vermelho); }
 
     .galeria-thumbs {
       display: grid;
@@ -79,11 +76,7 @@
       border: 2px solid transparent;
     }
 
-    .galeria-thumb.ativo {
-      opacity: 1;
-      border-color: var(--vermelho);
-    }
-
+    .galeria-thumb.ativo { opacity: 1; border-color: var(--vermelho); }
     .galeria-thumb:hover { opacity: 1; }
 
     .galeria-thumb img {
@@ -92,7 +85,6 @@
       object-fit: cover;
     }
 
-    /* INFO */
     .info-nome {
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
@@ -135,7 +127,6 @@
       margin-bottom: 1.5rem;
     }
 
-    /* MAPA */
     .mapa-box {
       background: var(--branco);
       border-radius: var(--radius);
@@ -161,7 +152,6 @@
 
     #mapa-imovel iframe { width: 100%; height: 100%; border: none; }
 
-    /* AÇÕES */
     .acoes-box {
       background: var(--branco);
       border-radius: var(--radius);
@@ -196,7 +186,6 @@
 
     .similares-section { background: var(--bege); padding: 3rem 2rem; }
 
-    /* Sem foto */
     .sem-foto {
       width: 100%;
       height: 100%;
@@ -228,7 +217,6 @@
       <h1 class="detalhes-titulo">Detalhes do Imóvel</h1>
 
       <div class="detalhes-grid">
-        <!-- COLUNA ESQUERDA: Galeria + Info + Descrição -->
         <div>
           <div class="galeria-main">
             <img id="foto-principal" src="" alt="Foto principal do imóvel"
@@ -247,7 +235,6 @@
           </div>
         </div>
 
-        <!-- COLUNA DIREITA: Mapa + Ações -->
         <div>
           <div class="mapa-box">
             <h4>📍 Localização do Imóvel</h4>
@@ -257,7 +244,8 @@
           </div>
 
           <div class="acoes-box">
-            <a href="financiamento.html" class="acao-btn">
+            <!-- ✅ Link com valor do imóvel na URL -->
+            <a id="btn-financiamento" href="financiamento.html" class="acao-btn">
               <span class="acao-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
                   <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -291,7 +279,6 @@
     </div>
   </section>
 
-  <!-- SIMILARES -->
   <section class="similares-section">
     <div class="container">
       <h2 class="section-title">Imóveis Semelhantes</h2>
@@ -311,7 +298,6 @@
       const params = new URLSearchParams(location.search);
       const id = params.get('id') || 1;
 
-      // ✅ Busca o imóvel do banco (não mais do dados.js)
       imovelAtual = await getImovelByIdBanco(id);
 
       if (!imovelAtual) {
@@ -320,25 +306,26 @@
         return;
       }
 
-      // Título da página
       document.title = imovelAtual.nome + ' – Casa Certa';
 
-      // ✅ Monta galeria com as fotos do banco
+      // ✅ Atualiza link de financiamento com o valor do imóvel
+      if (imovelAtual.preco) {
+        document.getElementById('btn-financiamento').href =
+          `financiamento.html?valor=${imovelAtual.preco}`;
+      }
+
       const todasFotos = imovelAtual.fotos.length > 0
         ? imovelAtual.fotos
         : ['img/casa-padrao.jpg'];
 
-      // Foto principal
       const fotoPrincipalEl = document.getElementById('foto-principal');
       fotoPrincipalEl.src = todasFotos[0];
       fotoPrincipalEl.alt = imovelAtual.nome;
 
-      // Favorito
       const btnFav = document.getElementById('btn-fav');
       btnFav.textContent = isFavorito(imovelAtual.id) ? '♥' : '♡';
       btnFav.classList.toggle('ativo', isFavorito(imovelAtual.id));
 
-      // ✅ Thumbs da galeria
       const thumbsEl = document.getElementById('galeria-thumbs');
       if (todasFotos.length > 1) {
         thumbsEl.innerHTML = todasFotos.map((src, i) => `
@@ -347,10 +334,9 @@
           </div>
         `).join('');
       } else {
-        thumbsEl.innerHTML = ''; // Sem thumbs se só tem 1 foto
+        thumbsEl.innerHTML = '';
       }
 
-      // Info
       document.getElementById('info-nome').textContent = imovelAtual.nome;
       document.getElementById('info-local').textContent =
         `📍 ${imovelAtual.bairro} – ${imovelAtual.cidade}`;
@@ -359,7 +345,6 @@
       document.getElementById('info-descricao').textContent =
         imovelAtual.descricao || 'Descrição não disponível.';
 
-      // Specs
       const svgArea = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
       const svgQuartos = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>`;
       const svgBanheiro = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" y1="5" x2="8" y2="7"/><line x1="2" y1="12" x2="22" y2="12"/></svg>`;
@@ -380,14 +365,12 @@
         </div>
       `).join('');
 
-      // Mapa (endereço como fallback já que não temos lat/lng no banco)
       const enderecoMapa = encodeURIComponent(
         `${imovelAtual.bairro}, ${imovelAtual.cidade}, Brasil`
       );
       document.getElementById('mapa-frame').src =
         `https://maps.google.com/maps?q=${enderecoMapa}&z=15&output=embed`;
 
-      // ✅ Similares — busca todos e filtra pelo tipo
       try {
         const resAll = await fetch(`${API}/imoveis/publicos`);
         const todosImoveis = await resAll.json();
